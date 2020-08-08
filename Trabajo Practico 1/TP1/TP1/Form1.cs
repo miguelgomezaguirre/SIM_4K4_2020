@@ -14,6 +14,7 @@ namespace TP1
     public partial class Form1 : Form
     {
         List<string> numeros = new List<string>();
+        List<double> numerosDouble = new List<double>();
         Generador generador = new Generador();
 
         double Xn = 0;
@@ -88,7 +89,7 @@ namespace TP1
                     
                 }            
 
-            cargarGrilla();
+            cargarGrilla(ref grdResultado);
 
             btnAgregarUno.Enabled = true;
 
@@ -140,13 +141,13 @@ namespace TP1
             numeros.Add(numeroGenerado.ToString("0.0000"));
 
 
-            cargarGrilla();
+            cargarGrilla(ref grdResultado);
 
             
 
         }
 
-        private void cargarGrilla()
+        private void cargarGrilla(ref DataGridView grilla)
         {
             DataTable table = new DataTable();
 
@@ -167,7 +168,8 @@ namespace TP1
                 indice++;
             }
 
-            grdResultado.DataSource = table;
+            grilla.DataSource = table;
+
         }
 
         private void cboMetodo_SelectedIndexChanged(object sender, EventArgs e)
@@ -184,6 +186,69 @@ namespace TP1
                 txt_c.Visible = true;
                 lbl_c.Visible = true;
             }
+        }
+
+        private void cboOrigenNumeros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnRealizarTest_Click(object sender, EventArgs e)
+        {
+            numeros = new List<string>();
+
+            Random rnd = new Random();
+
+            int cantidadDeNumerosAGenerar = int.Parse(txtCantNumerosAGenerar.Text);
+            int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
+
+            double numeroGenerado = 0;
+
+            for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
+            {
+                numeroGenerado = rnd.NextDouble();
+
+                numeroGenerado = truncar(numeroGenerado);
+
+                numerosDouble.Add(numeroGenerado);
+
+            }
+
+            double minimo = numerosDouble.Min();
+            double maximo = numerosDouble.Max();
+
+            List<Intervalo> intervalos = new List<Intervalo>();
+
+            double tamanioIntervalo = Math.Round(1f / (double)numeroDeIntervalos, 5);
+
+            double limiteInferior = 0;
+            double limiteSuperior = 0;
+
+            for (int i = 0; i < numeroDeIntervalos; i++)
+            {
+                Intervalo intervalo = new Intervalo();
+
+                intervalo.numero = i + 1;
+                intervalo.limiteInferior = limiteInferior;
+                intervalo.limiteSuperior = limiteInferior + tamanioIntervalo;
+
+                limiteInferior = intervalo.limiteSuperior;
+
+                intervalos.Add(intervalo);
+            }
+
+            cargarGrillaPuntoB();
+            
+        }
+
+        private void cargarGrillaPuntoB()
+        {
+            
+        }
+
+        private double truncar(double numero)
+        {
+            return Math.Truncate(numero * 10000) / 10000;
         }
     }
 }
