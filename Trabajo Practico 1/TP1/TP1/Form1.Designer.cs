@@ -28,6 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btnCalcular = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_semilla = new System.Windows.Forms.TextBox();
@@ -69,11 +72,16 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.lblChiCuadrado = new System.Windows.Forms.Label();
+            this.btnVerGrafico = new System.Windows.Forms.Button();
+            this.tabGrafico = new System.Windows.Forms.TabPage();
+            this.grafico = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdPuntoB)).BeginInit();
+            this.tabGrafico.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grafico)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCalcular
@@ -262,6 +270,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabGrafico);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -300,6 +309,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btnVerGrafico);
             this.tabPage2.Controls.Add(this.lblChiCuadrado);
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.textBox4);
@@ -381,7 +391,7 @@
             // 
             // btnRealizarTest
             // 
-            this.btnRealizarTest.Location = new System.Drawing.Point(167, 93);
+            this.btnRealizarTest.Location = new System.Drawing.Point(200, 93);
             this.btnRealizarTest.Name = "btnRealizarTest";
             this.btnRealizarTest.Size = new System.Drawing.Size(88, 33);
             this.btnRealizarTest.TabIndex = 6;
@@ -493,6 +503,42 @@
             this.lblChiCuadrado.Text = "label15";
             this.lblChiCuadrado.Visible = false;
             // 
+            // btnVerGrafico
+            // 
+            this.btnVerGrafico.Location = new System.Drawing.Point(106, 93);
+            this.btnVerGrafico.Name = "btnVerGrafico";
+            this.btnVerGrafico.Size = new System.Drawing.Size(88, 33);
+            this.btnVerGrafico.TabIndex = 18;
+            this.btnVerGrafico.Text = "Ver Gráfico";
+            this.btnVerGrafico.UseVisualStyleBackColor = true;
+            this.btnVerGrafico.Click += new System.EventHandler(this.btnVerGrafico_Click);
+            // 
+            // tabGrafico
+            // 
+            this.tabGrafico.Controls.Add(this.grafico);
+            this.tabGrafico.Location = new System.Drawing.Point(4, 22);
+            this.tabGrafico.Name = "tabGrafico";
+            this.tabGrafico.Size = new System.Drawing.Size(672, 447);
+            this.tabGrafico.TabIndex = 2;
+            this.tabGrafico.Text = "Graficos";
+            this.tabGrafico.UseVisualStyleBackColor = true;
+            // 
+            // grafico
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.grafico.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.grafico.Legends.Add(legend2);
+            this.grafico.Location = new System.Drawing.Point(3, 3);
+            this.grafico.Name = "grafico";
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.grafico.Series.Add(series2);
+            this.grafico.Size = new System.Drawing.Size(666, 441);
+            this.grafico.TabIndex = 0;
+            this.grafico.Text = "chart1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -508,6 +554,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdPuntoB)).EndInit();
+            this.tabGrafico.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grafico)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -555,6 +603,9 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblChiCuadrado;
+        private System.Windows.Forms.Button btnVerGrafico;
+        private System.Windows.Forms.TabPage tabGrafico;
+        private System.Windows.Forms.DataVisualization.Charting.Chart grafico;
     }
 }
 

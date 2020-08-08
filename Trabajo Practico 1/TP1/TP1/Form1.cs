@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using TP1.Clases;
 
 namespace TP1
@@ -17,6 +18,7 @@ namespace TP1
         List<string> numeros = new List<string>();
         List<double> numerosDouble = new List<double>();
         Generador generador = new Generador();
+        List<Intervalo> intervalos = new List<Intervalo>();
 
         double Xn = 0;
 
@@ -210,7 +212,7 @@ namespace TP1
 
              
 
-            List<Intervalo> intervalos = new List<Intervalo>();
+            
 
             double tamanioIntervalo = Math.Round(1f / (double)numeroDeIntervalos, 5);
 
@@ -311,6 +313,17 @@ namespace TP1
         private double truncar(double numero)
         {
             return Math.Truncate(numero * 10000) / 10000;
+        }
+
+        private void btnVerGrafico_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < intervalos.Count; i++)
+            {
+                Series serie = grafico.Series.Add("titulo" + i);
+
+                serie.Label = "etiqueta";
+                serie.Points.Add(3);
+            }
         }
     }
 }
