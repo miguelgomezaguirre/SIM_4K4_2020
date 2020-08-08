@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -190,39 +191,31 @@ namespace TP1
 
         private void cboOrigenNumeros_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if(cboOrigenNumeros.SelectedIndex == 0)
+            {
 
+            }
+            else
+            {
+
+            }
         }
 
         private void btnRealizarTest_Click(object sender, EventArgs e)
         {
-            numeros = new List<string>();
-
-            Random rnd = new Random();
+            numeros = new List<string>();            
 
             int cantidadDeNumerosAGenerar = int.Parse(txtCantNumerosAGenerar.Text);
             int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
 
-            double numeroGenerado = 0;
-
-            for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
-            {
-                numeroGenerado = rnd.NextDouble();
-
-                numeroGenerado = truncar(numeroGenerado);
-
-                numerosDouble.Add(numeroGenerado);
-
-            }
-
-            double minimo = numerosDouble.Min();
-            double maximo = numerosDouble.Max();
+             
 
             List<Intervalo> intervalos = new List<Intervalo>();
 
             double tamanioIntervalo = Math.Round(1f / (double)numeroDeIntervalos, 5);
 
             double limiteInferior = 0;
-            double limiteSuperior = 0;
+            double frecuenciaEsperada = Math.Round((double)cantidadDeNumerosAGenerar / (double)numeroDeIntervalos, 5);
 
             for (int i = 0; i < numeroDeIntervalos; i++)
             {
@@ -230,20 +223,89 @@ namespace TP1
 
                 intervalo.numero = i + 1;
                 intervalo.limiteInferior = limiteInferior;
-                intervalo.limiteSuperior = limiteInferior + tamanioIntervalo;
+                intervalo.limiteSuperior = Math.Round(limiteInferior + tamanioIntervalo,5);
+                intervalo.frecuenciaEsperada = frecuenciaEsperada;
 
                 limiteInferior = intervalo.limiteSuperior;
 
                 intervalos.Add(intervalo);
             }
 
-            cargarGrillaPuntoB();
+            double numeroGenerado = 0;
+
+            if (cboOrigenNumeros.SelectedIndex == 0)
+            {
+                Random rnd = new Random();
+
+                for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
+                {
+                    numeroGenerado = rnd.NextDouble();
+
+                    numeroGenerado = truncar(numeroGenerado);
+
+                    numerosDouble.Add(numeroGenerado);
+
+                    for (int j = 0; j < intervalos.Count; j++)
+                    {
+                        if(intervalos[j].limiteSuperior > numeroGenerado)
+                        {
+                            intervalos[j].frecuenciaObservada++;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //TODO: ACA Generar numeros aleatorios por metodo mixto
+            }
+
+
+            cargarGrillaPuntoB(intervalos);
             
         }
 
-        private void cargarGrillaPuntoB()
+        private void cargarGrillaPuntoB(List<Intervalo> intervalos)
         {
-            
+            DataTable tabla = new DataTable();
+
+            tabla.Columns.Add("Intervalo");
+            tabla.Columns.Add("FO");
+            tabla.Columns.Add("FE");
+            tabla.Columns.Add("DifFrec");
+            tabla.Columns.Add("DifFrecCuadrado");
+            tabla.Columns.Add("chiCuadrado");
+
+            double acumulador = 0;
+
+            DataRow fila;
+
+            foreach (var intervalo in intervalos)
+            {
+                fila = tabla.NewRow();
+
+                fila["Intervalo"] = "[ " + intervalo.limiteInferior + " ; " + intervalo.limiteSuperior + " )";
+                fila["FO"] = intervalo.frecuenciaObservada;
+                fila["FE"] = intervalo.frecuenciaEsperada;
+                fila["DifFrec"] = intervalo.diferenciaDeFrecuencias();
+                fila["DifFrecCuadrado"] = intervalo.diferenciaCuadradaDeFrecuencias();
+                fila["chiCuadrado"] = intervalo.chiCuadradoIntervalo();
+
+                acumulador += intervalo.chiCuadradoIntervalo();
+
+                tabla.Rows.Add(fila);
+            }
+
+            fila = tabla.NewRow();
+
+            fila["chiCuadrado"] = acumulador;
+
+            tabla.Rows.Add(fila);
+
+            lblChiCuadrado.Text = acumulador.ToString();
+            lblChiCuadrado.Visible = true;
+
+            grdPuntoB.DataSource = tabla;
         }
 
         private double truncar(double numero)

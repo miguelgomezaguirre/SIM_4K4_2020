@@ -58,19 +58,22 @@
             this.txtCantNumerosAGenerar = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.btnRealizarTest = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Intervalos = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Cantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FO = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FE = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DifFrec = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DifFrecCuadrado = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.chiCuadrado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.grdPuntoB = new System.Windows.Forms.DataGridView();
+            this.label10 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.lblChiCuadrado = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdPuntoB)).BeginInit();
             this.SuspendLayout();
             // 
             // btnCalcular
@@ -107,7 +110,7 @@
             this.grdResultado.Location = new System.Drawing.Point(6, 194);
             this.grdResultado.Name = "grdResultado";
             this.grdResultado.ReadOnly = true;
-            this.grdResultado.Size = new System.Drawing.Size(541, 247);
+            this.grdResultado.Size = new System.Drawing.Size(660, 247);
             this.grdResultado.TabIndex = 3;
             // 
             // label2
@@ -262,7 +265,7 @@
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(561, 473);
+            this.tabControl1.Size = new System.Drawing.Size(680, 473);
             this.tabControl1.TabIndex = 20;
             // 
             // tabPage1
@@ -290,14 +293,24 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(553, 447);
+            this.tabPage1.Size = new System.Drawing.Size(672, 447);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Punto A";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.dataGridView1);
+            this.tabPage2.Controls.Add(this.lblChiCuadrado);
+            this.tabPage2.Controls.Add(this.label14);
+            this.tabPage2.Controls.Add(this.textBox4);
+            this.tabPage2.Controls.Add(this.label13);
+            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.textBox1);
+            this.tabPage2.Controls.Add(this.label11);
+            this.tabPage2.Controls.Add(this.textBox2);
+            this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Controls.Add(this.textBox3);
+            this.tabPage2.Controls.Add(this.grdPuntoB);
             this.tabPage2.Controls.Add(this.btnRealizarTest);
             this.tabPage2.Controls.Add(this.txtCantNumerosAGenerar);
             this.tabPage2.Controls.Add(this.label9);
@@ -308,7 +321,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(553, 447);
+            this.tabPage2.Size = new System.Drawing.Size(672, 447);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "B y C";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -376,79 +389,115 @@
             this.btnRealizarTest.UseVisualStyleBackColor = true;
             this.btnRealizarTest.Click += new System.EventHandler(this.btnRealizarTest_Click);
             // 
-            // dataGridView1
+            // grdPuntoB
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Intervalos,
-            this.Cantidad,
-            this.FO,
-            this.FE,
-            this.DifFrec,
-            this.DifFrecCuadrado,
-            this.chiCuadrado});
-            this.dataGridView1.Location = new System.Drawing.Point(6, 132);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.Size = new System.Drawing.Size(541, 309);
-            this.dataGridView1.TabIndex = 7;
+            this.grdPuntoB.AllowUserToAddRows = false;
+            this.grdPuntoB.AllowUserToDeleteRows = false;
+            this.grdPuntoB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdPuntoB.Location = new System.Drawing.Point(6, 157);
+            this.grdPuntoB.Name = "grdPuntoB";
+            this.grdPuntoB.ReadOnly = true;
+            this.grdPuntoB.Size = new System.Drawing.Size(660, 284);
+            this.grdPuntoB.TabIndex = 7;
             // 
-            // Intervalos
+            // label10
             // 
-            this.Intervalos.HeaderText = "Intervalos";
-            this.Intervalos.Name = "Intervalos";
-            this.Intervalos.ReadOnly = true;
-            this.Intervalos.Width = 50;
+            this.label10.AutoSize = true;
+            this.label10.Enabled = false;
+            this.label10.Location = new System.Drawing.Point(323, 18);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(40, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Text = "Semilla";
             // 
-            // Cantidad
+            // textBox1
             // 
-            this.Cantidad.HeaderText = "Cantidad en Intervalo";
-            this.Cantidad.Name = "Cantidad";
-            this.Cantidad.ReadOnly = true;
-            this.Cantidad.Width = 50;
+            this.textBox1.Enabled = false;
+            this.textBox1.Location = new System.Drawing.Point(369, 15);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(116, 20);
+            this.textBox1.TabIndex = 9;
             // 
-            // FO
+            // label11
             // 
-            this.FO.HeaderText = "Frecuencia Observada";
-            this.FO.Name = "FO";
-            this.FO.ReadOnly = true;
-            this.FO.Width = 50;
+            this.label11.AutoSize = true;
+            this.label11.Enabled = false;
+            this.label11.Location = new System.Drawing.Point(323, 70);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(15, 13);
+            this.label11.TabIndex = 10;
+            this.label11.Text = "m";
             // 
-            // FE
+            // textBox2
             // 
-            this.FE.HeaderText = "Frecuencia Esperada";
-            this.FE.Name = "FE";
-            this.FE.ReadOnly = true;
-            this.FE.Width = 50;
+            this.textBox2.Enabled = false;
+            this.textBox2.Location = new System.Drawing.Point(369, 67);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(116, 20);
+            this.textBox2.TabIndex = 11;
             // 
-            // DifFrec
+            // label12
             // 
-            this.DifFrec.HeaderText = "FE-FO";
-            this.DifFrec.Name = "DifFrec";
-            this.DifFrec.ReadOnly = true;
-            this.DifFrec.Width = 50;
+            this.label12.AutoSize = true;
+            this.label12.Enabled = false;
+            this.label12.Location = new System.Drawing.Point(323, 44);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(13, 13);
+            this.label12.TabIndex = 12;
+            this.label12.Text = "a";
             // 
-            // DifFrecCuadrado
+            // textBox3
             // 
-            this.DifFrecCuadrado.HeaderText = "(FE-FO)^2";
-            this.DifFrecCuadrado.Name = "DifFrecCuadrado";
-            this.DifFrecCuadrado.ReadOnly = true;
-            this.DifFrecCuadrado.Width = 50;
+            this.textBox3.Enabled = false;
+            this.textBox3.Location = new System.Drawing.Point(369, 41);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(116, 20);
+            this.textBox3.TabIndex = 13;
             // 
-            // chiCuadrado
+            // textBox4
             // 
-            this.chiCuadrado.HeaderText = "(FE-FO)^2/FE";
-            this.chiCuadrado.Name = "chiCuadrado";
-            this.chiCuadrado.ReadOnly = true;
-            this.chiCuadrado.Width = 50;
+            this.textBox4.Enabled = false;
+            this.textBox4.Location = new System.Drawing.Point(369, 93);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(116, 20);
+            this.textBox4.TabIndex = 15;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Enabled = false;
+            this.label13.Location = new System.Drawing.Point(323, 96);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(13, 13);
+            this.label13.TabIndex = 14;
+            this.label13.Text = "c";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(466, 138);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(102, 16);
+            this.label14.TabIndex = 16;
+            this.label14.Text = "chi cuadrado:";
+            // 
+            // lblChiCuadrado
+            // 
+            this.lblChiCuadrado.AutoSize = true;
+            this.lblChiCuadrado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblChiCuadrado.Location = new System.Drawing.Point(607, 138);
+            this.lblChiCuadrado.Name = "lblChiCuadrado";
+            this.lblChiCuadrado.Size = new System.Drawing.Size(59, 16);
+            this.lblChiCuadrado.TabIndex = 17;
+            this.lblChiCuadrado.Text = "label15";
+            this.lblChiCuadrado.Visible = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 500);
+            this.ClientSize = new System.Drawing.Size(704, 500);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Principal";
@@ -458,7 +507,7 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.grdPuntoB)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -495,14 +544,17 @@
         private System.Windows.Forms.TextBox txtCantIntervalos;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnRealizarTest;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Intervalos;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Cantidad;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FO;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FE;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DifFrec;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DifFrecCuadrado;
-        private System.Windows.Forms.DataGridViewTextBoxColumn chiCuadrado;
+        private System.Windows.Forms.DataGridView grdPuntoB;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label lblChiCuadrado;
     }
 }
 

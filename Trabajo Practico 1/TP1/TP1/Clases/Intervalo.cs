@@ -11,7 +11,6 @@ namespace TP1.Clases
         public int numero { get; set; }
         public double limiteInferior { get; set; }
         public double limiteSuperior { get; set; }
-        public int cantidad { get; set; }
         public int frecuenciaObservada { get; set; }
         public double frecuenciaEsperada { get; set; }
         public double diferenciaDeFrecuencias()
