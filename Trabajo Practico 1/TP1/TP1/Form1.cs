@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -34,10 +36,10 @@ namespace TP1
             //c = 43
             //m = 100
 
-            txt_semilla.Text = "37";
-            txt_a.Text = "91";
-            txt_c.Text = "43";
-            txt_m.Text = "100";
+            //txt_semilla.Text = "37";
+            //txt_a.Text = "91";
+            //txt_c.Text = "43";
+            //txt_m.Text = "100";
 
         }
 
@@ -205,6 +207,50 @@ namespace TP1
 
 
 
+            }
+
+            int cantidad = 0;
+
+            if(string.IsNullOrEmpty(txtCantNumerosAGenerar.Text))
+            {
+                mensajeError = "Debe ingresar la cantidad de números a generar";
+                txtCantNumerosAGenerar.Focus();
+                return false;
+            }
+
+            if(!int.TryParse(txtCantNumerosAGenerar.Text, out cantidad))
+            {
+                mensajeError = "La cantidad de números a generar debe ser entera";
+                txtCantNumerosAGenerar.Focus();
+                return false;
+            }
+
+            if(cantidad <= 0)
+            {
+                mensajeError = "La cantidad de números a generar debe ser mayor a cero";
+                txtCantNumerosAGenerar.Focus();
+                return false;
+            }
+
+            if(string.IsNullOrEmpty(txtCantIntervalos.Text))
+            {
+                mensajeError = "Debe ingresar una cantidad de intervalos";
+                txtCantIntervalos.Focus();
+                return false;
+            }
+
+            if (!int.TryParse(txtCantIntervalos.Text, out cantidad))
+            {
+                mensajeError = "La cantidad de intervalos debe ser entera";
+                txtCantIntervalos.Focus();
+                return false;
+            }
+
+            if (cantidad <= 0)
+            {
+                mensajeError = "La cantidad de intervalos debe ser mayor a cero";
+                txtCantIntervalos.Focus();
+                return false;
             }
 
             return true;
@@ -380,10 +426,9 @@ namespace TP1
 
             numeros.Add(numeroGenerado.ToString("0.0000"));
 
-
             cargarGrilla(ref grdResultado);
 
-            
+            grdResultado.FirstDisplayedScrollingRowIndex = grdResultado.RowCount - 1;
 
         }
 
@@ -410,6 +455,7 @@ namespace TP1
 
             grilla.DataSource = table;
 
+            
         }
 
         private void cboMetodo_SelectedIndexChanged(object sender, EventArgs e)
@@ -429,24 +475,36 @@ namespace TP1
                     lbl_c.Visible = true;
                 }
             }
-            
+
+            btnAgregarUno.Enabled = false;
         }
 
         private void cboOrigenNumeros_SelectedIndexChanged(object sender, EventArgs e)
         {
             if(cboOrigenNumeros.SelectedIndex == 0)
             {
-                txtSemilla_puntoC.Enabled = false;
-                txt_a_puntoC.Enabled = false;
-                txt_c_puntoC.Enabled = false;
-                txt_m_puntoC.Enabled = false;
+                txtSemilla_puntoC.Visible = false;
+                txt_a_puntoC.Visible = false;
+                txt_c_puntoC.Visible = false;
+                txt_m_puntoC.Visible = false;
+
+                lblSemila_puntoC.Visible = false;
+                lbl_a_puntoC.Visible = false;
+                lbl_m_puntoC.Visible = false;
+                lbl_c_puntoC.Visible = false;
             }
             else
             {
-                txtSemilla_puntoC.Enabled = true;
-                txt_a_puntoC.Enabled = true;
-                txt_c_puntoC.Enabled = true;
-                txt_m_puntoC.Enabled = true;
+
+                txtSemilla_puntoC.Visible = true;
+                txt_a_puntoC.Visible = true;
+                txt_c_puntoC.Visible = true;
+                txt_m_puntoC.Visible = true;
+
+                lblSemila_puntoC.Visible = true;
+                lbl_a_puntoC.Visible = true;
+                lbl_m_puntoC.Visible = true;
+                lbl_c_puntoC.Visible = true;
             }
         }
 
@@ -547,6 +605,8 @@ namespace TP1
                 cargarGrillaPuntoB(intervalos);
 
                 graficar();
+
+                btnExportarSerie.Visible = true;
             }
             else
             {
@@ -579,9 +639,9 @@ namespace TP1
             {
                 fila = tabla.NewRow();
 
-                fila["Intervalo"] = "[ " + intervalo.limiteInferior + " ; " + intervalo.limiteSuperior + " )";
-                fila["FO"] = intervalo.frecuenciaObservada;
-                fila["FE"] = intervalo.frecuenciaEsperada;
+                fila["Intervalo"] = "[" + intervalo.limiteInferior + " ; " + intervalo.limiteSuperior + ")";
+                fila["FO"] = intervalo.frecuenciaObservada.ToString("0.0000");
+                fila["FE"] = intervalo.frecuenciaEsperada.ToString("0.0000");
                 fila["DifFrec"] = intervalo.diferenciaDeFrecuencias().ToString("0.0000");
                 fila["DifFrecCuadrado"] = intervalo.diferenciaCuadradaDeFrecuencias().ToString("0.0000");
                 fila["chiCuadrado"] = intervalo.chiCuadradoIntervalo().ToString("0.0000");
@@ -608,11 +668,7 @@ namespace TP1
             return Math.Truncate(numero * 10000) / 10000;
         }
 
-        private void btnVerGrafico_Click(object sender, EventArgs e)
-        {
-            graficar();   
-            tabGrafico.Select();
-        }
+        
 
         private void graficar()
         {
@@ -679,6 +735,28 @@ namespace TP1
             btnAgregarUno.Enabled = false;
             btnLimpiar.Enabled = false;
             grdResultado.DataSource = null;
+        }
+
+        private void btnExportarSerie_Click(object sender, EventArgs e)
+        {
+            StringBuilder listadoNumeros = new StringBuilder();
+
+            foreach (var numero in numerosDouble)
+            {
+                listadoNumeros.AppendLine(numero.ToString("0.0000"));
+            }
+
+
+
+            string pathArchivo = Application.StartupPath.TrimEnd('/') + "/list" + DateTime.Now.ToLongTimeString().Replace(":","_") + ".txt";
+                       
+            TextWriter tw = new StreamWriter(pathArchivo);
+
+            tw.Write(listadoNumeros.ToString());
+
+            tw.Close();
+
+            Process.Start(pathArchivo);
         }
     }
 

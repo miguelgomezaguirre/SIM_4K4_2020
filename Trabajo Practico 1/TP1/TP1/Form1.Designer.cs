@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea12 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend12 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btnCalcular = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_semilla = new System.Windows.Forms.TextBox();
@@ -50,16 +50,16 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.btnVerGrafico = new System.Windows.Forms.Button();
+            this.btnExportarSerie = new System.Windows.Forms.Button();
             this.lblChiCuadrado = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.txt_c_puntoC = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
+            this.lbl_c_puntoC = new System.Windows.Forms.Label();
+            this.lblSemila_puntoC = new System.Windows.Forms.Label();
             this.txtSemilla_puntoC = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
+            this.lbl_m_puntoC = new System.Windows.Forms.Label();
             this.txt_m_puntoC = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
+            this.lbl_a_puntoC = new System.Windows.Forms.Label();
             this.txt_a_puntoC = new System.Windows.Forms.TextBox();
             this.grdPuntoB = new System.Windows.Forms.DataGridView();
             this.btnRealizarTest = new System.Windows.Forms.Button();
@@ -72,6 +72,9 @@
             this.tabGrafico = new System.Windows.Forms.TabPage();
             this.grafico = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.btnLimpiar = new System.Windows.Forms.Button();
+            this.tabIntegrantes = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -79,6 +82,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.grdPuntoB)).BeginInit();
             this.tabGrafico.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grafico)).BeginInit();
+            this.tabIntegrantes.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCalcular
@@ -230,6 +234,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabGrafico);
+            this.tabControl1.Controls.Add(this.tabIntegrantes);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -260,21 +265,21 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(672, 447);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Punto A";
+            this.tabPage1.Text = "Generador";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.btnVerGrafico);
+            this.tabPage2.Controls.Add(this.btnExportarSerie);
             this.tabPage2.Controls.Add(this.lblChiCuadrado);
             this.tabPage2.Controls.Add(this.label14);
             this.tabPage2.Controls.Add(this.txt_c_puntoC);
-            this.tabPage2.Controls.Add(this.label13);
-            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.lbl_c_puntoC);
+            this.tabPage2.Controls.Add(this.lblSemila_puntoC);
             this.tabPage2.Controls.Add(this.txtSemilla_puntoC);
-            this.tabPage2.Controls.Add(this.label11);
+            this.tabPage2.Controls.Add(this.lbl_m_puntoC);
             this.tabPage2.Controls.Add(this.txt_m_puntoC);
-            this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Controls.Add(this.lbl_a_puntoC);
             this.tabPage2.Controls.Add(this.txt_a_puntoC);
             this.tabPage2.Controls.Add(this.grdPuntoB);
             this.tabPage2.Controls.Add(this.btnRealizarTest);
@@ -289,19 +294,19 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(672, 447);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "B y C";
+            this.tabPage2.Text = "chi^2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // btnVerGrafico
+            // btnExportarSerie
             // 
-            this.btnVerGrafico.Location = new System.Drawing.Point(106, 93);
-            this.btnVerGrafico.Name = "btnVerGrafico";
-            this.btnVerGrafico.Size = new System.Drawing.Size(88, 33);
-            this.btnVerGrafico.TabIndex = 18;
-            this.btnVerGrafico.Text = "Ver Gráfico";
-            this.btnVerGrafico.UseVisualStyleBackColor = true;
-            this.btnVerGrafico.Visible = false;
-            this.btnVerGrafico.Click += new System.EventHandler(this.btnVerGrafico_Click);
+            this.btnExportarSerie.Location = new System.Drawing.Point(106, 93);
+            this.btnExportarSerie.Name = "btnExportarSerie";
+            this.btnExportarSerie.Size = new System.Drawing.Size(88, 33);
+            this.btnExportarSerie.TabIndex = 18;
+            this.btnExportarSerie.Text = "Exportar Serie";
+            this.btnExportarSerie.UseVisualStyleBackColor = true;
+            this.btnExportarSerie.Visible = false;
+            this.btnExportarSerie.Click += new System.EventHandler(this.btnExportarSerie_Click);
             // 
             // lblChiCuadrado
             // 
@@ -326,75 +331,75 @@
             // 
             // txt_c_puntoC
             // 
-            this.txt_c_puntoC.Enabled = false;
             this.txt_c_puntoC.Location = new System.Drawing.Point(369, 93);
             this.txt_c_puntoC.Name = "txt_c_puntoC";
             this.txt_c_puntoC.Size = new System.Drawing.Size(116, 20);
             this.txt_c_puntoC.TabIndex = 6;
+            this.txt_c_puntoC.Visible = false;
             // 
-            // label13
+            // lbl_c_puntoC
             // 
-            this.label13.AutoSize = true;
-            this.label13.Enabled = false;
-            this.label13.Location = new System.Drawing.Point(323, 96);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(13, 13);
-            this.label13.TabIndex = 14;
-            this.label13.Text = "c";
+            this.lbl_c_puntoC.AutoSize = true;
+            this.lbl_c_puntoC.Location = new System.Drawing.Point(323, 96);
+            this.lbl_c_puntoC.Name = "lbl_c_puntoC";
+            this.lbl_c_puntoC.Size = new System.Drawing.Size(13, 13);
+            this.lbl_c_puntoC.TabIndex = 14;
+            this.lbl_c_puntoC.Text = "c";
+            this.lbl_c_puntoC.Visible = false;
             // 
-            // label10
+            // lblSemila_puntoC
             // 
-            this.label10.AutoSize = true;
-            this.label10.Enabled = false;
-            this.label10.Location = new System.Drawing.Point(323, 18);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(40, 13);
-            this.label10.TabIndex = 8;
-            this.label10.Text = "Semilla";
+            this.lblSemila_puntoC.AutoSize = true;
+            this.lblSemila_puntoC.Location = new System.Drawing.Point(323, 18);
+            this.lblSemila_puntoC.Name = "lblSemila_puntoC";
+            this.lblSemila_puntoC.Size = new System.Drawing.Size(40, 13);
+            this.lblSemila_puntoC.TabIndex = 8;
+            this.lblSemila_puntoC.Text = "Semilla";
+            this.lblSemila_puntoC.Visible = false;
             // 
             // txtSemilla_puntoC
             // 
-            this.txtSemilla_puntoC.Enabled = false;
             this.txtSemilla_puntoC.Location = new System.Drawing.Point(369, 15);
             this.txtSemilla_puntoC.Name = "txtSemilla_puntoC";
             this.txtSemilla_puntoC.Size = new System.Drawing.Size(116, 20);
             this.txtSemilla_puntoC.TabIndex = 3;
+            this.txtSemilla_puntoC.Visible = false;
             // 
-            // label11
+            // lbl_m_puntoC
             // 
-            this.label11.AutoSize = true;
-            this.label11.Enabled = false;
-            this.label11.Location = new System.Drawing.Point(323, 70);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(15, 13);
-            this.label11.TabIndex = 10;
-            this.label11.Text = "m";
+            this.lbl_m_puntoC.AutoSize = true;
+            this.lbl_m_puntoC.Location = new System.Drawing.Point(323, 70);
+            this.lbl_m_puntoC.Name = "lbl_m_puntoC";
+            this.lbl_m_puntoC.Size = new System.Drawing.Size(15, 13);
+            this.lbl_m_puntoC.TabIndex = 10;
+            this.lbl_m_puntoC.Text = "m";
+            this.lbl_m_puntoC.Visible = false;
             // 
             // txt_m_puntoC
             // 
-            this.txt_m_puntoC.Enabled = false;
             this.txt_m_puntoC.Location = new System.Drawing.Point(369, 67);
             this.txt_m_puntoC.Name = "txt_m_puntoC";
             this.txt_m_puntoC.Size = new System.Drawing.Size(116, 20);
             this.txt_m_puntoC.TabIndex = 5;
+            this.txt_m_puntoC.Visible = false;
             // 
-            // label12
+            // lbl_a_puntoC
             // 
-            this.label12.AutoSize = true;
-            this.label12.Enabled = false;
-            this.label12.Location = new System.Drawing.Point(323, 44);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(13, 13);
-            this.label12.TabIndex = 12;
-            this.label12.Text = "a";
+            this.lbl_a_puntoC.AutoSize = true;
+            this.lbl_a_puntoC.Location = new System.Drawing.Point(323, 44);
+            this.lbl_a_puntoC.Name = "lbl_a_puntoC";
+            this.lbl_a_puntoC.Size = new System.Drawing.Size(13, 13);
+            this.lbl_a_puntoC.TabIndex = 12;
+            this.lbl_a_puntoC.Text = "a";
+            this.lbl_a_puntoC.Visible = false;
             // 
             // txt_a_puntoC
             // 
-            this.txt_a_puntoC.Enabled = false;
             this.txt_a_puntoC.Location = new System.Drawing.Point(369, 41);
             this.txt_a_puntoC.Name = "txt_a_puntoC";
             this.txt_a_puntoC.Size = new System.Drawing.Size(116, 20);
             this.txt_a_puntoC.TabIndex = 4;
+            this.txt_a_puntoC.Visible = false;
             // 
             // grdPuntoB
             // 
@@ -483,16 +488,16 @@
             // 
             // grafico
             // 
-            chartArea12.Name = "ChartArea1";
-            this.grafico.ChartAreas.Add(chartArea12);
-            legend12.Name = "Legend1";
-            this.grafico.Legends.Add(legend12);
+            chartArea1.Name = "ChartArea1";
+            this.grafico.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.grafico.Legends.Add(legend1);
             this.grafico.Location = new System.Drawing.Point(3, 3);
             this.grafico.Name = "grafico";
-            series12.ChartArea = "ChartArea1";
-            series12.Legend = "Legend1";
-            series12.Name = "Series1";
-            this.grafico.Series.Add(series12);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.grafico.Series.Add(series1);
             this.grafico.Size = new System.Drawing.Size(666, 441);
             this.grafico.TabIndex = 0;
             this.grafico.Text = "chart1";
@@ -508,6 +513,41 @@
             this.btnLimpiar.UseVisualStyleBackColor = true;
             this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
+            // tabIntegrantes
+            // 
+            this.tabIntegrantes.Controls.Add(this.listBox1);
+            this.tabIntegrantes.Controls.Add(this.label7);
+            this.tabIntegrantes.Location = new System.Drawing.Point(4, 22);
+            this.tabIntegrantes.Name = "tabIntegrantes";
+            this.tabIntegrantes.Size = new System.Drawing.Size(672, 447);
+            this.tabIntegrantes.TabIndex = 3;
+            this.tabIntegrantes.Text = "Integrantes";
+            this.tabIntegrantes.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(21, 25);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(102, 20);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Integrantes";
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Items.AddRange(new object[] {
+            "62476 - Ardiles Hernan Ulises",
+            "53756 - Brizuela Marcelo",
+            "40684 - Fabro Juan Pablo",
+            "65130 - Gomez Aguirre Miguel",
+            "64813 - Vildoza Gianni Luca"});
+            this.listBox1.Location = new System.Drawing.Point(25, 48);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(159, 108);
+            this.listBox1.TabIndex = 1;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -515,7 +555,7 @@
             this.ClientSize = new System.Drawing.Size(704, 500);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Principal";
+            this.Text = "TP 1 - Grupo K";
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -525,6 +565,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.grdPuntoB)).EndInit();
             this.tabGrafico.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grafico)).EndInit();
+            this.tabIntegrantes.ResumeLayout(false);
+            this.tabIntegrantes.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -559,19 +601,22 @@
         private System.Windows.Forms.Button btnRealizarTest;
         private System.Windows.Forms.DataGridView grdPuntoB;
         private System.Windows.Forms.TextBox txt_c_puntoC;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label lbl_c_puntoC;
+        private System.Windows.Forms.Label lblSemila_puntoC;
         private System.Windows.Forms.TextBox txtSemilla_puntoC;
-        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label lbl_m_puntoC;
         private System.Windows.Forms.TextBox txt_m_puntoC;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label lbl_a_puntoC;
         private System.Windows.Forms.TextBox txt_a_puntoC;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblChiCuadrado;
-        private System.Windows.Forms.Button btnVerGrafico;
+        private System.Windows.Forms.Button btnExportarSerie;
         private System.Windows.Forms.TabPage tabGrafico;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico;
         private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.TabPage tabIntegrantes;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 
