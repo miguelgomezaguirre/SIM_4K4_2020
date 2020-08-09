@@ -310,6 +310,8 @@ namespace TP1
             tabla.Columns.Add("DifFrecCuadrado");
             tabla.Columns.Add("chiCuadrado");
 
+            
+
             double acumulador = 0;
 
             DataRow fila;
@@ -349,12 +351,47 @@ namespace TP1
 
         private void btnVerGrafico_Click(object sender, EventArgs e)
         {
+            graficar();
+            //for (int i = 0; i < intervalos.Count; i++)
+            //{
+            //    Series serie = grafico.Series.Add("titulo" + i);
+
+            //    serie.Label = "etiqueta";
+            //    serie.Points.Add(3);
+            //}
+        }
+
+        private void graficar()
+        {
+            grafico.Palette = ChartColorPalette.Excel;
+
+            //grafico.Titles.Clear();
+            grafico.Titles.Add("FRECUENCIAS OBSERVADAS VS ESPERADAS");
+            grafico.Series.Clear();
+
+            List<double> fObservada = new List<double>();
+            List<double> fEsperada = new List<double>();
+
+            foreach (Intervalo intervalo in intervalos)
+            {
+                fObservada.Add(intervalo.frecuenciaObservada);
+                fEsperada.Add(intervalo.frecuenciaEsperada);
+            }
+
+            Series serieFObservada = new Series();
+            serieFObservada.Name = "Frecuencia Observada";
+            grafico.Series.Add(serieFObservada);
+
+            Series serieFEsperada = new Series();
+            serieFEsperada.Name = "Frecuencia Esperada";
+            grafico.Series.Add(serieFEsperada);
+
             for (int i = 0; i < intervalos.Count; i++)
             {
-                Series serie = grafico.Series.Add("titulo" + i);
-
-                serie.Label = "etiqueta";
-                serie.Points.Add(3);
+                Intervalo aux = intervalos[i];
+                double mediaIntervalo = (aux.limiteInferior + aux.limiteSuperior) / 2d;
+                grafico.Series["Frecuencia Observada"].Points.AddXY(mediaIntervalo, fObservada[i]);
+                grafico.Series["Frecuencia Esperada"].Points.AddXY(mediaIntervalo, fEsperada[i]);
             }
         }
     }
