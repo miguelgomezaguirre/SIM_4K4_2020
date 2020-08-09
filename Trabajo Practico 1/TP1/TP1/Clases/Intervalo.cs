@@ -33,5 +33,10 @@ namespace TP1.Clases
                 throw new Exception("Calcule la frecuencia esperada");
             }
         }
+
+        public double getValorMedia()
+        {
+            return this.limiteInferior + this.limiteSuperior / 2;
+        }
     }
 }

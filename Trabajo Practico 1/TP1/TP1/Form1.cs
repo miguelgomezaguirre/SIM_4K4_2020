@@ -362,12 +362,30 @@ namespace TP1
         {
             generarPaleta();
 
+            int maxValue = 0;
+            var chart = grafico.ChartAreas[0];
+            chart.AxisX.CustomLabels.Clear();
+            chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chart.AxisX.Minimum = 0;
+            chart.AxisY.Minimum = 0;
+            chart.AxisX.Maximum = 1;
+
             foreach (Intervalo intervalo in intervalos)
             {
+                if (intervalo.frecuenciaObservada > maxValue) {
+                    maxValue = intervalo.frecuenciaObservada;
+                }
+
                 double media = Math.Round((intervalo.limiteInferior + intervalo.limiteSuperior)/2, 2);
+                media = Math.Truncate( media * 10000) / 10000;
+
+                chart.AxisX.CustomLabels.Add(intervalo.limiteInferior, intervalo.limiteSuperior, media.ToString());
+
                 grafico.Series[FRECUENCIA_OBSERVADA].Points.AddXY(media, intervalo.frecuenciaObservada);
                 grafico.Series[FRECUENCIA_ESPERADA].Points.AddXY(media, intervalo.frecuenciaEsperada);
             }
+
+            chart.AxisY.Maximum = maxValue * 1.1;
         }
 
 
@@ -386,10 +404,6 @@ namespace TP1
             serieFEsperada.Name = FRECUENCIA_ESPERADA;
             grafico.Series.Add(serieFEsperada);
 
-            var chart = grafico.ChartAreas[0];
-            chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chart.AxisX.Minimum = 0;
-            chart.AxisY.Minimum = 0;
         }
     }
 }
