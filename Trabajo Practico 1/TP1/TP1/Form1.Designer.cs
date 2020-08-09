@@ -63,12 +63,12 @@
             this.btnRealizarTest = new System.Windows.Forms.Button();
             this.grdPuntoB = new System.Windows.Forms.DataGridView();
             this.label10 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtSemilla_puntoC = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txt_m_puntoC = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.txt_a_puntoC = new System.Windows.Forms.TextBox();
+            this.txt_c_puntoC = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.lblChiCuadrado = new System.Windows.Forms.Label();
@@ -312,14 +312,14 @@
             this.tabPage2.Controls.Add(this.btnVerGrafico);
             this.tabPage2.Controls.Add(this.lblChiCuadrado);
             this.tabPage2.Controls.Add(this.label14);
-            this.tabPage2.Controls.Add(this.textBox4);
+            this.tabPage2.Controls.Add(this.txt_c_puntoC);
             this.tabPage2.Controls.Add(this.label13);
             this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.textBox1);
+            this.tabPage2.Controls.Add(this.txtSemilla_puntoC);
             this.tabPage2.Controls.Add(this.label11);
-            this.tabPage2.Controls.Add(this.textBox2);
+            this.tabPage2.Controls.Add(this.txt_m_puntoC);
             this.tabPage2.Controls.Add(this.label12);
-            this.tabPage2.Controls.Add(this.textBox3);
+            this.tabPage2.Controls.Add(this.txt_a_puntoC);
             this.tabPage2.Controls.Add(this.grdPuntoB);
             this.tabPage2.Controls.Add(this.btnRealizarTest);
             this.tabPage2.Controls.Add(this.txtCantNumerosAGenerar);
@@ -420,13 +420,13 @@
             this.label10.TabIndex = 8;
             this.label10.Text = "Semilla";
             // 
-            // textBox1
+            // txtSemilla_puntoC
             // 
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(369, 15);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(116, 20);
-            this.textBox1.TabIndex = 9;
+            this.txtSemilla_puntoC.Enabled = false;
+            this.txtSemilla_puntoC.Location = new System.Drawing.Point(369, 15);
+            this.txtSemilla_puntoC.Name = "txtSemilla_puntoC";
+            this.txtSemilla_puntoC.Size = new System.Drawing.Size(116, 20);
+            this.txtSemilla_puntoC.TabIndex = 9;
             // 
             // label11
             // 
@@ -438,13 +438,13 @@
             this.label11.TabIndex = 10;
             this.label11.Text = "m";
             // 
-            // textBox2
+            // txt_m_puntoC
             // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(369, 67);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(116, 20);
-            this.textBox2.TabIndex = 11;
+            this.txt_m_puntoC.Enabled = false;
+            this.txt_m_puntoC.Location = new System.Drawing.Point(369, 67);
+            this.txt_m_puntoC.Name = "txt_m_puntoC";
+            this.txt_m_puntoC.Size = new System.Drawing.Size(116, 20);
+            this.txt_m_puntoC.TabIndex = 11;
             // 
             // label12
             // 
@@ -456,21 +456,21 @@
             this.label12.TabIndex = 12;
             this.label12.Text = "a";
             // 
-            // textBox3
+            // txt_a_puntoC
             // 
-            this.textBox3.Enabled = false;
-            this.textBox3.Location = new System.Drawing.Point(369, 41);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(116, 20);
-            this.textBox3.TabIndex = 13;
+            this.txt_a_puntoC.Enabled = false;
+            this.txt_a_puntoC.Location = new System.Drawing.Point(369, 41);
+            this.txt_a_puntoC.Name = "txt_a_puntoC";
+            this.txt_a_puntoC.Size = new System.Drawing.Size(116, 20);
+            this.txt_a_puntoC.TabIndex = 13;
             // 
-            // textBox4
+            // txt_c_puntoC
             // 
-            this.textBox4.Enabled = false;
-            this.textBox4.Location = new System.Drawing.Point(369, 93);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(116, 20);
-            this.textBox4.TabIndex = 15;
+            this.txt_c_puntoC.Enabled = false;
+            this.txt_c_puntoC.Location = new System.Drawing.Point(369, 93);
+            this.txt_c_puntoC.Name = "txt_c_puntoC";
+            this.txt_c_puntoC.Size = new System.Drawing.Size(116, 20);
+            this.txt_c_puntoC.TabIndex = 15;
             // 
             // label13
             // 
@@ -593,14 +593,14 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnRealizarTest;
         private System.Windows.Forms.DataGridView grdPuntoB;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox txt_c_puntoC;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtSemilla_puntoC;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txt_m_puntoC;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox txt_a_puntoC;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label lblChiCuadrado;
         private System.Windows.Forms.Button btnVerGrafico;

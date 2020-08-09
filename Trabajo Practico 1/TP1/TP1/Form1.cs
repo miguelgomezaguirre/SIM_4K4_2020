@@ -195,24 +195,30 @@ namespace TP1
         {
             if(cboOrigenNumeros.SelectedIndex == 0)
             {
-
+                txtSemilla_puntoC.Enabled = false;
+                txt_a_puntoC.Enabled = false;
+                txt_c_puntoC.Enabled = false;
+                txt_m_puntoC.Enabled = false;
             }
             else
             {
-
+                txtSemilla_puntoC.Enabled = true;
+                txt_a_puntoC.Enabled = true;
+                txt_c_puntoC.Enabled = true;
+                txt_m_puntoC.Enabled = true;
             }
         }
 
         private void btnRealizarTest_Click(object sender, EventArgs e)
         {
-            numeros = new List<string>();            
+            numeros = new List<string>();
+
+            intervalos = new List<Intervalo>();
+
+            numerosDouble = new List<double>();
 
             int cantidadDeNumerosAGenerar = int.Parse(txtCantNumerosAGenerar.Text);
             int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
-
-             
-
-            
 
             double tamanioIntervalo = Math.Round(1f / (double)numeroDeIntervalos, 5);
 
@@ -260,6 +266,32 @@ namespace TP1
             else
             {
                 //TODO: ACA Generar numeros aleatorios por metodo mixto
+
+                Xn = double.Parse(txtSemilla_puntoC.Text);
+
+                double a = double.Parse(txt_a_puntoC.Text);
+                double m = double.Parse(txt_m_puntoC.Text);
+                double c = double.Parse(txt_c_puntoC.Text);
+
+                for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
+                {
+                    Xn = generarMixto(Xn, a, m, c);                    
+
+                    numeroGenerado = Xn / (m - 1);
+
+                    numeroGenerado = Math.Truncate(numeroGenerado * 10000) / 10000;
+                                        
+                    numerosDouble.Add(numeroGenerado);
+
+                    for (int j = 0; j < intervalos.Count; j++)
+                    {
+                        if (intervalos[j].limiteSuperior > numeroGenerado)
+                        {
+                            intervalos[j].frecuenciaObservada++;
+                            break;
+                        }
+                    }
+                }
             }
 
 
