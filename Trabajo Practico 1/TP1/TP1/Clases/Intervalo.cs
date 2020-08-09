@@ -9,6 +9,7 @@ namespace TP1.Clases
     public class Intervalo
     {
         public int numero { get; set; }
+        public string etiqueta { get; set; }
         public double limiteInferior { get; set; }
         public double limiteSuperior { get; set; }
         public int frecuenciaObservada { get; set; }
