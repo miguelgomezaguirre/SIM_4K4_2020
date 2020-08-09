@@ -211,92 +211,238 @@ namespace TP1
 
         private void btnRealizarTest_Click(object sender, EventArgs e)
         {
-            numeros = new List<string>();
+            string mensajeError = "";
 
-            intervalos = new List<Intervalo>();
-
-            numerosDouble = new List<double>();
-
-            int cantidadDeNumerosAGenerar = int.Parse(txtCantNumerosAGenerar.Text);
-            int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
-
-            double tamanioIntervalo = Math.Round(1f / (double)numeroDeIntervalos, 5);
-
-            double limiteInferior = 0;
-            double frecuenciaEsperada = Math.Round((double)cantidadDeNumerosAGenerar / (double)numeroDeIntervalos, 5);
-
-            for (int i = 0; i < numeroDeIntervalos; i++)
+            if(validarFormularioPuntoByC(ref mensajeError))
             {
-                Intervalo intervalo = new Intervalo();
+                numeros = new List<string>();
 
-                intervalo.numero = i + 1;
-                intervalo.limiteInferior = limiteInferior;
-                intervalo.limiteSuperior = Math.Round(limiteInferior + tamanioIntervalo,5);
-                intervalo.frecuenciaEsperada = frecuenciaEsperada;
+                intervalos = new List<Intervalo>();
 
-                limiteInferior = intervalo.limiteSuperior;
+                numerosDouble = new List<double>();
 
-                intervalos.Add(intervalo);
-            }
+                int cantidadDeNumerosAGenerar = int.Parse(txtCantNumerosAGenerar.Text);
+                int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
 
-            double numeroGenerado = 0;
+                double tamanioIntervalo = Math.Round(1f / (double)numeroDeIntervalos, 5);
 
-            if (cboOrigenNumeros.SelectedIndex == 0)
-            {
-                Random rnd = new Random();
+                double limiteInferior = 0;
+                double frecuenciaEsperada = Math.Round((double)cantidadDeNumerosAGenerar / (double)numeroDeIntervalos, 5);
 
-                for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
+                for (int i = 0; i < numeroDeIntervalos; i++)
                 {
-                    numeroGenerado = rnd.NextDouble();
+                    Intervalo intervalo = new Intervalo();
 
-                    numeroGenerado = truncar(numeroGenerado);
+                    intervalo.numero = i + 1;
+                    intervalo.limiteInferior = limiteInferior;
+                    intervalo.limiteSuperior = Math.Round(limiteInferior + tamanioIntervalo, 5);
+                    intervalo.frecuenciaEsperada = frecuenciaEsperada;
 
-                    numerosDouble.Add(numeroGenerado);
+                    limiteInferior = intervalo.limiteSuperior;
 
-                    for (int j = 0; j < intervalos.Count; j++)
+                    intervalos.Add(intervalo);
+                }
+
+                double numeroGenerado = 0;
+
+                if (cboOrigenNumeros.SelectedIndex == 0)
+                {
+                    Random rnd = new Random();
+
+                    for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
                     {
-                        if(intervalos[j].limiteSuperior > numeroGenerado)
+                        numeroGenerado = rnd.NextDouble();
+
+                        numeroGenerado = truncar(numeroGenerado);
+
+                        numerosDouble.Add(numeroGenerado);
+
+                        for (int j = 0; j < intervalos.Count; j++)
                         {
-                            intervalos[j].frecuenciaObservada++;
-                            break;
+                            if (intervalos[j].limiteSuperior > numeroGenerado)
+                            {
+                                intervalos[j].frecuenciaObservada++;
+                                break;
+                            }
                         }
                     }
                 }
+                else
+                {
+                    if (cboOrigenNumeros.SelectedIndex == 1)
+                    {
+                        //TODO: ACA Generar numeros aleatorios por metodo mixto
+
+                        Xn = double.Parse(txtSemilla_puntoC.Text);
+
+                        double a = double.Parse(txt_a_puntoC.Text);
+                        double m = double.Parse(txt_m_puntoC.Text);
+                        double c = double.Parse(txt_c_puntoC.Text);
+
+                        for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
+                        {
+                            Xn = generarMixto(Xn, a, m, c);
+
+                            numeroGenerado = Xn / (m - 1);
+
+                            numeroGenerado = Math.Truncate(numeroGenerado * 10000) / 10000;
+
+                            numerosDouble.Add(numeroGenerado);
+
+                            for (int j = 0; j < intervalos.Count; j++)
+                            {
+                                if (intervalos[j].limiteSuperior > numeroGenerado)
+                                {
+                                    intervalos[j].frecuenciaObservada++;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+
+                cargarGrillaPuntoB(intervalos);
             }
             else
             {
-                //TODO: ACA Generar numeros aleatorios por metodo mixto
+                MessageBox.Show(mensajeError, "Error", MessageBoxButtons.OK);
+            }
+            
+            
+        }
 
-                Xn = double.Parse(txtSemilla_puntoC.Text);
-
-                double a = double.Parse(txt_a_puntoC.Text);
-                double m = double.Parse(txt_m_puntoC.Text);
-                double c = double.Parse(txt_c_puntoC.Text);
-
-                for (int i = 0; i < cantidadDeNumerosAGenerar; i++)
-                {
-                    Xn = generarMixto(Xn, a, m, c);                    
-
-                    numeroGenerado = Xn / (m - 1);
-
-                    numeroGenerado = Math.Truncate(numeroGenerado * 10000) / 10000;
-                                        
-                    numerosDouble.Add(numeroGenerado);
-
-                    for (int j = 0; j < intervalos.Count; j++)
-                    {
-                        if (intervalos[j].limiteSuperior > numeroGenerado)
-                        {
-                            intervalos[j].frecuenciaObservada++;
-                            break;
-                        }
-                    }
-                }
+        private bool validarFormularioPuntoByC(ref string mensajeError)
+        {
+            if(cboOrigenNumeros.SelectedIndex == -1)
+            {
+                mensajeError = "Seleccione un origen de números aleatorios";
+                cboOrigenNumeros.Focus();
+                return false;
             }
 
+            if(cboOrigenNumeros.SelectedIndex == 1)
+            {
+                //Metodo congruente mixto
+                if(string.IsNullOrEmpty(txtSemilla_puntoC.Text))
+                {
+                    mensajeError = "Debe ingresar la semilla";
+                    txtSemilla_puntoC.Focus();
+                    return false;
+                }
 
-            cargarGrillaPuntoB(intervalos);
-            
+                if (string.IsNullOrEmpty(txt_a_puntoC.Text))
+                {
+                    mensajeError = "Debe ingresar un valor para a";
+                    txt_a_puntoC.Focus();
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(txt_m_puntoC.Text))
+                {
+                    mensajeError = "Debe ingresar un valor para m";
+                    txt_m_puntoC.Focus();
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(txt_c_puntoC.Text))
+                {
+                    mensajeError = "Debe ingresar un valor para c";
+                    txt_c_puntoC.Focus();
+                    return false;
+                }
+
+                double valorText = 0;
+
+                if(!double.TryParse(txtSemilla_puntoC.Text, out valorText))
+                {
+                    mensajeError = "Debe ingresar un número válido para la semilla";
+                    txtSemilla_puntoC.Focus();
+                    return false;
+                }
+                else
+                {
+                    if(valorText <= 0)
+                    {
+                        mensajeError = "El valor de c debe ser mayor a 0";
+                        txtSemilla_puntoC.Focus();
+                        return false;
+                    }
+                }
+
+                if (!double.TryParse(txt_a_puntoC.Text, out valorText))
+                {
+                    mensajeError = "Debe ingresar un número válido para a";
+                    txt_a_puntoC.Focus();
+                    return false;
+                }
+                else
+                {
+                    if (valorText <= 0)
+                    {
+                        mensajeError = "El valor de a debe ser mayor a 0";
+                        txt_a_puntoC.Focus();
+                        return false;
+                    }
+
+                    if(valorText % 1 != 0)
+                    {
+                        mensajeError = "El valor de a debe ser entero";
+                        txt_a_puntoC.Focus();
+                        return false;
+                    }
+                }
+
+                if (!double.TryParse(txt_m_puntoC.Text, out valorText))
+                {
+                    mensajeError = "Debe ingresar un número válido para m";
+                    txt_m_puntoC.Focus();
+                    return false;
+                }
+                else
+                {
+                    if(valorText <= 1)
+                    {
+                        mensajeError = "El valor de m debe ser mayor a 1";
+                        txt_m_puntoC.Focus();
+                        return false;
+                    }
+
+                    if (valorText % 1 != 0)
+                    {
+                        mensajeError = "El valor de m debe ser entero";
+                        txt_m_puntoC.Focus();
+                        return false;
+                    }
+                }
+
+                if (!double.TryParse(txt_c_puntoC.Text, out valorText))
+                {
+                    mensajeError = "Debe ingresar un número válido para c";
+                    txt_c_puntoC.Focus();
+                    return false;
+                }
+                else
+                {
+                    if (valorText <= 0)
+                    {
+                        mensajeError = "El valor de c debe ser mayor a 1";
+                        txt_c_puntoC.Focus();
+                        return false;
+                    }
+
+                    if (valorText % 1 != 0)
+                    {
+                        mensajeError = "El valor de c debe ser entero";
+                        txt_c_puntoC.Focus();
+                        return false;
+                    }
+                }
+
+            }
+
+            return true;
         }
 
         private void cargarGrillaPuntoB(List<Intervalo> intervalos)
@@ -352,6 +498,8 @@ namespace TP1
         private void btnVerGrafico_Click(object sender, EventArgs e)
         {
             graficar();
+
+            tabGrafico.Select();
             //for (int i = 0; i < intervalos.Count; i++)
             //{
             //    Series serie = grafico.Series.Add("titulo" + i);
@@ -365,10 +513,11 @@ namespace TP1
         {
             grafico.Palette = ChartColorPalette.Excel;
 
-            //grafico.Titles.Clear();
+            grafico.Titles.Clear();
             grafico.Titles.Add("FRECUENCIAS OBSERVADAS VS ESPERADAS");
             grafico.Series.Clear();
 
+            
             List<double> fObservada = new List<double>();
             List<double> fEsperada = new List<double>();
 
@@ -380,19 +529,27 @@ namespace TP1
 
             Series serieFObservada = new Series();
             serieFObservada.Name = "Frecuencia Observada";
+
             grafico.Series.Add(serieFObservada);
 
             Series serieFEsperada = new Series();
             serieFEsperada.Name = "Frecuencia Esperada";
+
             grafico.Series.Add(serieFEsperada);
 
             for (int i = 0; i < intervalos.Count; i++)
             {
                 Intervalo aux = intervalos[i];
-                double mediaIntervalo = (aux.limiteInferior + aux.limiteSuperior) / 2d;
+                double mediaIntervalo = Math.Round((aux.limiteInferior + aux.limiteSuperior) / 2d, 4);
+
+                //grafico.Series["Frecuencia Esperada"].AxisLabel = mediaIntervalo.ToString();
+
                 grafico.Series["Frecuencia Observada"].Points.AddXY(mediaIntervalo, fObservada[i]);
                 grafico.Series["Frecuencia Esperada"].Points.AddXY(mediaIntervalo, fEsperada[i]);
             }
+
+
         }
     }
+
 }
