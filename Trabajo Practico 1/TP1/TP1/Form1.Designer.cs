@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea12 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend12 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btnCalcular = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txt_semilla = new System.Windows.Forms.TextBox();
@@ -47,34 +47,31 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtCantidad = new System.Windows.Forms.TextBox();
             this.lblTiempo = new System.Windows.Forms.Label();
-            this.btnAnterior = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.cboPagina = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.cboOrigenNumeros = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.txtCantIntervalos = new System.Windows.Forms.TextBox();
-            this.txtCantNumerosAGenerar = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.btnRealizarTest = new System.Windows.Forms.Button();
-            this.grdPuntoB = new System.Windows.Forms.DataGridView();
+            this.btnVerGrafico = new System.Windows.Forms.Button();
+            this.lblChiCuadrado = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txt_c_puntoC = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.txtSemilla_puntoC = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txt_m_puntoC = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.txt_a_puntoC = new System.Windows.Forms.TextBox();
-            this.txt_c_puntoC = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.lblChiCuadrado = new System.Windows.Forms.Label();
-            this.btnVerGrafico = new System.Windows.Forms.Button();
+            this.grdPuntoB = new System.Windows.Forms.DataGridView();
+            this.btnRealizarTest = new System.Windows.Forms.Button();
+            this.txtCantNumerosAGenerar = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtCantIntervalos = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cboOrigenNumeros = new System.Windows.Forms.ComboBox();
             this.tabGrafico = new System.Windows.Forms.TabPage();
             this.grafico = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.btnLimpiar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -86,10 +83,10 @@
             // 
             // btnCalcular
             // 
-            this.btnCalcular.Location = new System.Drawing.Point(195, 116);
+            this.btnCalcular.Location = new System.Drawing.Point(9, 199);
             this.btnCalcular.Name = "btnCalcular";
-            this.btnCalcular.Size = new System.Drawing.Size(103, 36);
-            this.btnCalcular.TabIndex = 0;
+            this.btnCalcular.Size = new System.Drawing.Size(212, 32);
+            this.btnCalcular.TabIndex = 6;
             this.btnCalcular.Text = "Calcular";
             this.btnCalcular.UseVisualStyleBackColor = true;
             this.btnCalcular.Click += new System.EventHandler(this.btnCalcular_Click);
@@ -105,20 +102,20 @@
             // 
             // txt_semilla
             // 
-            this.txt_semilla.Location = new System.Drawing.Point(52, 37);
+            this.txt_semilla.Location = new System.Drawing.Point(66, 37);
             this.txt_semilla.Name = "txt_semilla";
-            this.txt_semilla.Size = new System.Drawing.Size(116, 20);
-            this.txt_semilla.TabIndex = 2;
+            this.txt_semilla.Size = new System.Drawing.Size(155, 20);
+            this.txt_semilla.TabIndex = 1;
             // 
             // grdResultado
             // 
             this.grdResultado.AllowUserToAddRows = false;
             this.grdResultado.AllowUserToDeleteRows = false;
             this.grdResultado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdResultado.Location = new System.Drawing.Point(6, 194);
+            this.grdResultado.Location = new System.Drawing.Point(227, 10);
             this.grdResultado.Name = "grdResultado";
             this.grdResultado.ReadOnly = true;
-            this.grdResultado.Size = new System.Drawing.Size(660, 247);
+            this.grdResultado.Size = new System.Drawing.Size(439, 431);
             this.grdResultado.TabIndex = 3;
             // 
             // label2
@@ -132,10 +129,10 @@
             // 
             // txt_m
             // 
-            this.txt_m.Location = new System.Drawing.Point(52, 89);
+            this.txt_m.Location = new System.Drawing.Point(66, 89);
             this.txt_m.Name = "txt_m";
-            this.txt_m.Size = new System.Drawing.Size(116, 20);
-            this.txt_m.TabIndex = 5;
+            this.txt_m.Size = new System.Drawing.Size(155, 20);
+            this.txt_m.TabIndex = 3;
             // 
             // label3
             // 
@@ -148,32 +145,33 @@
             // 
             // txt_a
             // 
-            this.txt_a.Location = new System.Drawing.Point(52, 63);
+            this.txt_a.Location = new System.Drawing.Point(66, 63);
             this.txt_a.Name = "txt_a";
-            this.txt_a.Size = new System.Drawing.Size(116, 20);
-            this.txt_a.TabIndex = 7;
+            this.txt_a.Size = new System.Drawing.Size(155, 20);
+            this.txt_a.TabIndex = 2;
             // 
             // btnAgregarUno
             // 
             this.btnAgregarUno.Enabled = false;
-            this.btnAgregarUno.Location = new System.Drawing.Point(304, 116);
+            this.btnAgregarUno.Location = new System.Drawing.Point(9, 237);
             this.btnAgregarUno.Name = "btnAgregarUno";
-            this.btnAgregarUno.Size = new System.Drawing.Size(106, 36);
-            this.btnAgregarUno.TabIndex = 8;
-            this.btnAgregarUno.Text = "Agregar";
+            this.btnAgregarUno.Size = new System.Drawing.Size(212, 37);
+            this.btnAgregarUno.TabIndex = 7;
+            this.btnAgregarUno.Text = "Agregar Uno";
             this.btnAgregarUno.UseVisualStyleBackColor = true;
             this.btnAgregarUno.Click += new System.EventHandler(this.btnAgregarUno_Click);
             // 
             // cboMetodo
             // 
+            this.cboMetodo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboMetodo.FormattingEnabled = true;
             this.cboMetodo.Items.AddRange(new object[] {
             "Congruencial Multiplicativo",
             "Congruencial Mixto"});
             this.cboMetodo.Location = new System.Drawing.Point(52, 10);
             this.cboMetodo.Name = "cboMetodo";
-            this.cboMetodo.Size = new System.Drawing.Size(116, 21);
-            this.cboMetodo.TabIndex = 9;
+            this.cboMetodo.Size = new System.Drawing.Size(169, 21);
+            this.cboMetodo.TabIndex = 0;
             this.cboMetodo.SelectedIndexChanged += new System.EventHandler(this.cboMetodo_SelectedIndexChanged);
             // 
             // label4
@@ -188,7 +186,7 @@
             // lbl_c
             // 
             this.lbl_c.AutoSize = true;
-            this.lbl_c.Location = new System.Drawing.Point(192, 66);
+            this.lbl_c.Location = new System.Drawing.Point(6, 118);
             this.lbl_c.Name = "lbl_c";
             this.lbl_c.Size = new System.Drawing.Size(13, 13);
             this.lbl_c.TabIndex = 11;
@@ -196,75 +194,36 @@
             // 
             // txt_c
             // 
-            this.txt_c.Location = new System.Drawing.Point(211, 63);
+            this.txt_c.Location = new System.Drawing.Point(66, 115);
             this.txt_c.Name = "txt_c";
-            this.txt_c.Size = new System.Drawing.Size(116, 20);
-            this.txt_c.TabIndex = 12;
+            this.txt_c.Size = new System.Drawing.Size(155, 20);
+            this.txt_c.TabIndex = 4;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(188, 13);
+            this.label6.Location = new System.Drawing.Point(6, 150);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(124, 13);
+            this.label6.Size = new System.Drawing.Size(102, 32);
             this.label6.TabIndex = 13;
             this.label6.Text = "Cantidad por primera vez";
             // 
             // txtCantidad
             // 
-            this.txtCantidad.Location = new System.Drawing.Point(318, 10);
+            this.txtCantidad.Location = new System.Drawing.Point(133, 150);
             this.txtCantidad.Name = "txtCantidad";
-            this.txtCantidad.Size = new System.Drawing.Size(81, 20);
-            this.txtCantidad.TabIndex = 14;
-            this.txtCantidad.Text = "20";
+            this.txtCantidad.Size = new System.Drawing.Size(88, 20);
+            this.txtCantidad.TabIndex = 5;
+            this.txtCantidad.Text = "20000";
             // 
             // lblTiempo
             // 
             this.lblTiempo.AutoSize = true;
-            this.lblTiempo.Location = new System.Drawing.Point(192, 92);
+            this.lblTiempo.Location = new System.Drawing.Point(21, 336);
             this.lblTiempo.Name = "lblTiempo";
             this.lblTiempo.Size = new System.Drawing.Size(42, 13);
             this.lblTiempo.TabIndex = 15;
             this.lblTiempo.Text = "Tiempo";
-            // 
-            // btnAnterior
-            // 
-            this.btnAnterior.Location = new System.Drawing.Point(331, 165);
-            this.btnAnterior.Name = "btnAnterior";
-            this.btnAnterior.Size = new System.Drawing.Size(75, 23);
-            this.btnAnterior.TabIndex = 16;
-            this.btnAnterior.Text = "Anterior";
-            this.btnAnterior.UseVisualStyleBackColor = true;
-            this.btnAnterior.Visible = false;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(412, 165);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 17;
-            this.button2.Text = "Siguiente";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Visible = false;
-            // 
-            // cboPagina
-            // 
-            this.cboPagina.FormattingEnabled = true;
-            this.cboPagina.Location = new System.Drawing.Point(265, 167);
-            this.cboPagina.Name = "cboPagina";
-            this.cboPagina.Size = new System.Drawing.Size(60, 21);
-            this.cboPagina.TabIndex = 18;
-            this.cboPagina.Visible = false;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(219, 170);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(40, 13);
-            this.label7.TabIndex = 19;
-            this.label7.Text = "Pagina";
-            this.label7.Visible = false;
+            this.lblTiempo.Visible = false;
             // 
             // tabControl1
             // 
@@ -275,19 +234,16 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(680, 473);
-            this.tabControl1.TabIndex = 20;
+            this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnLimpiar);
             this.tabPage1.Controls.Add(this.cboMetodo);
             this.tabPage1.Controls.Add(this.grdResultado);
-            this.tabPage1.Controls.Add(this.label7);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.cboPagina);
             this.tabPage1.Controls.Add(this.txt_semilla);
-            this.tabPage1.Controls.Add(this.button2);
             this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.btnAnterior);
             this.tabPage1.Controls.Add(this.txt_m);
             this.tabPage1.Controls.Add(this.lblTiempo);
             this.tabPage1.Controls.Add(this.label3);
@@ -336,79 +292,55 @@
             this.tabPage2.Text = "B y C";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // cboOrigenNumeros
+            // btnVerGrafico
             // 
-            this.cboOrigenNumeros.FormattingEnabled = true;
-            this.cboOrigenNumeros.Items.AddRange(new object[] {
-            "Mecanismo provisto por el lenguaje (C#)",
-            "Metodo congruencial mixto"});
-            this.cboOrigenNumeros.Location = new System.Drawing.Point(167, 14);
-            this.cboOrigenNumeros.Name = "cboOrigenNumeros";
-            this.cboOrigenNumeros.Size = new System.Drawing.Size(121, 21);
-            this.cboOrigenNumeros.TabIndex = 0;
-            this.cboOrigenNumeros.SelectedIndexChanged += new System.EventHandler(this.cboOrigenNumeros_SelectedIndexChanged);
+            this.btnVerGrafico.Location = new System.Drawing.Point(106, 93);
+            this.btnVerGrafico.Name = "btnVerGrafico";
+            this.btnVerGrafico.Size = new System.Drawing.Size(88, 33);
+            this.btnVerGrafico.TabIndex = 18;
+            this.btnVerGrafico.Text = "Ver Gráfico";
+            this.btnVerGrafico.UseVisualStyleBackColor = true;
+            this.btnVerGrafico.Visible = false;
+            this.btnVerGrafico.Click += new System.EventHandler(this.btnVerGrafico_Click);
             // 
-            // label5
+            // lblChiCuadrado
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 17);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(147, 13);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Origen de Numeros Aleatorios";
+            this.lblChiCuadrado.AutoSize = true;
+            this.lblChiCuadrado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblChiCuadrado.Location = new System.Drawing.Point(574, 138);
+            this.lblChiCuadrado.Name = "lblChiCuadrado";
+            this.lblChiCuadrado.Size = new System.Drawing.Size(59, 16);
+            this.lblChiCuadrado.TabIndex = 17;
+            this.lblChiCuadrado.Text = "label15";
+            this.lblChiCuadrado.Visible = false;
             // 
-            // label8
+            // label14
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 44);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(112, 13);
-            this.label8.TabIndex = 2;
-            this.label8.Text = "Cantidad de intervalos";
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Location = new System.Drawing.Point(466, 138);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(102, 16);
+            this.label14.TabIndex = 16;
+            this.label14.Text = "chi cuadrado:";
             // 
-            // txtCantIntervalos
+            // txt_c_puntoC
             // 
-            this.txtCantIntervalos.Location = new System.Drawing.Point(167, 41);
-            this.txtCantIntervalos.Name = "txtCantIntervalos";
-            this.txtCantIntervalos.Size = new System.Drawing.Size(53, 20);
-            this.txtCantIntervalos.TabIndex = 3;
+            this.txt_c_puntoC.Enabled = false;
+            this.txt_c_puntoC.Location = new System.Drawing.Point(369, 93);
+            this.txt_c_puntoC.Name = "txt_c_puntoC";
+            this.txt_c_puntoC.Size = new System.Drawing.Size(116, 20);
+            this.txt_c_puntoC.TabIndex = 6;
             // 
-            // txtCantNumerosAGenerar
+            // label13
             // 
-            this.txtCantNumerosAGenerar.Location = new System.Drawing.Point(167, 67);
-            this.txtCantNumerosAGenerar.Name = "txtCantNumerosAGenerar";
-            this.txtCantNumerosAGenerar.Size = new System.Drawing.Size(53, 20);
-            this.txtCantNumerosAGenerar.TabIndex = 5;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 70);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(155, 13);
-            this.label9.TabIndex = 4;
-            this.label9.Text = "Cantidad de números a generar";
-            // 
-            // btnRealizarTest
-            // 
-            this.btnRealizarTest.Location = new System.Drawing.Point(200, 93);
-            this.btnRealizarTest.Name = "btnRealizarTest";
-            this.btnRealizarTest.Size = new System.Drawing.Size(88, 33);
-            this.btnRealizarTest.TabIndex = 6;
-            this.btnRealizarTest.Text = "Realizar TEST";
-            this.btnRealizarTest.UseVisualStyleBackColor = true;
-            this.btnRealizarTest.Click += new System.EventHandler(this.btnRealizarTest_Click);
-            // 
-            // grdPuntoB
-            // 
-            this.grdPuntoB.AllowUserToAddRows = false;
-            this.grdPuntoB.AllowUserToDeleteRows = false;
-            this.grdPuntoB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grdPuntoB.Location = new System.Drawing.Point(6, 157);
-            this.grdPuntoB.Name = "grdPuntoB";
-            this.grdPuntoB.ReadOnly = true;
-            this.grdPuntoB.Size = new System.Drawing.Size(660, 284);
-            this.grdPuntoB.TabIndex = 7;
+            this.label13.AutoSize = true;
+            this.label13.Enabled = false;
+            this.label13.Location = new System.Drawing.Point(323, 96);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(13, 13);
+            this.label13.TabIndex = 14;
+            this.label13.Text = "c";
             // 
             // label10
             // 
@@ -426,7 +358,7 @@
             this.txtSemilla_puntoC.Location = new System.Drawing.Point(369, 15);
             this.txtSemilla_puntoC.Name = "txtSemilla_puntoC";
             this.txtSemilla_puntoC.Size = new System.Drawing.Size(116, 20);
-            this.txtSemilla_puntoC.TabIndex = 9;
+            this.txtSemilla_puntoC.TabIndex = 3;
             // 
             // label11
             // 
@@ -444,7 +376,7 @@
             this.txt_m_puntoC.Location = new System.Drawing.Point(369, 67);
             this.txt_m_puntoC.Name = "txt_m_puntoC";
             this.txt_m_puntoC.Size = new System.Drawing.Size(116, 20);
-            this.txt_m_puntoC.TabIndex = 11;
+            this.txt_m_puntoC.TabIndex = 5;
             // 
             // label12
             // 
@@ -462,56 +394,82 @@
             this.txt_a_puntoC.Location = new System.Drawing.Point(369, 41);
             this.txt_a_puntoC.Name = "txt_a_puntoC";
             this.txt_a_puntoC.Size = new System.Drawing.Size(116, 20);
-            this.txt_a_puntoC.TabIndex = 13;
+            this.txt_a_puntoC.TabIndex = 4;
             // 
-            // txt_c_puntoC
+            // grdPuntoB
             // 
-            this.txt_c_puntoC.Enabled = false;
-            this.txt_c_puntoC.Location = new System.Drawing.Point(369, 93);
-            this.txt_c_puntoC.Name = "txt_c_puntoC";
-            this.txt_c_puntoC.Size = new System.Drawing.Size(116, 20);
-            this.txt_c_puntoC.TabIndex = 15;
+            this.grdPuntoB.AllowUserToAddRows = false;
+            this.grdPuntoB.AllowUserToDeleteRows = false;
+            this.grdPuntoB.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdPuntoB.Location = new System.Drawing.Point(6, 157);
+            this.grdPuntoB.Name = "grdPuntoB";
+            this.grdPuntoB.ReadOnly = true;
+            this.grdPuntoB.Size = new System.Drawing.Size(660, 284);
+            this.grdPuntoB.TabIndex = 7;
             // 
-            // label13
+            // btnRealizarTest
             // 
-            this.label13.AutoSize = true;
-            this.label13.Enabled = false;
-            this.label13.Location = new System.Drawing.Point(323, 96);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(13, 13);
-            this.label13.TabIndex = 14;
-            this.label13.Text = "c";
+            this.btnRealizarTest.Location = new System.Drawing.Point(200, 93);
+            this.btnRealizarTest.Name = "btnRealizarTest";
+            this.btnRealizarTest.Size = new System.Drawing.Size(88, 33);
+            this.btnRealizarTest.TabIndex = 7;
+            this.btnRealizarTest.Text = "Realizar TEST";
+            this.btnRealizarTest.UseVisualStyleBackColor = true;
+            this.btnRealizarTest.Click += new System.EventHandler(this.btnRealizarTest_Click);
             // 
-            // label14
+            // txtCantNumerosAGenerar
             // 
-            this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(466, 138);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(102, 16);
-            this.label14.TabIndex = 16;
-            this.label14.Text = "chi cuadrado:";
+            this.txtCantNumerosAGenerar.Location = new System.Drawing.Point(167, 67);
+            this.txtCantNumerosAGenerar.Name = "txtCantNumerosAGenerar";
+            this.txtCantNumerosAGenerar.Size = new System.Drawing.Size(53, 20);
+            this.txtCantNumerosAGenerar.TabIndex = 2;
             // 
-            // lblChiCuadrado
+            // label9
             // 
-            this.lblChiCuadrado.AutoSize = true;
-            this.lblChiCuadrado.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblChiCuadrado.Location = new System.Drawing.Point(607, 138);
-            this.lblChiCuadrado.Name = "lblChiCuadrado";
-            this.lblChiCuadrado.Size = new System.Drawing.Size(59, 16);
-            this.lblChiCuadrado.TabIndex = 17;
-            this.lblChiCuadrado.Text = "label15";
-            this.lblChiCuadrado.Visible = false;
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 70);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(155, 13);
+            this.label9.TabIndex = 4;
+            this.label9.Text = "Cantidad de números a generar";
             // 
-            // btnVerGrafico
+            // txtCantIntervalos
             // 
-            this.btnVerGrafico.Location = new System.Drawing.Point(106, 93);
-            this.btnVerGrafico.Name = "btnVerGrafico";
-            this.btnVerGrafico.Size = new System.Drawing.Size(88, 33);
-            this.btnVerGrafico.TabIndex = 18;
-            this.btnVerGrafico.Text = "Ver Gráfico";
-            this.btnVerGrafico.UseVisualStyleBackColor = true;
-            this.btnVerGrafico.Click += new System.EventHandler(this.btnVerGrafico_Click);
+            this.txtCantIntervalos.Location = new System.Drawing.Point(167, 41);
+            this.txtCantIntervalos.Name = "txtCantIntervalos";
+            this.txtCantIntervalos.Size = new System.Drawing.Size(53, 20);
+            this.txtCantIntervalos.TabIndex = 1;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 44);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(112, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Cantidad de intervalos";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 17);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(147, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Origen de Numeros Aleatorios";
+            // 
+            // cboOrigenNumeros
+            // 
+            this.cboOrigenNumeros.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboOrigenNumeros.FormattingEnabled = true;
+            this.cboOrigenNumeros.Items.AddRange(new object[] {
+            "Mecanismo provisto por el lenguaje (C#)",
+            "Metodo congruencial mixto"});
+            this.cboOrigenNumeros.Location = new System.Drawing.Point(167, 14);
+            this.cboOrigenNumeros.Name = "cboOrigenNumeros";
+            this.cboOrigenNumeros.Size = new System.Drawing.Size(121, 21);
+            this.cboOrigenNumeros.TabIndex = 0;
+            this.cboOrigenNumeros.SelectedIndexChanged += new System.EventHandler(this.cboOrigenNumeros_SelectedIndexChanged);
             // 
             // tabGrafico
             // 
@@ -525,19 +483,30 @@
             // 
             // grafico
             // 
-            chartArea2.Name = "ChartArea1";
-            this.grafico.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.grafico.Legends.Add(legend2);
+            chartArea12.Name = "ChartArea1";
+            this.grafico.ChartAreas.Add(chartArea12);
+            legend12.Name = "Legend1";
+            this.grafico.Legends.Add(legend12);
             this.grafico.Location = new System.Drawing.Point(3, 3);
             this.grafico.Name = "grafico";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.grafico.Series.Add(series2);
+            series12.ChartArea = "ChartArea1";
+            series12.Legend = "Legend1";
+            series12.Name = "Series1";
+            this.grafico.Series.Add(series12);
             this.grafico.Size = new System.Drawing.Size(666, 441);
             this.grafico.TabIndex = 0;
             this.grafico.Text = "chart1";
+            // 
+            // btnLimpiar
+            // 
+            this.btnLimpiar.Enabled = false;
+            this.btnLimpiar.Location = new System.Drawing.Point(9, 280);
+            this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Size = new System.Drawing.Size(212, 37);
+            this.btnLimpiar.TabIndex = 8;
+            this.btnLimpiar.Text = "Limpiar";
+            this.btnLimpiar.UseVisualStyleBackColor = true;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
             // Form1
             // 
@@ -578,10 +547,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtCantidad;
         private System.Windows.Forms.Label lblTiempo;
-        private System.Windows.Forms.Button btnAnterior;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.ComboBox cboPagina;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -606,6 +571,7 @@
         private System.Windows.Forms.Button btnVerGrafico;
         private System.Windows.Forms.TabPage tabGrafico;
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico;
+        private System.Windows.Forms.Button btnLimpiar;
     }
 }
 
