@@ -15,6 +15,9 @@ namespace TP1
 {
     public partial class Form1 : Form
     {
+        const String FRECUENCIA_OBSERVADA = "Frecuencia Observada";
+        const String FRECUENCIA_ESPERADA = "Frecuencia Esperada";
+
         List<string> numeros = new List<string>();
         List<double> numerosDouble = new List<double>();
         Generador generador = new Generador();
@@ -606,57 +609,56 @@ namespace TP1
         }
 
         private void btnVerGrafico_Click(object sender, EventArgs e)
-        {            
+        {
+            graficar();   
             tabGrafico.Select();
-            //for (int i = 0; i < intervalos.Count; i++)
-            //{
-            //    Series serie = grafico.Series.Add("titulo" + i);
-
-            //    serie.Label = "etiqueta";
-            //    serie.Points.Add(3);
-            //}
         }
 
         private void graficar()
         {
-            grafico.Palette = ChartColorPalette.Excel;
+            generarPaleta();
 
+            int maxValue = 0;
+            var chart = grafico.ChartAreas[0];
+            chart.AxisX.CustomLabels.Clear();
+            chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chart.AxisX.Minimum = 0;
+            chart.AxisY.Minimum = 0;
+            chart.AxisX.Maximum = 1;
+
+            foreach (Intervalo intervalo in intervalos)
+            {
+                if (intervalo.frecuenciaObservada > maxValue) {
+                    maxValue = intervalo.frecuenciaObservada;
+                }
+
+                double media = Math.Round((intervalo.limiteInferior + intervalo.limiteSuperior)/2, 2);
+                media = Math.Truncate( media * 10000) / 10000;
+
+                chart.AxisX.CustomLabels.Add(intervalo.limiteInferior, intervalo.limiteSuperior, media.ToString());
+
+                grafico.Series[FRECUENCIA_OBSERVADA].Points.AddXY(media, intervalo.frecuenciaObservada);
+                grafico.Series[FRECUENCIA_ESPERADA].Points.AddXY(media, intervalo.frecuenciaEsperada);
+            }
+
+            chart.AxisY.Maximum = maxValue * 1.1;
+        }
+
+
+        private void generarPaleta()
+        {
+            grafico.Palette = ChartColorPalette.Excel;
             grafico.Titles.Clear();
             grafico.Titles.Add("FRECUENCIAS OBSERVADAS VS ESPERADAS");
             grafico.Series.Clear();
 
-            
-            List<double> fObservada = new List<double>();
-            List<double> fEsperada = new List<double>();
-
-            foreach (Intervalo intervalo in intervalos)
-            {
-                fObservada.Add(intervalo.frecuenciaObservada);
-                fEsperada.Add(intervalo.frecuenciaEsperada);
-            }
-
             Series serieFObservada = new Series();
-            serieFObservada.Name = "Frecuencia Observada";
-
+            serieFObservada.Name = FRECUENCIA_OBSERVADA;
             grafico.Series.Add(serieFObservada);
 
             Series serieFEsperada = new Series();
-            serieFEsperada.Name = "Frecuencia Esperada";
-
+            serieFEsperada.Name = FRECUENCIA_ESPERADA;
             grafico.Series.Add(serieFEsperada);
-
-            for (int i = 0; i < intervalos.Count; i++)
-            {
-                Intervalo aux = intervalos[i];
-                double mediaIntervalo = Math.Round((aux.limiteInferior + aux.limiteSuperior) / 2d, 4);
-
-                //grafico.Series["Frecuencia Esperada"].AxisLabel = mediaIntervalo.ToString();
-
-                grafico.Series["Frecuencia Observada"].Points.AddXY(mediaIntervalo, fObservada[i]);
-                grafico.Series["Frecuencia Esperada"].Points.AddXY(mediaIntervalo, fEsperada[i]);
-            }
-
-
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
