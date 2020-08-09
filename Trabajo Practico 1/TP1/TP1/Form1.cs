@@ -362,18 +362,9 @@ namespace TP1
         {
             generarPaleta();
 
-            var chart = grafico.ChartAreas[0];
-            chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
-            chart.AxisX.Minimum = 0;
-            chart.AxisY.Minimum = 0;
-          
-
             foreach (Intervalo intervalo in intervalos)
             {
                 double media = Math.Round((intervalo.limiteInferior + intervalo.limiteSuperior)/2, 2);
-
-                chart.AxisX.Interval = media;
-
                 grafico.Series[FRECUENCIA_OBSERVADA].Points.AddXY(media, intervalo.frecuenciaObservada);
                 grafico.Series[FRECUENCIA_ESPERADA].Points.AddXY(media, intervalo.frecuenciaEsperada);
             }
@@ -395,6 +386,10 @@ namespace TP1
             serieFEsperada.Name = FRECUENCIA_ESPERADA;
             grafico.Series.Add(serieFEsperada);
 
+            var chart = grafico.ChartAreas[0];
+            chart.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Number;
+            chart.AxisX.Minimum = 0;
+            chart.AxisY.Minimum = 0;
         }
     }
 }
