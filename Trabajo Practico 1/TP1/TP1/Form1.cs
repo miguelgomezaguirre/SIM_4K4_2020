@@ -258,6 +258,7 @@ namespace TP1
 
         private bool validarAMC(ref string mensajeError, ref TextBox txtA, ref TextBox txtM, ref TextBox txtC)
         {
+
             if(!validarAM(ref mensajeError, ref txtA, ref txtM))
             {
                 return false;
@@ -270,9 +271,10 @@ namespace TP1
                 return false;
             }
 
-            double valorText = 0;
+            double valor_c = 0;
+            double valor_m = Double.Parse(txtM.Text);
 
-            if (!double.TryParse(txtC.Text, out valorText))
+            if (!double.TryParse(txtC.Text, out valor_c))
             {
                 mensajeError = "Debe ingresar un número válido para la semilla";
                 txtC.Focus();
@@ -280,7 +282,7 @@ namespace TP1
             }
             else
             {
-                if (valorText <= 0)
+                if (valor_c <= 0)
                 {
                     mensajeError = "El valor de c debe ser mayor a 0";
                     txtC.Focus();
@@ -288,9 +290,7 @@ namespace TP1
                 }
             }
 
-            
-
-            if (!double.TryParse(txtC.Text, out valorText))
+            if (!double.TryParse(txtC.Text, out valor_c))
             {
                 mensajeError = "Debe ingresar un número válido para c";
                 txtC.Focus();
@@ -298,14 +298,14 @@ namespace TP1
             }
             else
             {
-                if (valorText <= 0)
+                if (valor_c <= 0)
                 {
                     mensajeError = "El valor de c debe ser mayor a 1";
                     txtC.Focus();
                     return false;
                 }
 
-                if (valorText % 1 != 0)
+                if (valor_c % 1 != 0)
                 {
                     mensajeError = "El valor de c debe ser entero";
                     txtC.Focus();
@@ -313,13 +313,20 @@ namespace TP1
                 }
             }
 
+            if(valor_c > valor_m)
+            {
+                mensajeError = "El valor de m debe ser mayor que el valor c";
+                txtM.Focus();
+                return false;
+            }
 
             return true;
         }
 
         private bool validarAM(ref string mensajeError, ref TextBox txtA, ref TextBox txtM)
         {
-            double valorText = 0;
+            double valor_a = 0;
+            double valor_m = 0;
 
             if (string.IsNullOrEmpty(txtA.Text))
             {
@@ -335,7 +342,7 @@ namespace TP1
                 return false;
             }
 
-            if (!double.TryParse(txtA.Text, out valorText))
+            if (!double.TryParse(txtA.Text, out valor_a))
             {
                 mensajeError = "Debe ingresar un número válido para a";
                 txtA.Focus();
@@ -343,14 +350,14 @@ namespace TP1
             }
             else
             {
-                if (valorText <= 0)
+                if (valor_a <= 0)
                 {
                     mensajeError = "El valor de a debe ser mayor a 0";
                     txtA.Focus();
                     return false;
                 }
 
-                if (valorText % 1 != 0)
+                if (valor_a % 1 != 0)
                 {
                     mensajeError = "El valor de a debe ser entero";
                     txtA.Focus();
@@ -358,7 +365,7 @@ namespace TP1
                 }
             }
 
-            if (!double.TryParse(txtM.Text, out valorText))
+            if (!double.TryParse(txtM.Text, out valor_m))
             {
                 mensajeError = "Debe ingresar un número válido para m";
                 txtM.Focus();
@@ -366,19 +373,26 @@ namespace TP1
             }
             else
             {
-                if (valorText <= 1)
+                if (valor_m <= 1)
                 {
                     mensajeError = "El valor de m debe ser mayor a 1";
                     txtM.Focus();
                     return false;
                 }
 
-                if (valorText % 1 != 0)
+                if (valor_m % 1 != 0)
                 {
                     mensajeError = "El valor de m debe ser entero";
                     txtM.Focus();
                     return false;
                 }
+            }
+
+            if( valor_a > valor_m)
+            {
+                mensajeError = "El valor de m debe ser mayor que el valor a";
+                txtM.Focus();
+                return false;
             }
 
             return true;
