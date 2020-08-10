@@ -1,0 +1,24 @@
+2020-Tarea a entregar 2: Toma de datos
+2019-Tarea a entregar 2: Toma de datos
+
+a) Realizar la toma de datos de un sistema real (mínimo 200 datos).
+
+b) Determinar a que distribución de probabilidad se puede asimilar la misma.
+
+c) Realizar su histograma y gráfica.
+
+d) Determinar hipotéticamente el comportamiento probabilístico de la muestra.
+
+e) Realizar las 2 pruebas que aceptan o rechazan tal hipótesis.
+
+f) Repetir esta experiencia con otra muestra diferente de datos (tamaño mínimo de la muestra 200)
+
+******************************
+
+Enviar todo en un archivo comprimido (preferido aunque no necesario) y el limite es un poco mas de 5 megas aunque se puede extender hasta 10.
+
+Ejecutable Funcionando y Fuentes. Indicar como ejecutarlo. El nombre de los integrantes en la pantalla cuando se ejecuta.
+
+De ser enlace o link, incluir archivo con archivos fuente.
+
+*****************************
