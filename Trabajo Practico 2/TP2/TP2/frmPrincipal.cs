@@ -339,9 +339,75 @@ namespace TP2
 
         private void btnRealizarTest_Click(object sender, EventArgs e)
         {
-            foreach (var intervalo in intervalos)
+            double media = obtenerMedia(datos);
+            double media2 = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
+
+            switch (distribucionElegida)
             {
-                intervalo.frecuenciaEsperada = calcularFrecuenciaEsperada(intervalo.limiteInferior, intervalo.limiteSuperior);
+                case TipoDistribucion.continuaExponencial:
+                    /*
+                     En el caso de haber elegido la distribucion exponencial, tenemos que:
+
+                        * lambda(media) = 1 / (media muestral);
+                        
+                    */
+
+                    //obtenemos el lambda para esta distribucion
+                    double lambda = 1 / media;
+
+                    //generamos la distribucion para el lambda dado:
+                    Exponential exponencial = new Exponential(lambda);
+
+                    //recorremos los intervalos para obtener los valores minimos y maximos, y asi calcular la frecuencia esperada
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = (exponencial.CumulativeDistribution(intervalo.limiteSuperior) - exponencial.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+                    }
+
+                    break;
+
+                case TipoDistribucion.continuaUniforme:
+                    /*
+                     En el caso de haber elegido uniforme, tenemos que:
+
+                        * FE = cantidad de datos de la muestra / cantidad de intervalos;
+                        
+                    */
+
+                    //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
+                    double frecuenciaEsperada = (double) datos.Count() / (double) intervalos.Count();
+
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = frecuenciaEsperada;
+                    }
+
+                    break;
+
+                case TipoDistribucion.continuaNormal:
+                    /*
+                        Para distribucion normal tenemos:
+                    
+                            desviacion estandar (sigma) = raiz cuadrada de la media;
+                            
+                     */
+
+                    //obtenemos la varianza
+                    double varianza = MathNet.Numerics.Statistics.ArrayStatistics.Variance(datos.ToArray());
+
+                    //calculamos la deviacion estandar
+                    double desviacionEstandar = Math.Sqrt(varianza);
+
+                    //creo la distribucion normal
+                    Normal normal = new Normal(media, desviacionEstandar);
+
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+                    }
+
+                    break;
+
             }
 
             graficar(true);
@@ -349,6 +415,8 @@ namespace TP2
 
         private double calcularFrecuenciaEsperada(double minimo, double maximo)
         {
+
+            double media = obtenerMedia(datos);
             double frecuenciaTotal = 0;
             double frecuenciaMax = 0;
             double frecuenciaMin = 0;
@@ -358,8 +426,20 @@ namespace TP2
             switch (distribucionElegida)
             {
                 case TipoDistribucion.continuaExponencial:
+                    /*
+                     En el caso de haber elegido la distribucion exponencial, tenemos que:
 
-                    var exponencial = new Exponential(1);
+                        * lambda(media) = 1 / (media muestral);
+                        
+                    */
+
+                    //obtenemos el lambda para esta distribucion
+                    double lambda = 1 / media;
+
+                    //generamos la distribucion para el lambda dado:
+                    Exponential exponencial = new Exponential(lambda);
+
+
 
                     frecuenciaMax = exponencial.CumulativeDistribution(maximo);
                     frecuenciaMin = exponencial.CumulativeDistribution(minimo);
@@ -395,5 +475,12 @@ namespace TP2
 
             return frecuenciaTotal * datos.Count();
         }
+
+
+        private double obtenerMedia(List<double> datos)
+        {
+            return datos.Sum() / datos.Count(); 
+        }
+
     }
 }
