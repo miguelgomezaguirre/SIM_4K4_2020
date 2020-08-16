@@ -364,6 +364,23 @@ namespace TP2
                     }
 
                     break;
+                case TipoDistribucion.continuaUniforme:
+                    /*
+                     En el caso de haber elegido uniforme, tenemos que:
+
+                        * FE = 1 / (cantidad de intervalos * cantidad de datos de la muestra);
+                        
+                    */
+
+                    //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
+                    double frecuenciaEsperada = 1 / (intervalos.Count() * datos.Count());
+
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = frecuenciaEsperada;
+                    }
+
+                    break;
             }
 
 
