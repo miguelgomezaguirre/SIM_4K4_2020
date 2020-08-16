@@ -410,14 +410,6 @@ namespace TP2
 
             }
 
-
-            /*
-            foreach (var intervalo in intervalos)
-            {
-                intervalo.frecuenciaEsperada = calcularFrecuenciaEsperada(intervalo.limiteInferior, intervalo.limiteSuperior);
-            }
-            */
-
             graficar(true);
         }
 
