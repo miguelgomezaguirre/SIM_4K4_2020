@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPrincipal));
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSeleccionArchivo = new System.Windows.Forms.TabPage();
             this.btnVerDistribucion = new System.Windows.Forms.Button();
@@ -46,7 +46,7 @@
             this.txtDirectorio = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabSeleccionDistribucion = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnRealizarTest = new System.Windows.Forms.Button();
             this.txtAlpha = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -55,6 +55,8 @@
             this.grafico = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lblGradosDeLibertad = new System.Windows.Forms.Label();
+            this.grdResultadoTest = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabSeleccionArchivo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdTab1)).BeginInit();
@@ -62,6 +64,8 @@
             this.tabSeleccionDistribucion.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grafico)).BeginInit();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grdResultadoTest)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -202,7 +206,8 @@
             // 
             // tabSeleccionDistribucion
             // 
-            this.tabSeleccionDistribucion.Controls.Add(this.button1);
+            this.tabSeleccionDistribucion.Controls.Add(this.lblGradosDeLibertad);
+            this.tabSeleccionDistribucion.Controls.Add(this.btnRealizarTest);
             this.tabSeleccionDistribucion.Controls.Add(this.txtAlpha);
             this.tabSeleccionDistribucion.Controls.Add(this.label4);
             this.tabSeleccionDistribucion.Controls.Add(this.pictureBox1);
@@ -217,18 +222,19 @@
             this.tabSeleccionDistribucion.Text = "Paso 2";
             this.tabSeleccionDistribucion.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnRealizarTest
             // 
-            this.button1.Location = new System.Drawing.Point(221, 424);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Realizar Test";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnRealizarTest.Location = new System.Drawing.Point(744, 22);
+            this.btnRealizarTest.Name = "btnRealizarTest";
+            this.btnRealizarTest.Size = new System.Drawing.Size(102, 23);
+            this.btnRealizarTest.TabIndex = 9;
+            this.btnRealizarTest.Text = "Realizar Test";
+            this.btnRealizarTest.UseVisualStyleBackColor = true;
+            this.btnRealizarTest.Click += new System.EventHandler(this.btnRealizarTest_Click);
             // 
             // txtAlpha
             // 
-            this.txtAlpha.Location = new System.Drawing.Point(136, 426);
+            this.txtAlpha.Location = new System.Drawing.Point(170, 449);
             this.txtAlpha.Name = "txtAlpha";
             this.txtAlpha.Size = new System.Drawing.Size(79, 20);
             this.txtAlpha.TabIndex = 8;
@@ -236,9 +242,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 429);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(11, 450);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(123, 13);
+            this.label4.Size = new System.Drawing.Size(153, 16);
             this.label4.TabIndex = 7;
             this.label4.Text = "Nivel de significación (α)";
             // 
@@ -268,21 +275,22 @@
             this.cboDistribucion.FormattingEnabled = true;
             this.cboDistribucion.Location = new System.Drawing.Point(466, 22);
             this.cboDistribucion.Name = "cboDistribucion";
-            this.cboDistribucion.Size = new System.Drawing.Size(218, 21);
+            this.cboDistribucion.Size = new System.Drawing.Size(250, 21);
             this.cboDistribucion.TabIndex = 1;
+            this.cboDistribucion.SelectedIndexChanged += new System.EventHandler(this.cboDistribucion_SelectedIndexChanged);
             // 
             // grafico
             // 
-            chartArea1.Name = "ChartArea1";
-            this.grafico.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.grafico.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.grafico.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.grafico.Legends.Add(legend2);
             this.grafico.Location = new System.Drawing.Point(3, 30);
             this.grafico.Name = "grafico";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.grafico.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.grafico.Series.Add(series2);
             this.grafico.Size = new System.Drawing.Size(451, 388);
             this.grafico.TabIndex = 0;
             this.grafico.Text = "chart1";
@@ -290,6 +298,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.grdResultadoTest);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -301,6 +310,24 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // lblGradosDeLibertad
+            // 
+            this.lblGradosDeLibertad.AutoSize = true;
+            this.lblGradosDeLibertad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGradosDeLibertad.Location = new System.Drawing.Point(11, 421);
+            this.lblGradosDeLibertad.Name = "lblGradosDeLibertad";
+            this.lblGradosDeLibertad.Size = new System.Drawing.Size(150, 16);
+            this.lblGradosDeLibertad.TabIndex = 10;
+            this.lblGradosDeLibertad.Text = "Grados de Libertad: ";
+            // 
+            // grdResultadoTest
+            // 
+            this.grdResultadoTest.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdResultadoTest.Location = new System.Drawing.Point(8, 6);
+            this.grdResultadoTest.Name = "grdResultadoTest";
+            this.grdResultadoTest.Size = new System.Drawing.Size(511, 595);
+            this.grdResultadoTest.TabIndex = 0;
             // 
             // frmPrincipal
             // 
@@ -320,6 +347,8 @@
             this.tabSeleccionDistribucion.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.grafico)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grdResultadoTest)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -345,9 +374,11 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnRealizarTest;
         private System.Windows.Forms.TextBox txtAlpha;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnVerDistribucion;
+        private System.Windows.Forms.Label lblGradosDeLibertad;
+        private System.Windows.Forms.DataGridView grdResultadoTest;
     }
 }
