@@ -12,6 +12,9 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TP2.Clases;
 using TP2.Properties;
 using MathNet.Numerics.Distributions;
+using Accord.Statistics.Testing;
+using Accord.Statistics.Distributions.Univariate;
+using Accord.Math;
 
 namespace TP2
 {
@@ -79,7 +82,7 @@ namespace TP2
                 cargarDatos();
 
                 double min = datos.Min();
-                double max = datos.Max();
+                double max = datos.Max() + 0.001f;
 
                 int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
 
@@ -120,7 +123,10 @@ namespace TP2
 
                 graficar(false);
 
-                
+                lblTamanioMuestra.Text = "Tamaño de la muestra: " + datos.Count().ToString();
+                lblPaso.Text = "Paso: " + paso.ToString("0.0000");
+
+                grpInfoMuestra.Visible = true;
 
             }
         }
@@ -274,22 +280,7 @@ namespace TP2
 
         private void setLabelGradosDeLibertad()
         {
-            int gradosDeLibertad = 0;
-
-            if (int.TryParse(txtCantIntervalos.Text, out gradosDeLibertad))
-            {
-                if(((Distribucion)cboDistribucion.SelectedItem).descripcion == "Poisson")
-                {
-                    gradosDeLibertad = gradosDeLibertad - 2;
-                }
-                else
-                {
-                    gradosDeLibertad = gradosDeLibertad - 1;
-                }
-                
-
-                lblGradosDeLibertad.Text = "Grados de Libertad: " + gradosDeLibertad;
-            }
+            int gradosDeLibertad = getGradosLibertad();
         }
 
         private void cboDistribucion_SelectedIndexChanged(object sender, EventArgs e)
@@ -337,82 +328,6 @@ namespace TP2
             
         }
 
-        private void btnRealizarTest_Click(object sender, EventArgs e)
-        {
-            double media = obtenerMedia(datos);
-            double media2 = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
-
-            switch (distribucionElegida)
-            {
-                case TipoDistribucion.continuaExponencial:
-                    /*
-                     En el caso de haber elegido la distribucion exponencial, tenemos que:
-
-                        * lambda(media) = 1 / (media muestral);
-                        
-                    */
-
-                    //obtenemos el lambda para esta distribucion
-                    double lambda = 1 / media;
-
-                    //generamos la distribucion para el lambda dado:
-                    Exponential exponencial = new Exponential(lambda);
-
-                    //recorremos los intervalos para obtener los valores minimos y maximos, y asi calcular la frecuencia esperada
-                    foreach (Intervalo intervalo in intervalos)
-                    {
-                        intervalo.frecuenciaEsperada = (exponencial.CumulativeDistribution(intervalo.limiteSuperior) - exponencial.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
-                    }
-
-                    break;
-
-                case TipoDistribucion.continuaUniforme:
-                    /*
-                     En el caso de haber elegido uniforme, tenemos que:
-
-                        * FE = cantidad de datos de la muestra / cantidad de intervalos;
-                        
-                    */
-
-                    //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
-                    double frecuenciaEsperada = (double) datos.Count() / (double) intervalos.Count();
-
-                    foreach (Intervalo intervalo in intervalos)
-                    {
-                        intervalo.frecuenciaEsperada = frecuenciaEsperada;
-                    }
-
-                    break;
-
-                case TipoDistribucion.continuaNormal:
-                    /*
-                        Para distribucion normal tenemos:
-                    
-                            desviacion estandar (sigma) = raiz cuadrada de la media;
-                            
-                     */
-
-                    //obtenemos la varianza
-                    double varianza = MathNet.Numerics.Statistics.ArrayStatistics.Variance(datos.ToArray());
-
-                    //calculamos la deviacion estandar
-                    double desviacionEstandar = Math.Sqrt(varianza);
-
-                    //creo la distribucion normal
-                    Normal normal = new Normal(media, desviacionEstandar);
-
-                    foreach (Intervalo intervalo in intervalos)
-                    {
-                        intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
-                    }
-
-                    break;
-
-            }
-
-            graficar(true);
-        }
-
         private double calcularFrecuenciaEsperada(double minimo, double maximo)
         {
 
@@ -455,7 +370,7 @@ namespace TP2
                     break;
                 case TipoDistribucion.continuaNormal:
 
-                    var normal = new Normal();
+                    var normal = new MathNet.Numerics.Distributions.Normal();
 
                     frecuenciaMax = normal.CumulativeDistribution(maximo);
                     frecuenciaMin = normal.CumulativeDistribution(minimo);
@@ -482,5 +397,201 @@ namespace TP2
             return datos.Sum() / datos.Count(); 
         }
 
+        private void btnComparar_Click(object sender, EventArgs e)
+        {
+            double media = obtenerMedia(datos);
+            double media2 = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
+
+            switch (distribucionElegida)
+            {
+                case TipoDistribucion.continuaExponencial:
+                    /*
+                     En el caso de haber elegido la distribucion exponencial, tenemos que:
+
+                        * lambda(media) = 1 / (media muestral);
+                        
+                    */
+
+                    //obtenemos el lambda para esta distribucion
+                    double lambda = 1 / media;
+
+                    //generamos la distribucion para el lambda dado:
+                    Exponential exponencial = new Exponential(lambda);
+
+                    //recorremos los intervalos para obtener los valores minimos y maximos, y asi calcular la frecuencia esperada
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = (exponencial.CumulativeDistribution(intervalo.limiteSuperior) - exponencial.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+                    }
+
+                    break;
+
+                case TipoDistribucion.continuaUniforme:
+                    /*
+                     En el caso de haber elegido uniforme, tenemos que:
+
+                        * FE = cantidad de datos de la muestra / cantidad de intervalos;
+                        
+                    */
+
+                    //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
+                    double frecuenciaEsperada = (double)datos.Count() / (double)intervalos.Count();
+
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = frecuenciaEsperada;
+                    }
+
+                    break;
+
+                case TipoDistribucion.continuaNormal:
+                    /*
+                        Para distribucion normal tenemos:
+                    
+                            desviacion estandar (sigma) = raiz cuadrada de la media;
+                            
+                     */
+
+                    //obtenemos la varianza
+                    double varianza = MathNet.Numerics.Statistics.ArrayStatistics.Variance(datos.ToArray());
+
+                    //calculamos la deviacion estandar
+                    double desviacionEstandar = Math.Sqrt(varianza);
+
+                    //creo la distribucion normal
+                    MathNet.Numerics.Distributions.Normal normal = new MathNet.Numerics.Distributions.Normal(media, desviacionEstandar);
+
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+                    }
+
+                    break;
+
+            }
+
+            graficar(true);
+        }
+
+        private void btnRealizarTest_Click(object sender, EventArgs e)
+        {
+            if(cboTest.Text.ToLower() == "chi cuadrado")
+            {
+                testChiCuadrado();
+            }
+            else
+            {
+                testKolmogorov();
+            }
+            
+        }
+
+
+        private void testChiCuadrado()
+        {
+            double chiCuadrado = 0;
+
+            foreach (var intervalo in intervalos)
+            {
+                chiCuadrado += intervalo.chiCuadradoIntervalo();
+            }
+
+            int gradosLibertad = getGradosLibertad();
+
+            MathNet.Numerics.Distributions.ChiSquared chiSquared = new ChiSquared(gradosLibertad);
+
+            double nivelDeConfianza = double.Parse(cboAlpha.Text);
+
+            double valorChiCuadradoEnTabla = chiSquared.InverseCumulativeDistribution(1 - nivelDeConfianza);
+
+            lblValorObtenido.Text = chiCuadrado.ToString("0.0000");
+            lblValorTabulado.Text = valorChiCuadradoEnTabla.ToString("0.0000");
+
+            if (chiCuadrado < valorChiCuadradoEnTabla)
+            {
+                //No se rechaza la hipotesis
+                lblResultadoPrueba.Text = "No se puede rechazar la hipótesis";
+            }
+            else
+            {
+                //Se rechaza la hipotesis
+                lblResultadoPrueba.Text = "Se rechaza la hipótesis";
+            }
+
+            grpResultado.Visible = true;
+        }
+
+
+        private void testKolmogorov()
+        {
+            double probabilidadObservadaAcumulada = 0;
+            double probabilidadEsperadaAcumulada = 0;
+
+            double maximo = 0;
+
+            foreach (var intervalo in intervalos)
+            {
+                probabilidadObservadaAcumulada += intervalo.frecuenciaObservada / (double)datos.Count();
+                probabilidadEsperadaAcumulada += intervalo.frecuenciaEsperada / (double)datos.Count();
+
+                double bondad = Math.Abs(probabilidadObservadaAcumulada - probabilidadEsperadaAcumulada);
+
+                if(maximo < bondad)
+                {
+                    maximo = bondad;
+                }
+            }
+
+            //TODO: obtener valor Kolmogorov
+            double valorKolmogorov = 4.17;
+
+            //Accord.Statistics.Distributions.Univariate
+            var distribucion = Accord.Statistics.Distributions.Univariate.NormalDistribution.Standard;
+
+            KolmogorovSmirnovTest kTest = new KolmogorovSmirnovTest(datos.ToArray(), distribucion);
+
+            var statistics = kTest.Statistic;
+            var pValue = kTest.PValue;
+            bool acepta = kTest.Significant;
+
+            if (acepta)
+            {
+                //No se rechaza la hipotesis
+                lblResultadoPrueba.Text = "No se puede rechazar la hipótesis";
+            }
+            else
+            {
+                //Se rechaza la hipotesis
+                lblResultadoPrueba.Text = "Se rechaza la hipótesis";
+            }
+
+            lblValorObtenido.Text = statistics.ToString("0.0000");
+            lblValorTabulado.Text = pValue.ToString("0.0000");
+
+            grpResultado.Visible = true;
+
+        }
+
+        private int getGradosLibertad()
+        {
+            int gradosDeLibertad = 0;
+
+            if (int.TryParse(txtCantIntervalos.Text, out gradosDeLibertad))
+            {
+                if (((Distribucion)cboDistribucion.SelectedItem).descripcion == "Poisson")
+                {
+                    gradosDeLibertad = gradosDeLibertad - 2;
+                }
+                else
+                {
+                    gradosDeLibertad = gradosDeLibertad - 1;
+                }
+
+
+                lblGradosDeLibertad.Text = "Grados de Libertad: " + gradosDeLibertad;
+            }
+
+            return gradosDeLibertad;
+        }
     }
 }

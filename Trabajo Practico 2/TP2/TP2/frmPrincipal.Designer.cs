@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPrincipal));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -46,17 +45,29 @@
             this.txtDirectorio = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabSeleccionDistribucion = new System.Windows.Forms.TabPage();
-            this.btnRealizarTest = new System.Windows.Forms.Button();
-            this.txtAlpha = new System.Windows.Forms.TextBox();
+            this.lblGradosDeLibertad = new System.Windows.Forms.Label();
+            this.btnComparar = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cboDistribucion = new System.Windows.Forms.ComboBox();
             this.grafico = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.lblGradosDeLibertad = new System.Windows.Forms.Label();
             this.grdResultadoTest = new System.Windows.Forms.DataGridView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.btnRealizarTest = new System.Windows.Forms.Button();
+            this.cboTest = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblValorObtenido = new System.Windows.Forms.Label();
+            this.lblValorTabulado = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.grpResultado = new System.Windows.Forms.GroupBox();
+            this.lblResultadoPrueba = new System.Windows.Forms.Label();
+            this.cboAlpha = new System.Windows.Forms.ComboBox();
+            this.grpInfoMuestra = new System.Windows.Forms.GroupBox();
+            this.lblTamanioMuestra = new System.Windows.Forms.Label();
+            this.lblPaso = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabSeleccionArchivo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdTab1)).BeginInit();
@@ -66,6 +77,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.grafico)).BeginInit();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultadoTest)).BeginInit();
+            this.grpResultado.SuspendLayout();
+            this.grpInfoMuestra.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -77,13 +90,14 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1154, 635);
+            this.tabControl1.Size = new System.Drawing.Size(1154, 723);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             this.tabControl1.TabIndexChanged += new System.EventHandler(this.tabControl1_TabIndexChanged);
             // 
             // tabSeleccionArchivo
             // 
+            this.tabSeleccionArchivo.Controls.Add(this.grpInfoMuestra);
             this.tabSeleccionArchivo.Controls.Add(this.btnVerDistribucion);
             this.tabSeleccionArchivo.Controls.Add(this.grdTab1);
             this.tabSeleccionArchivo.Controls.Add(this.txtCantIntervalos);
@@ -96,7 +110,7 @@
             this.tabSeleccionArchivo.Location = new System.Drawing.Point(4, 22);
             this.tabSeleccionArchivo.Name = "tabSeleccionArchivo";
             this.tabSeleccionArchivo.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSeleccionArchivo.Size = new System.Drawing.Size(1146, 609);
+            this.tabSeleccionArchivo.Size = new System.Drawing.Size(1146, 697);
             this.tabSeleccionArchivo.TabIndex = 0;
             this.tabSeleccionArchivo.Text = "Paso 1";
             this.tabSeleccionArchivo.UseVisualStyleBackColor = true;
@@ -116,7 +130,7 @@
             this.grdTab1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdTab1.Location = new System.Drawing.Point(290, 6);
             this.grdTab1.Name = "grdTab1";
-            this.grdTab1.Size = new System.Drawing.Size(472, 412);
+            this.grdTab1.Size = new System.Drawing.Size(472, 685);
             this.grdTab1.TabIndex = 7;
             // 
             // txtCantIntervalos
@@ -206,9 +220,13 @@
             // 
             // tabSeleccionDistribucion
             // 
-            this.tabSeleccionDistribucion.Controls.Add(this.lblGradosDeLibertad);
+            this.tabSeleccionDistribucion.Controls.Add(this.cboAlpha);
+            this.tabSeleccionDistribucion.Controls.Add(this.grpResultado);
+            this.tabSeleccionDistribucion.Controls.Add(this.label5);
+            this.tabSeleccionDistribucion.Controls.Add(this.cboTest);
             this.tabSeleccionDistribucion.Controls.Add(this.btnRealizarTest);
-            this.tabSeleccionDistribucion.Controls.Add(this.txtAlpha);
+            this.tabSeleccionDistribucion.Controls.Add(this.lblGradosDeLibertad);
+            this.tabSeleccionDistribucion.Controls.Add(this.btnComparar);
             this.tabSeleccionDistribucion.Controls.Add(this.label4);
             this.tabSeleccionDistribucion.Controls.Add(this.pictureBox1);
             this.tabSeleccionDistribucion.Controls.Add(this.label3);
@@ -217,33 +235,36 @@
             this.tabSeleccionDistribucion.Location = new System.Drawing.Point(4, 22);
             this.tabSeleccionDistribucion.Name = "tabSeleccionDistribucion";
             this.tabSeleccionDistribucion.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSeleccionDistribucion.Size = new System.Drawing.Size(1146, 609);
+            this.tabSeleccionDistribucion.Size = new System.Drawing.Size(1146, 697);
             this.tabSeleccionDistribucion.TabIndex = 1;
             this.tabSeleccionDistribucion.Text = "Paso 2";
             this.tabSeleccionDistribucion.UseVisualStyleBackColor = true;
             // 
-            // btnRealizarTest
+            // lblGradosDeLibertad
             // 
-            this.btnRealizarTest.Location = new System.Drawing.Point(744, 22);
-            this.btnRealizarTest.Name = "btnRealizarTest";
-            this.btnRealizarTest.Size = new System.Drawing.Size(102, 23);
-            this.btnRealizarTest.TabIndex = 9;
-            this.btnRealizarTest.Text = "Realizar Test";
-            this.btnRealizarTest.UseVisualStyleBackColor = true;
-            this.btnRealizarTest.Click += new System.EventHandler(this.btnRealizarTest_Click);
+            this.lblGradosDeLibertad.AutoSize = true;
+            this.lblGradosDeLibertad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGradosDeLibertad.Location = new System.Drawing.Point(17, 513);
+            this.lblGradosDeLibertad.Name = "lblGradosDeLibertad";
+            this.lblGradosDeLibertad.Size = new System.Drawing.Size(150, 16);
+            this.lblGradosDeLibertad.TabIndex = 10;
+            this.lblGradosDeLibertad.Text = "Grados de Libertad: ";
             // 
-            // txtAlpha
+            // btnComparar
             // 
-            this.txtAlpha.Location = new System.Drawing.Point(170, 449);
-            this.txtAlpha.Name = "txtAlpha";
-            this.txtAlpha.Size = new System.Drawing.Size(79, 20);
-            this.txtAlpha.TabIndex = 8;
+            this.btnComparar.Location = new System.Drawing.Point(1038, 22);
+            this.btnComparar.Name = "btnComparar";
+            this.btnComparar.Size = new System.Drawing.Size(102, 23);
+            this.btnComparar.TabIndex = 9;
+            this.btnComparar.Text = "Comparar";
+            this.btnComparar.UseVisualStyleBackColor = true;
+            this.btnComparar.Click += new System.EventHandler(this.btnComparar_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(11, 450);
+            this.label4.Location = new System.Drawing.Point(17, 542);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(153, 16);
             this.label4.TabIndex = 7;
@@ -252,18 +273,18 @@
             // pictureBox1
             // 
             this.pictureBox1.ErrorImage = null;
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(466, 49);
+            this.pictureBox1.Image = global::TP2.Properties.Resources.continuas;
+            this.pictureBox1.Location = new System.Drawing.Point(760, 51);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(672, 283);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.Size = new System.Drawing.Size(198, 475);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(463, 6);
+            this.label3.Location = new System.Drawing.Point(757, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(108, 13);
             this.label3.TabIndex = 2;
@@ -273,7 +294,7 @@
             // 
             this.cboDistribucion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboDistribucion.FormattingEnabled = true;
-            this.cboDistribucion.Location = new System.Drawing.Point(466, 22);
+            this.cboDistribucion.Location = new System.Drawing.Point(760, 22);
             this.cboDistribucion.Name = "cboDistribucion";
             this.cboDistribucion.Size = new System.Drawing.Size(250, 21);
             this.cboDistribucion.TabIndex = 1;
@@ -285,13 +306,13 @@
             this.grafico.ChartAreas.Add(chartArea2);
             legend2.Name = "Legend1";
             this.grafico.Legends.Add(legend2);
-            this.grafico.Location = new System.Drawing.Point(3, 30);
+            this.grafico.Location = new System.Drawing.Point(6, 51);
             this.grafico.Name = "grafico";
             series2.ChartArea = "ChartArea1";
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.grafico.Series.Add(series2);
-            this.grafico.Size = new System.Drawing.Size(451, 388);
+            this.grafico.Size = new System.Drawing.Size(738, 459);
             this.grafico.TabIndex = 0;
             this.grafico.Text = "chart1";
             this.grafico.Click += new System.EventHandler(this.chart1_Click);
@@ -307,20 +328,6 @@
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // lblGradosDeLibertad
-            // 
-            this.lblGradosDeLibertad.AutoSize = true;
-            this.lblGradosDeLibertad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblGradosDeLibertad.Location = new System.Drawing.Point(11, 421);
-            this.lblGradosDeLibertad.Name = "lblGradosDeLibertad";
-            this.lblGradosDeLibertad.Size = new System.Drawing.Size(150, 16);
-            this.lblGradosDeLibertad.TabIndex = 10;
-            this.lblGradosDeLibertad.Text = "Grados de Libertad: ";
-            // 
             // grdResultadoTest
             // 
             this.grdResultadoTest.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -329,11 +336,165 @@
             this.grdResultadoTest.Size = new System.Drawing.Size(511, 595);
             this.grdResultadoTest.TabIndex = 0;
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // btnRealizarTest
+            // 
+            this.btnRealizarTest.Location = new System.Drawing.Point(372, 542);
+            this.btnRealizarTest.Name = "btnRealizarTest";
+            this.btnRealizarTest.Size = new System.Drawing.Size(172, 46);
+            this.btnRealizarTest.TabIndex = 11;
+            this.btnRealizarTest.Text = "Realizar Test";
+            this.btnRealizarTest.UseVisualStyleBackColor = true;
+            this.btnRealizarTest.Click += new System.EventHandler(this.btnRealizarTest_Click);
+            // 
+            // cboTest
+            // 
+            this.cboTest.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTest.FormattingEnabled = true;
+            this.cboTest.Items.AddRange(new object[] {
+            "Chi Cuadrado",
+            "Kolmogorov-Smirnov"});
+            this.cboTest.Location = new System.Drawing.Point(176, 567);
+            this.cboTest.Name = "cboTest";
+            this.cboTest.Size = new System.Drawing.Size(188, 21);
+            this.cboTest.TabIndex = 12;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(17, 568);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(97, 16);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Test a efectuar";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(6, 16);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(96, 16);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "Valor obtenido";
+            // 
+            // lblValorObtenido
+            // 
+            this.lblValorObtenido.AutoSize = true;
+            this.lblValorObtenido.Location = new System.Drawing.Point(33, 43);
+            this.lblValorObtenido.Name = "lblValorObtenido";
+            this.lblValorObtenido.Size = new System.Drawing.Size(35, 13);
+            this.lblValorObtenido.TabIndex = 16;
+            this.lblValorObtenido.Text = "label8";
+            // 
+            // lblValorTabulado
+            // 
+            this.lblValorTabulado.AutoSize = true;
+            this.lblValorTabulado.Location = new System.Drawing.Point(150, 43);
+            this.lblValorTabulado.Name = "lblValorTabulado";
+            this.lblValorTabulado.Size = new System.Drawing.Size(35, 13);
+            this.lblValorTabulado.TabIndex = 18;
+            this.lblValorTabulado.Text = "label8";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(123, 16);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(96, 16);
+            this.label9.TabIndex = 17;
+            this.label9.Text = "Valor tabulado";
+            // 
+            // grpResultado
+            // 
+            this.grpResultado.Controls.Add(this.lblResultadoPrueba);
+            this.grpResultado.Controls.Add(this.label7);
+            this.grpResultado.Controls.Add(this.lblValorTabulado);
+            this.grpResultado.Controls.Add(this.lblValorObtenido);
+            this.grpResultado.Controls.Add(this.label9);
+            this.grpResultado.Location = new System.Drawing.Point(550, 532);
+            this.grpResultado.Name = "grpResultado";
+            this.grpResultado.Size = new System.Drawing.Size(315, 124);
+            this.grpResultado.TabIndex = 19;
+            this.grpResultado.TabStop = false;
+            this.grpResultado.Text = "Resultado de la prueba";
+            this.grpResultado.Visible = false;
+            // 
+            // lblResultadoPrueba
+            // 
+            this.lblResultadoPrueba.AutoSize = true;
+            this.lblResultadoPrueba.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblResultadoPrueba.Location = new System.Drawing.Point(19, 78);
+            this.lblResultadoPrueba.Name = "lblResultadoPrueba";
+            this.lblResultadoPrueba.Size = new System.Drawing.Size(57, 20);
+            this.lblResultadoPrueba.TabIndex = 19;
+            this.lblResultadoPrueba.Text = "label6";
+            // 
+            // cboAlpha
+            // 
+            this.cboAlpha.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboAlpha.FormattingEnabled = true;
+            this.cboAlpha.Items.AddRange(new object[] {
+            "0,001",
+            "0,0025",
+            "0,005",
+            "0,01",
+            "0,025",
+            "0,05",
+            "0,1",
+            "0,15",
+            "0,2",
+            "0,25",
+            "0,3",
+            "0,35",
+            "0,4",
+            "0,45",
+            "0,5"});
+            this.cboAlpha.Location = new System.Drawing.Point(176, 541);
+            this.cboAlpha.Name = "cboAlpha";
+            this.cboAlpha.Size = new System.Drawing.Size(188, 21);
+            this.cboAlpha.TabIndex = 20;
+            // 
+            // grpInfoMuestra
+            // 
+            this.grpInfoMuestra.Controls.Add(this.lblPaso);
+            this.grpInfoMuestra.Controls.Add(this.lblTamanioMuestra);
+            this.grpInfoMuestra.Location = new System.Drawing.Point(6, 229);
+            this.grpInfoMuestra.Name = "grpInfoMuestra";
+            this.grpInfoMuestra.Size = new System.Drawing.Size(278, 94);
+            this.grpInfoMuestra.TabIndex = 9;
+            this.grpInfoMuestra.TabStop = false;
+            this.grpInfoMuestra.Text = "Información de muestra";
+            this.grpInfoMuestra.Visible = false;
+            // 
+            // lblTamanioMuestra
+            // 
+            this.lblTamanioMuestra.AutoSize = true;
+            this.lblTamanioMuestra.Location = new System.Drawing.Point(6, 26);
+            this.lblTamanioMuestra.Name = "lblTamanioMuestra";
+            this.lblTamanioMuestra.Size = new System.Drawing.Size(96, 13);
+            this.lblTamanioMuestra.TabIndex = 0;
+            this.lblTamanioMuestra.Text = "lblTamanioMuestra";
+            // 
+            // lblPaso
+            // 
+            this.lblPaso.AutoSize = true;
+            this.lblPaso.Location = new System.Drawing.Point(6, 54);
+            this.lblPaso.Name = "lblPaso";
+            this.lblPaso.Size = new System.Drawing.Size(96, 13);
+            this.lblPaso.TabIndex = 1;
+            this.lblPaso.Text = "lblTamanioMuestra";
+            // 
             // frmPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1154, 635);
+            this.ClientSize = new System.Drawing.Size(1154, 723);
             this.Controls.Add(this.tabControl1);
             this.Name = "frmPrincipal";
             this.Text = "frmPrincipal";
@@ -349,6 +510,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.grafico)).EndInit();
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdResultadoTest)).EndInit();
+            this.grpResultado.ResumeLayout(false);
+            this.grpResultado.PerformLayout();
+            this.grpInfoMuestra.ResumeLayout(false);
+            this.grpInfoMuestra.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -374,11 +539,23 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart grafico;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button btnRealizarTest;
-        private System.Windows.Forms.TextBox txtAlpha;
+        private System.Windows.Forms.Button btnComparar;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnVerDistribucion;
         private System.Windows.Forms.Label lblGradosDeLibertad;
         private System.Windows.Forms.DataGridView grdResultadoTest;
+        private System.Windows.Forms.Button btnRealizarTest;
+        private System.Windows.Forms.ComboBox cboTest;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblValorObtenido;
+        private System.Windows.Forms.Label lblValorTabulado;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox grpResultado;
+        private System.Windows.Forms.Label lblResultadoPrueba;
+        private System.Windows.Forms.ComboBox cboAlpha;
+        private System.Windows.Forms.GroupBox grpInfoMuestra;
+        private System.Windows.Forms.Label lblTamanioMuestra;
+        private System.Windows.Forms.Label lblPaso;
     }
 }
