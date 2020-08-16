@@ -340,6 +340,7 @@ namespace TP2
         private void btnRealizarTest_Click(object sender, EventArgs e)
         {
             double media = obtenerMedia(datos);
+            double media2 = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
 
             switch (distribucionElegida)
             {
@@ -364,16 +365,17 @@ namespace TP2
                     }
 
                     break;
+
                 case TipoDistribucion.continuaUniforme:
                     /*
                      En el caso de haber elegido uniforme, tenemos que:
 
-                        * FE = 1 / (cantidad de intervalos * cantidad de datos de la muestra);
+                        * FE = cantidad de datos de la muestra / cantidad de intervalos;
                         
                     */
 
                     //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
-                    double frecuenciaEsperada = 1 / (intervalos.Count() * datos.Count());
+                    double frecuenciaEsperada = (double) datos.Count() / (double) intervalos.Count();
 
                     foreach (Intervalo intervalo in intervalos)
                     {
@@ -381,6 +383,31 @@ namespace TP2
                     }
 
                     break;
+
+                case TipoDistribucion.continuaNormal:
+                    /*
+                        Para distribucion normal tenemos:
+                    
+                            desviacion estandar (sigma) = raiz cuadrada de la media;
+                            
+                     */
+
+                    //obtenemos la varianza
+                    double varianza = MathNet.Numerics.Statistics.ArrayStatistics.Variance(datos.ToArray());
+
+                    //calculamos la deviacion estandar
+                    double desviacionEstandar = Math.Sqrt(varianza);
+
+                    //creo la distribucion normal
+                    Normal normal = new Normal(media, desviacionEstandar);
+
+                    foreach (Intervalo intervalo in intervalos)
+                    {
+                        intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+                    }
+
+                    break;
+
             }
 
 
@@ -460,12 +487,7 @@ namespace TP2
 
         private double obtenerMedia(List<double> datos)
         {
-            double sum = 0;
-            foreach(double x in datos)
-            {
-                sum += x;
-            }
-            return sum / datos.Count(); 
+            return datos.Sum() / datos.Count(); 
         }
 
     }
