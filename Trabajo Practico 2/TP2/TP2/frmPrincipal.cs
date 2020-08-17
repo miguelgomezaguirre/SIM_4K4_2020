@@ -65,6 +65,10 @@ namespace TP2
                 txtDirectorio.Text = openFileDialog1.FileName;
 
                 txtDirectorio.Enabled = false;
+
+                btnVerDistribucion.Enabled = false;
+
+                reiniciarTab2();
             }
         }
 
@@ -81,57 +85,76 @@ namespace TP2
             string mensajeError = "";
             if(validarTab1(ref mensajeError))
             {
-                cargarDatos();
-
-                double min = datos.Min();
-                double max = datos.Max() + 0.001d;
-
-                int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
-
-                double paso = (max - min) / (double)numeroDeIntervalos;
-
-                paso = Math.Round(paso, CANTIDAD_DECIMALES);
-
-                double limiteInferior = min;
-                double limiteSuperior = min + paso;
-
-                Intervalo intervalo = null;
-
-                for (int i = 0; i < numeroDeIntervalos; i++)
+                if(cargarDatos())
                 {
-                    intervalo = new Intervalo();
-
-                    intervalo.numero = i + 1;
-                    intervalo.limiteInferior = Math.Round(limiteInferior, CANTIDAD_DECIMALES);
-                    intervalo.limiteSuperior = Math.Round(limiteSuperior, CANTIDAD_DECIMALES);
-
-                    intervalos.Add(intervalo);
-
-                    limiteInferior = limiteSuperior;
-                    limiteSuperior = limiteInferior + paso;
-                }
-
-                for (int i = 0; i < datos.Count; i++)
-                {
-                    for (int j = 0; j < intervalos.Count; j++)
+                    if (datos.Count < 200)
                     {
-                        if (intervalos[j].limiteSuperior > datos[i])
+                        MessageBox.Show("Debe ingresar una muestra mayor a 200 números. Datos encontrados: " + datos.Count());
+
+                        return;
+                    }
+
+                    double min = datos.Min();
+                    double max = datos.Max() + 0.001d;
+
+                    int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
+
+                    double paso = (max - min) / (double)numeroDeIntervalos;
+
+                    paso = Math.Round(paso, CANTIDAD_DECIMALES);
+
+                    double limiteInferior = min;
+                    double limiteSuperior = min + paso;
+
+                    Intervalo intervalo = null;
+
+                    for (int i = 0; i < numeroDeIntervalos; i++)
+                    {
+                        intervalo = new Intervalo();
+
+                        intervalo.numero = i + 1;
+                        intervalo.limiteInferior = Math.Round(limiteInferior, CANTIDAD_DECIMALES);
+                        intervalo.limiteSuperior = Math.Round(limiteSuperior, CANTIDAD_DECIMALES);
+
+                        intervalos.Add(intervalo);
+
+                        limiteInferior = limiteSuperior;
+                        limiteSuperior = limiteInferior + paso;
+                    }
+
+                    for (int i = 0; i < datos.Count; i++)
+                    {
+                        for (int j = 0; j < intervalos.Count; j++)
                         {
-                            intervalos[j].frecuenciaObservada++;
-                            break;
+                            if (intervalos[j].limiteSuperior > datos[i])
+                            {
+                                intervalos[j].frecuenciaObservada++;
+                                break;
+                            }
                         }
                     }
+
+                    cargarGrillaTab1();
+
+                    graficar(false);
+
+                    lblTamanioMuestra.Text = "Tamaño de la muestra: " + datos.Count().ToString();
+                    lblPaso.Text = "Paso: " + paso.ToString("0.0000");
+                    lblPaso.Visible = true;
+
+                    btnVerDistribucion.Enabled = true;
+
+                    grpInfoMuestra.Visible = true;
+
+                    reiniciarTab2();
                 }
 
-                cargarGrillaTab1();
+                
 
-                graficar(false);
-
-                lblTamanioMuestra.Text = "Tamaño de la muestra: " + datos.Count().ToString();
-                lblPaso.Text = "Paso: " + paso.ToString("0.0000");
-
-                grpInfoMuestra.Visible = true;
-
+            }
+            else
+            {
+                MessageBox.Show(mensajeError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -161,10 +184,73 @@ namespace TP2
 
         private bool validarTab1(ref string mensajeError)
         {
+            #region validacion archivo de datos
+
+            string directorio = txtDirectorio.Text;
+
+            if (string.IsNullOrEmpty(directorio))
+            {
+                mensajeError = "Debe seleccionar un archivo de datos";
+                txtDirectorio.Focus();
+                return false;
+            }
+
+            if (!File.Exists(directorio))
+            {
+                mensajeError = "Debe seleccionar un archivo válido";
+                txtDirectorio.Focus();
+                return false;
+            }
+
+            #endregion
+
+            #region validacion cantidad de intervalos
+            string cantidadIntervalosText = txtCantIntervalos.Text;
+            if (string.IsNullOrEmpty(cantidadIntervalosText))
+            {
+                mensajeError = "Debe ingresar la cantidad de intervalos";
+                txtCantIntervalos.Focus();
+                return false;
+            }
+            else
+            {
+                int cantidadIntervalos = 0;
+
+                if(!int.TryParse(cantidadIntervalosText, out cantidadIntervalos))
+                {
+                    mensajeError = "El número de intervalos debe ser un valor entero";
+                    txtCantIntervalos.Focus();
+                    return false;
+                }
+                else
+                {
+                    if(cantidadIntervalos <= 0)
+                    {
+                        mensajeError = "El número de intervalos debe ser mayor a cero";
+                        txtCantIntervalos.Focus();
+                        return false;
+                    }
+                }
+            }
+
+            #endregion
+
+            #region validacion seleccion tipo de variable
+
+            if(!rdbContinua.Checked && !rdbDiscreta.Checked)
+            {
+                mensajeError = "Debe seleccionar un tipo de variable";
+                grpTipoVariable.Focus();
+                return false;
+            }
+
+            #endregion
+
+
             return true;
         }
 
-        private void cargarDatos()
+        private bool cargarDatos()
         {
             string[] textoArchivo = File.ReadAllLines(txtDirectorio.Text);
 
@@ -173,16 +259,26 @@ namespace TP2
             for (int i = 0; i < textoArchivo.Length; i++)
             {
                 string texto = textoArchivo[i].Replace(".", ",");
+
+                texto = texto.Trim();
+
                 if (double.TryParse(texto, out valor))
                 {
                     datos.Add(valor);
                 }
                 else
                 {
+                    if(string.IsNullOrEmpty(texto))
+                    {
+                        continue;
+                    }
+
                     MessageBox.Show("El valor en la línea " + (i + 1) + " no es numérico.", "Error", MessageBoxButtons.OK);
-                    return;
+                    return false;
                 }
             }
+
+            return true;
         }
 
         private void graficar(bool agregarEsperada)
@@ -331,80 +427,11 @@ namespace TP2
             }
             
         }
-
-        private double calcularFrecuenciaEsperada(double minimo, double maximo)
-        {
-
-            double media = obtenerMedia(datos);
-            double frecuenciaTotal = 0;
-            double frecuenciaMax = 0;
-            double frecuenciaMin = 0;
-
             
-
-            switch (distribucionElegida)
-            {
-                case TipoDistribucion.continuaExponencial:
-                    /*
-                     En el caso de haber elegido la distribucion exponencial, tenemos que:
-
-                        * lambda(media) = 1 / (media muestral);
-                        
-                    */
-
-                    //obtenemos el lambda para esta distribucion
-                    double lambda = 1 / media;
-
-                    //generamos la distribucion para el lambda dado:
-                    Exponential exponencial = new Exponential(lambda);
-
-
-
-                    frecuenciaMax = exponencial.CumulativeDistribution(maximo);
-                    frecuenciaMin = exponencial.CumulativeDistribution(minimo);
-
-                    break;
-                case TipoDistribucion.continuaUniforme:
-
-                    var uniforme = new ContinuousUniform();
-
-                    frecuenciaMax = uniforme.CumulativeDistribution(maximo);
-                    frecuenciaMin = uniforme.CumulativeDistribution(minimo);
-
-                    break;
-                case TipoDistribucion.continuaNormal:
-
-                    var normal = new MathNet.Numerics.Distributions.Normal();
-
-                    frecuenciaMax = normal.CumulativeDistribution(maximo);
-                    frecuenciaMin = normal.CumulativeDistribution(minimo);
-
-                    break;
-                case TipoDistribucion.discretaBinomial:
-                    break;
-                case TipoDistribucion.discretaPoisson:
-                    break;
-                case TipoDistribucion.discretaUniforme:
-                    break;
-                default:
-                    break;
-            }
-
-            frecuenciaTotal = frecuenciaMax - frecuenciaMin;
-
-            return frecuenciaTotal * datos.Count();
-        }
-
-
-        private double obtenerMedia(List<double> datos)
-        {
-            return datos.Sum() / datos.Count(); 
-        }
 
         private void btnComparar_Click(object sender, EventArgs e)
         {
-            double media = obtenerMedia(datos);
-            double media2 = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
+            double media = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
 
             switch (distribucionElegida)
             {
@@ -481,18 +508,62 @@ namespace TP2
             }
 
             graficar(true);
+
+            cboAlpha.Enabled = true;
+            cboTest.Enabled = true;
+            btnRealizarTest.Enabled = true;
+        }
+
+        private void reiniciarTab2()
+        {
+            cboAlpha.SelectedIndex = -1;
+            cboTest.SelectedIndex = -1;
+
+            cboAlpha.Enabled = false;
+            cboTest.Enabled = false;
+            btnRealizarTest.Enabled = false;
+
+            grpResultado.Visible = false;
         }
 
         private void btnRealizarTest_Click(object sender, EventArgs e)
         {
-            if(cboTest.Text.ToLower() == "chi cuadrado")
+            if(!string.IsNullOrEmpty(cboTest.Text))
             {
-                testChiCuadrado();
+                if (cboTest.Text.ToLower() == "chi cuadrado")
+                {
+                    if (!string.IsNullOrEmpty(cboAlpha.Text))
+                    {
+                        testChiCuadrado();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Debe seleccionar un nivel de significación");
+                        cboAlpha.Focus();
+                        return;
+                    }
+
+                }
+                else
+                {
+                    if (cboAlpha.Text != "0,1" && cboAlpha.Text != "0,01" && cboAlpha.Text != "0,001" &&
+                        cboAlpha.Text != "0,2" && cboAlpha.Text != "0,02" && cboAlpha.Text != "0,002" &&
+                         cboAlpha.Text != "0,05" && cboAlpha.Text != "0,005")
+                    {
+                        MessageBox.Show("Debe seleccionar uno de los siguientes valores " + Environment.NewLine + " [0,1; 0,01 ; 0,001 ; 0,2 ; 0,02 ; 0,002 ; 0,05 ; 0,005 ]");
+                        cboAlpha.Focus();
+                        return;
+                    }
+                    testKolmogorov();
+                }
             }
             else
             {
-                testKolmogorov();
+                MessageBox.Show("Debe seleccionar un método para realizar la prueba");
+                cboTest.Focus();
+                return;
             }
+            
             
         }
 
@@ -508,32 +579,46 @@ namespace TP2
 
             int gradosLibertad = getGradosLibertad();
 
-            MathNet.Numerics.Distributions.ChiSquared chiSquared = new ChiSquared(gradosLibertad);
-
-            double nivelDeConfianza = double.Parse(cboAlpha.Text);
-
-            double valorChiCuadradoEnTabla = chiSquared.InverseCumulativeDistribution(1 - nivelDeConfianza);
-
-            lblValorObtenido.Text = chiCuadrado.ToString("0.0000");
-            lblValorTabulado.Text = valorChiCuadradoEnTabla.ToString("0.0000");
-
-            if (chiCuadrado < valorChiCuadradoEnTabla)
+            if(gradosLibertad > 0)
             {
-                //No se rechaza la hipotesis
-                lblResultadoPrueba.Text = "No se puede rechazar la hipótesis";
+                MathNet.Numerics.Distributions.ChiSquared chiSquared = new ChiSquared(gradosLibertad);
+
+                double nivelDeConfianza = double.Parse(cboAlpha.Text);
+
+                double valorChiCuadradoEnTabla = chiSquared.InverseCumulativeDistribution(1 - nivelDeConfianza);
+
+                lblValorObtenido.Text = chiCuadrado.ToString("0.0000");
+                lblValorTabulado.Text = valorChiCuadradoEnTabla.ToString("0.0000");
+
+                if (chiCuadrado < valorChiCuadradoEnTabla)
+                {
+                    //No se rechaza la hipotesis
+                    lblResultadoPrueba.Text = "No se puede rechazar la hipótesis";
+                }
+                else
+                {
+                    //Se rechaza la hipotesis
+                    lblResultadoPrueba.Text = "Se rechaza la hipótesis";
+                }
+
+                grpResultado.Visible = true;
             }
             else
             {
-                //Se rechaza la hipotesis
-                lblResultadoPrueba.Text = "Se rechaza la hipótesis";
-            }
+                MessageBox.Show("No se puede realizar el test con " + gradosLibertad + " grados de libertad. Ingrese una cantidad de intervalos mayor", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            grpResultado.Visible = true;
+                tabControl1.SelectedTab = tabSeleccionArchivo;
+
+                txtCantIntervalos.Focus();
+            }
+            
         }
 
 
         private void testKolmogorov()
         {
+            double frecuenciaObservadaAcumulada = 0;
+            double frecuenciaEsperadaAcumulada = 0;
             double probabilidadObservadaAcumulada = 0;
             double probabilidadEsperadaAcumulada = 0;
 
@@ -541,34 +626,67 @@ namespace TP2
 
             foreach (var intervalo in intervalos)
             {
-                probabilidadObservadaAcumulada += intervalo.frecuenciaObservada / (double)datos.Count();
-                probabilidadEsperadaAcumulada += intervalo.frecuenciaEsperada / (double)datos.Count();
+                frecuenciaObservadaAcumulada += intervalo.frecuenciaObservada;
+                probabilidadObservadaAcumulada = frecuenciaObservadaAcumulada / (double)datos.Count();
+
+                frecuenciaEsperadaAcumulada += intervalo.frecuenciaEsperada;
+                probabilidadEsperadaAcumulada = frecuenciaEsperadaAcumulada / (double)datos.Count();
 
                 double bondad = Math.Abs(probabilidadObservadaAcumulada - probabilidadEsperadaAcumulada);
 
-                if(maximo < bondad)
+                if (maximo < bondad)
                 {
                     maximo = bondad;
                 }
             }
 
-            //TODO: obtener valor Kolmogorov
-            double valorKolmogorov = 4.17;
+            double DCalculado = maximo;
+            //valor kolmogorov para alfa de 0.1
+            double valorKolmogorov = 1.22d;
 
-            //Accord.Statistics.Distributions.Univariate
-            var distribucion = Accord.Statistics.Distributions.Univariate.NormalDistribution.Standard;
+            if(cboAlpha.Text == "0,05")
+            {
+                valorKolmogorov = 1.36d;
+            }
+            else if (cboAlpha.Text == "0,05")
+            {
+                valorKolmogorov = 1.73d;
+            }
+            else if(cboAlpha.Text == "0,01")
+            {
+                valorKolmogorov = 1.63d;
+            }
+            else if (cboAlpha.Text == "0,001")
+            {
+                valorKolmogorov = 1.95d;
+            }
+            else if (cboAlpha.Text == "0,2")
+            {
+                valorKolmogorov = 1.07d;
+            }
+            else if (cboAlpha.Text == "0,02")
+            {
+                valorKolmogorov = 1.52d;
+            }
+            else if (cboAlpha.Text == "0,002")
+            {
+                valorKolmogorov = 1.85d;
+            }
 
-            KolmogorovSmirnovTest kTest = new KolmogorovSmirnovTest(datos.ToArray(), distribucion);
-            
-            var statistics = kTest.Statistic;
-            var pValue = kTest.PValue;
-            bool acepta = kTest.Significant;
+            double DCritico = valorKolmogorov / Math.Sqrt(intervalos.Count);
 
-            kTest.Size = double.Parse(cboAlpha.Text);
+            ////Accord.Statistics.Distributions.Univariate
+            //var distribucion = Accord.Statistics.Distributions.Univariate.NormalDistribution.Standard;
 
-            var statistics2 = kTest.Statistic;
-            var pValue2 = kTest.PValue;
-            bool acepta2 = kTest.Significant;
+            //KolmogorovSmirnovTest kTest = new KolmogorovSmirnovTest(datos.ToArray(), distribucion);
+
+
+            //var statistics = kTest.Statistic;
+            //var pValue = kTest.PValue;
+            //bool acepta = kTest.Significant;
+
+            bool acepta = DCalculado < DCritico;
+                       
 
             if (acepta)
             {
@@ -581,8 +699,8 @@ namespace TP2
                 lblResultadoPrueba.Text = "Se rechaza la hipótesis";
             }
 
-            lblValorObtenido.Text = statistics.ToString("0.0000");
-            lblValorTabulado.Text = pValue.ToString("0.0000");
+            lblValorObtenido.Text = DCalculado.ToString("0.0000");
+            lblValorTabulado.Text = DCritico.ToString("0.0000");
 
             grpResultado.Visible = true;
 
@@ -608,6 +726,31 @@ namespace TP2
             }
 
             return gradosDeLibertad;
+        }
+
+        private void tabSeleccionDistribucion_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboTest_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(cboTest.Text))
+            {
+                object[] significancia = null;
+                if (cboTest.Text.ToLower() == "chi cuadrado")
+                {
+                    significancia = new object[] { 0.1, 0.01, 0.001, 0.15, 0.2, 0.25, 0.025, 0.0025, 0.3, 0.35, 0.4, 0.45, 0.5, 0.05, 0.005};
+                }
+                else
+                {
+                    significancia = new object[] { 0.1, 0.01, 0.001, 0.2, 0.02, 0.002, 0.05, 0.005};
+                }
+
+                cboAlpha.Items.Clear();
+                cboAlpha.Items.AddRange(significancia);
+            }
+            
         }
     }
 }
