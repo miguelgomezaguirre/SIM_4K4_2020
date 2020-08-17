@@ -26,6 +26,8 @@ namespace TP2
         const String FRECUENCIA_OBSERVADA = "Frecuencia Observada";
         const String FRECUENCIA_ESPERADA = "Frecuencia Esperada";
 
+        const int CANTIDAD_DECIMALES = 4;
+
         private List<Distribucion> distribucionesContinuas = new List<Distribucion>();
         private List<Distribucion> distribucionesDiscretas = new List<Distribucion>();
 
@@ -82,11 +84,13 @@ namespace TP2
                 cargarDatos();
 
                 double min = datos.Min();
-                double max = datos.Max() + 0.001f;
+                double max = datos.Max() + 0.001d;
 
                 int numeroDeIntervalos = int.Parse(txtCantIntervalos.Text);
 
                 double paso = (max - min) / (double)numeroDeIntervalos;
+
+                paso = Math.Round(paso, CANTIDAD_DECIMALES);
 
                 double limiteInferior = min;
                 double limiteSuperior = min + paso;
@@ -98,8 +102,8 @@ namespace TP2
                     intervalo = new Intervalo();
 
                     intervalo.numero = i + 1;
-                    intervalo.limiteInferior = Math.Round(limiteInferior, 4);
-                    intervalo.limiteSuperior = Math.Round(limiteSuperior, 4);
+                    intervalo.limiteInferior = Math.Round(limiteInferior, CANTIDAD_DECIMALES);
+                    intervalo.limiteSuperior = Math.Round(limiteSuperior, CANTIDAD_DECIMALES);
 
                     intervalos.Add(intervalo);
 
@@ -200,7 +204,7 @@ namespace TP2
                     maxValue = intervalo.frecuenciaObservada;
                 }
 
-                double media = Math.Round((intervalo.limiteInferior + intervalo.limiteSuperior) / 2, 2);
+                double media = Math.Round((intervalo.limiteInferior + intervalo.limiteSuperior) / 2, CANTIDAD_DECIMALES);
                 media = Math.Truncate(media * 10000) / 10000;
 
                 chart.AxisX.CustomLabels.Add(intervalo.limiteInferior, intervalo.limiteSuperior, media.ToString());
@@ -422,6 +426,8 @@ namespace TP2
                     foreach (Intervalo intervalo in intervalos)
                     {
                         intervalo.frecuenciaEsperada = (exponencial.CumulativeDistribution(intervalo.limiteSuperior) - exponencial.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+
+                        intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
                     }
 
                     break;
@@ -440,6 +446,8 @@ namespace TP2
                     foreach (Intervalo intervalo in intervalos)
                     {
                         intervalo.frecuenciaEsperada = frecuenciaEsperada;
+
+                        intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
                     }
 
                     break;
@@ -464,6 +472,8 @@ namespace TP2
                     foreach (Intervalo intervalo in intervalos)
                     {
                         intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+
+                        intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
                     }
 
                     break;
@@ -549,10 +559,16 @@ namespace TP2
             var distribucion = Accord.Statistics.Distributions.Univariate.NormalDistribution.Standard;
 
             KolmogorovSmirnovTest kTest = new KolmogorovSmirnovTest(datos.ToArray(), distribucion);
-
+            
             var statistics = kTest.Statistic;
             var pValue = kTest.PValue;
             bool acepta = kTest.Significant;
+
+            kTest.Size = double.Parse(cboAlpha.Text);
+
+            var statistics2 = kTest.Statistic;
+            var pValue2 = kTest.PValue;
+            bool acepta2 = kTest.Significant;
 
             if (acepta)
             {
