@@ -141,7 +141,7 @@ namespace TP2
                     lblPaso.Visible = true;
 
                     btnVerDistribucion.Enabled = true;
-
+                    btnComparar.Enabled = true;
                     grpInfoMuestra.Visible = true;
 
                     reiniciarTab2();
@@ -317,7 +317,6 @@ namespace TP2
         {
             grafico.Palette = ChartColorPalette.Excel;
             grafico.Titles.Clear();
-            grafico.Titles.Add("FRECUENCIAS OBSERVADAS");
             grafico.Series.Clear();
 
             Series serieFObservada = new Series();
