@@ -12,9 +12,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using TP2.Clases;
 using TP2.Properties;
 using MathNet.Numerics.Distributions;
-using Accord.Statistics.Testing;
-using Accord.Statistics.Distributions.Univariate;
-using Accord.Math;
+
 
 namespace TP2
 {
