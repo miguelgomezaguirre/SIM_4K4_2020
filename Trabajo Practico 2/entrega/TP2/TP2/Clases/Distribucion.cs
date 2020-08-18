@@ -16,8 +16,6 @@ namespace TP2.Clases
         public int id { get; set; }
         public string descripcion { get; set; }
 
-        public int parametrosEstimados { get; set; }
-
         public Tipo tipoDistribucion { get; set; }
     }
 }

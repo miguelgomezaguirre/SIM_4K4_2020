@@ -1,0 +1,3 @@
+ejecutar archivo TP2 - Accesso directo.
+
+ademas se adjuntan datos de prueba en la carpeta datos.

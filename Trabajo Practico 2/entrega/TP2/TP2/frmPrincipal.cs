@@ -44,9 +44,9 @@ namespace TP2
         {
             InitializeComponent();
 
-            distribucionesContinuas.Add(new Distribucion { id=1, descripcion = "Exponencial Negativa", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 1 });
-            distribucionesContinuas.Add(new Distribucion { id = 2, descripcion = "Normal", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 2 });
-            distribucionesContinuas.Add(new Distribucion { id = 3, descripcion = "Uniforme", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 2 });
+            distribucionesContinuas.Add(new Distribucion { id=1, descripcion = "Exponencial Negativa", tipoDistribucion = Distribucion.Tipo.continua });
+            distribucionesContinuas.Add(new Distribucion { id = 2, descripcion = "Normal", tipoDistribucion = Distribucion.Tipo.continua });
+            distribucionesContinuas.Add(new Distribucion { id = 3, descripcion = "Uniforme", tipoDistribucion = Distribucion.Tipo.continua });
             
 
             distribucionesDiscretas.Add(new Distribucion { id = 1, descripcion = "Binomial", tipoDistribucion = Distribucion.Tipo.discreta });
@@ -709,8 +709,16 @@ namespace TP2
 
             if (int.TryParse(txtCantIntervalos.Text, out gradosDeLibertad))
             {
+                if (((Distribucion)cboDistribucion.SelectedItem).descripcion == "Poisson")
+                {
+                    gradosDeLibertad = gradosDeLibertad - 2;
+                }
+                else
+                {
+                    gradosDeLibertad = gradosDeLibertad - 1;
+                }
 
-                gradosDeLibertad = gradosDeLibertad - 1 - ((Distribucion)cboDistribucion.SelectedItem).parametrosEstimados;
+
                 lblGradosDeLibertad.Text = "Grados de Libertad: " + gradosDeLibertad;
             }
 
