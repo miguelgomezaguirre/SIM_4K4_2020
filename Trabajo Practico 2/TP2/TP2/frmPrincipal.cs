@@ -351,7 +351,6 @@ namespace TP2
             {
                 if(rdbContinua.Checked)
                 {
-                    //TODO: Cargar combo continuas
                     cboDistribucion.DataSource = distribucionesContinuas;
                     cboDistribucion.DisplayMember = "descripcion";
                     cboDistribucion.ValueMember = "id";
@@ -360,7 +359,6 @@ namespace TP2
                 }
                 else if(rdbDiscreta.Checked)
                 {
-                    //TODO: Cargar combo discretas
                     cboDistribucion.DataSource = distribucionesDiscretas;
                     cboDistribucion.DisplayMember = "descripcion";
                     cboDistribucion.ValueMember = "id";
