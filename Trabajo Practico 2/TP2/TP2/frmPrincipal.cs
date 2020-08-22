@@ -46,7 +46,7 @@ namespace TP2
 
             distribucionesContinuas.Add(new Distribucion { id=1, descripcion = "Exponencial Negativa", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 1 });
             distribucionesContinuas.Add(new Distribucion { id = 2, descripcion = "Normal", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 2 });
-            distribucionesContinuas.Add(new Distribucion { id = 3, descripcion = "Uniforme", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 2 });
+            distribucionesContinuas.Add(new Distribucion { id = 3, descripcion = "Uniforme", tipoDistribucion = Distribucion.Tipo.continua, parametrosEstimados = 0 });
             
 
             distribucionesDiscretas.Add(new Distribucion { id = 1, descripcion = "Binomial", tipoDistribucion = Distribucion.Tipo.discreta });
