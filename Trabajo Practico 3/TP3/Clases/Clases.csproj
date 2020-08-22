@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Distribucion.cs" />
-    <Compile Include="Generadores\Continua.cs" />
+    <Compile Include="Generadores\DistribucionesContinuas.cs" />
     <Compile Include="Generadores\GeneradorAleatorio.cs" />
     <Compile Include="Intervalo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
