@@ -113,7 +113,7 @@ namespace Clases.Generadores
             v = new double[tamanioMuestra];
 
             double p = 1;
-            double x = 0;
+            double x = -1;
             double u = 0;
 
             double a = Math.Exp(-lambda);

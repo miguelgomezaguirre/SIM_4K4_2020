@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabSeleccionArchivo = new System.Windows.Forms.TabPage();
             this.cboDistribucion = new System.Windows.Forms.ComboBox();
@@ -41,10 +41,6 @@
             this.label15 = new System.Windows.Forms.Label();
             this.txtMedia = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.txtMaximo = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.txtMinimo = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
             this.txtCantIntervalos = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.txtCantNumeros = new System.Windows.Forms.TextBox();
@@ -72,6 +68,8 @@
             this.label8 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.btnExportarMuestra = new System.Windows.Forms.Button();
+            this.chkVerFrecEsperada = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabSeleccionArchivo.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -132,17 +130,13 @@
             this.groupBox3.Controls.Add(this.label15);
             this.groupBox3.Controls.Add(this.txtMedia);
             this.groupBox3.Controls.Add(this.label16);
-            this.groupBox3.Controls.Add(this.txtMaximo);
-            this.groupBox3.Controls.Add(this.label17);
-            this.groupBox3.Controls.Add(this.txtMinimo);
-            this.groupBox3.Controls.Add(this.label18);
             this.groupBox3.Controls.Add(this.txtCantIntervalos);
             this.groupBox3.Controls.Add(this.label19);
             this.groupBox3.Controls.Add(this.txtCantNumeros);
             this.groupBox3.Controls.Add(this.label20);
             this.groupBox3.Location = new System.Drawing.Point(11, 42);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(430, 119);
+            this.groupBox3.Size = new System.Drawing.Size(355, 119);
             this.groupBox3.TabIndex = 12;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Parámetros";
@@ -150,7 +144,7 @@
             // txtLambda
             // 
             this.txtLambda.Enabled = false;
-            this.txtLambda.Location = new System.Drawing.Point(373, 48);
+            this.txtLambda.Location = new System.Drawing.Point(280, 74);
             this.txtLambda.Name = "txtLambda";
             this.txtLambda.Size = new System.Drawing.Size(48, 20);
             this.txtLambda.TabIndex = 19;
@@ -158,7 +152,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(290, 51);
+            this.label14.Location = new System.Drawing.Point(197, 77);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(45, 13);
             this.label14.TabIndex = 18;
@@ -167,7 +161,7 @@
             // txtDesvEstandar
             // 
             this.txtDesvEstandar.Enabled = false;
-            this.txtDesvEstandar.Location = new System.Drawing.Point(373, 22);
+            this.txtDesvEstandar.Location = new System.Drawing.Point(280, 48);
             this.txtDesvEstandar.Name = "txtDesvEstandar";
             this.txtDesvEstandar.Size = new System.Drawing.Size(48, 20);
             this.txtDesvEstandar.TabIndex = 17;
@@ -175,7 +169,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(290, 25);
+            this.label15.Location = new System.Drawing.Point(197, 51);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(77, 13);
             this.label15.TabIndex = 16;
@@ -184,7 +178,7 @@
             // txtMedia
             // 
             this.txtMedia.Enabled = false;
-            this.txtMedia.Location = new System.Drawing.Point(236, 74);
+            this.txtMedia.Location = new System.Drawing.Point(280, 22);
             this.txtMedia.Name = "txtMedia";
             this.txtMedia.Size = new System.Drawing.Size(48, 20);
             this.txtMedia.TabIndex = 15;
@@ -192,45 +186,11 @@
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(190, 77);
+            this.label16.Location = new System.Drawing.Point(197, 25);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(36, 13);
             this.label16.TabIndex = 14;
             this.label16.Text = "Media";
-            // 
-            // txtMaximo
-            // 
-            this.txtMaximo.Enabled = false;
-            this.txtMaximo.Location = new System.Drawing.Point(236, 48);
-            this.txtMaximo.Name = "txtMaximo";
-            this.txtMaximo.Size = new System.Drawing.Size(48, 20);
-            this.txtMaximo.TabIndex = 13;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(190, 51);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(43, 13);
-            this.label17.TabIndex = 12;
-            this.label17.Text = "Máximo";
-            // 
-            // txtMinimo
-            // 
-            this.txtMinimo.Enabled = false;
-            this.txtMinimo.Location = new System.Drawing.Point(236, 22);
-            this.txtMinimo.Name = "txtMinimo";
-            this.txtMinimo.Size = new System.Drawing.Size(48, 20);
-            this.txtMinimo.TabIndex = 11;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(190, 25);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(42, 13);
-            this.label18.TabIndex = 10;
-            this.label18.Text = "Mínimo";
             // 
             // txtCantIntervalos
             // 
@@ -275,11 +235,12 @@
             // 
             // grpInfoMuestra
             // 
+            this.grpInfoMuestra.Controls.Add(this.btnExportarMuestra);
             this.grpInfoMuestra.Controls.Add(this.lblPaso);
             this.grpInfoMuestra.Controls.Add(this.lblTamanioMuestra);
             this.grpInfoMuestra.Location = new System.Drawing.Point(11, 263);
             this.grpInfoMuestra.Name = "grpInfoMuestra";
-            this.grpInfoMuestra.Size = new System.Drawing.Size(278, 94);
+            this.grpInfoMuestra.Size = new System.Drawing.Size(278, 120);
             this.grpInfoMuestra.TabIndex = 9;
             this.grpInfoMuestra.TabStop = false;
             this.grpInfoMuestra.Text = "Información de muestra";
@@ -335,6 +296,7 @@
             // 
             // tabSeleccionDistribucion
             // 
+            this.tabSeleccionDistribucion.Controls.Add(this.chkVerFrecEsperada);
             this.tabSeleccionDistribucion.Controls.Add(this.cboAlpha);
             this.tabSeleccionDistribucion.Controls.Add(this.grpResultado);
             this.tabSeleccionDistribucion.Controls.Add(this.btnRealizarTest);
@@ -383,7 +345,7 @@
             this.grpResultado.Controls.Add(this.lblValorTabulado);
             this.grpResultado.Controls.Add(this.lblValorObtenido);
             this.grpResultado.Controls.Add(this.lblValorTabuladoTitle);
-            this.grpResultado.Location = new System.Drawing.Point(716, 153);
+            this.grpResultado.Location = new System.Drawing.Point(716, 175);
             this.grpResultado.Name = "grpResultado";
             this.grpResultado.Size = new System.Drawing.Size(266, 131);
             this.grpResultado.TabIndex = 19;
@@ -442,7 +404,7 @@
             // btnRealizarTest
             // 
             this.btnRealizarTest.Enabled = false;
-            this.btnRealizarTest.Location = new System.Drawing.Point(755, 101);
+            this.btnRealizarTest.Location = new System.Drawing.Point(755, 123);
             this.btnRealizarTest.Name = "btnRealizarTest";
             this.btnRealizarTest.Size = new System.Drawing.Size(188, 46);
             this.btnRealizarTest.TabIndex = 11;
@@ -472,16 +434,16 @@
             // 
             // grafico
             // 
-            chartArea2.Name = "ChartArea1";
-            this.grafico.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.grafico.Legends.Add(legend2);
+            chartArea3.Name = "ChartArea1";
+            this.grafico.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.grafico.Legends.Add(legend3);
             this.grafico.Location = new System.Drawing.Point(8, 6);
             this.grafico.Name = "grafico";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.grafico.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.grafico.Series.Add(series3);
             this.grafico.Size = new System.Drawing.Size(738, 459);
             this.grafico.TabIndex = 0;
             this.grafico.Text = "chart1";
@@ -526,6 +488,26 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // btnExportarMuestra
+            // 
+            this.btnExportarMuestra.Location = new System.Drawing.Point(9, 82);
+            this.btnExportarMuestra.Name = "btnExportarMuestra";
+            this.btnExportarMuestra.Size = new System.Drawing.Size(131, 32);
+            this.btnExportarMuestra.TabIndex = 2;
+            this.btnExportarMuestra.Text = "Exportar Muestra";
+            this.btnExportarMuestra.UseVisualStyleBackColor = true;
+            this.btnExportarMuestra.Click += new System.EventHandler(this.btnExportarMuestra_Click);
+            // 
+            // chkVerFrecEsperada
+            // 
+            this.chkVerFrecEsperada.AutoSize = true;
+            this.chkVerFrecEsperada.Location = new System.Drawing.Point(758, 100);
+            this.chkVerFrecEsperada.Name = "chkVerFrecEsperada";
+            this.chkVerFrecEsperada.Size = new System.Drawing.Size(146, 17);
+            this.chkVerFrecEsperada.TabIndex = 21;
+            this.chkVerFrecEsperada.Text = "Ver Frecuencia Esperada";
+            this.chkVerFrecEsperada.UseVisualStyleBackColor = true;
             // 
             // frmPrincipal
             // 
@@ -588,15 +570,13 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox txtMedia;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox txtMaximo;
-        private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.TextBox txtMinimo;
-        private System.Windows.Forms.Label label18;
         private System.Windows.Forms.TextBox txtCantIntervalos;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TextBox txtCantNumeros;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.ComboBox cboDistribucion;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnExportarMuestra;
+        private System.Windows.Forms.CheckBox chkVerFrecEsperada;
     }
 }

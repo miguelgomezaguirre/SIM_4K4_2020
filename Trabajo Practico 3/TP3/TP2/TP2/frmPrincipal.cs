@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -84,12 +85,6 @@ namespace TP2
 
                 generarDatos();
 
-                if (datos.Count < 200)
-                {
-                    MessageBox.Show("Debe ingresar una muestra mayor a 200 números. Datos encontrados: " + datos.Count());
-
-                    return;
-                }
 
                 double min = datos.Min();
                 double max = datos.Max() + 0.001d;
@@ -99,6 +94,11 @@ namespace TP2
                 double paso = (max - min) / (double)numeroDeIntervalos;
 
                 paso = Math.Round(paso, CANTIDAD_DECIMALES);
+
+                if (distribucionElegida == TipoDistribucion.continuaPoisson)
+                {
+                    paso = 1;
+                }
 
                 double limiteInferior = min;
                 double limiteSuperior = min + paso;
@@ -133,11 +133,20 @@ namespace TP2
 
                 cargarGrillaTab1();
 
-                graficar(false);
+                graficar(true);
 
                 lblTamanioMuestra.Text = "Tamaño de la muestra: " + datos.Count().ToString();
-                lblPaso.Text = "Paso: " + paso.ToString("0.0000");
-                lblPaso.Visible = true;
+
+                if(distribucionElegida != TipoDistribucion.continuaPoisson)
+                {
+                    lblPaso.Text = "Paso: " + paso.ToString("0.0000");
+                    lblPaso.Visible = true;
+                }
+                else
+                {
+                    lblPaso.Visible = false;
+                }
+                    
 
                 btnVerDistribucion.Enabled = true;
                 grpInfoMuestra.Visible = true;
@@ -208,7 +217,6 @@ namespace TP2
                 default:
                     break;
             }
-
         }
 
         private void cargarGrillaTab1()
@@ -224,7 +232,15 @@ namespace TP2
             {
                 fila = tabla.NewRow();
 
-                fila["Intervalo"] = "[" + intervalo.limiteInferior.ToString("0.0000") + " ; " + intervalo.limiteSuperior.ToString("0.0000") + ")";
+                if (distribucionElegida != TipoDistribucion.continuaPoisson)
+                {
+                    fila["Intervalo"] = "[" + intervalo.limiteInferior.ToString("0.0000") + " ; " + intervalo.limiteSuperior.ToString("0.0000") + ")";
+                }
+                    
+                else
+                {
+                    fila["Intervalo"] = intervalo.limiteInferior.ToString("0");
+                }
                 fila["FO"] = intervalo.frecuenciaObservada.ToString("0.0000");
 
                 tabla.Rows.Add(fila);
@@ -239,6 +255,7 @@ namespace TP2
         {
 
             #region validacion cantidad de intervalos
+
             string cantidadIntervalosText = txtCantIntervalos.Text;
             if (string.IsNullOrEmpty(cantidadIntervalosText))
             {
@@ -269,7 +286,108 @@ namespace TP2
 
             #endregion
 
-            
+            #region Validación cantidad de números
+
+            string cantidadNumerosText = txtCantNumeros.Text;
+            if (string.IsNullOrEmpty(cantidadNumerosText))
+            {
+                mensajeError = "Debe ingresar la cantidad de números a generar";
+                txtCantNumeros.Focus();
+                return false;
+            }
+            else
+            {
+                int cantidadNumeros = 0;
+
+                if (!int.TryParse(cantidadNumerosText, out cantidadNumeros))
+                {
+                    mensajeError = "El número de intervalos debe ser un valor entero";
+                    txtCantNumeros.Focus();
+                    return false;
+                }
+                else
+                {
+                    if (cantidadNumeros <= 0)
+                    {
+                        mensajeError = "El número de intervalos debe ser mayor a cero";
+                        txtCantNumeros.Focus();
+                        return false;
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Validación Distribución Normal
+
+            if(distribucionElegida == TipoDistribucion.continuaNormal)
+            {
+                string mediaText = txtMedia.Text;
+                if (string.IsNullOrEmpty(mediaText))
+                {
+                    mensajeError = "Debe ingresar la media";
+                    txtMedia.Focus();
+                    return false;
+                }
+                else
+                {
+                    double media = 0;
+
+                    if (!double.TryParse(mediaText, out media))
+                    {
+                        mensajeError = "La media debe ser numérica";
+                        txtCantNumeros.Focus();
+                        return false;
+                    }
+                }
+
+                string desvEstandarText = txtDesvEstandar.Text;
+                if (string.IsNullOrEmpty(desvEstandarText))
+                {
+                    mensajeError = "Debe ingresar la desviación estándar";
+                    txtDesvEstandar.Focus();
+                    return false;
+                }
+                else
+                {
+                    double desvEstandar = 0;
+
+                    if (!double.TryParse(desvEstandarText, out desvEstandar))
+                    {
+                        mensajeError = "La desviación estándar debe ser mayor a cero";
+                        txtDesvEstandar.Focus();
+                        return false;
+                    }
+                }
+            }
+
+
+            #endregion
+
+            #region Validación Poisson
+
+            if(distribucionElegida == TipoDistribucion.continuaPoisson || distribucionElegida == TipoDistribucion.continuaExponencial)
+            {
+                string lambdaText = txtLambda.Text;
+                if (string.IsNullOrEmpty(lambdaText))
+                {
+                    mensajeError = "Debe ingresar un valor para lambda";
+                    txtLambda.Focus();
+                    return false;
+                }
+                else
+                {
+                    double lambda = 0;
+
+                    if (!double.TryParse(lambdaText, out lambda))
+                    {
+                        mensajeError = "El valor de lambda debe ser mayor a cero";
+                        txtLambda.Focus();
+                        return false;
+                    }
+                }
+            }
+            #endregion
 
 
             return true;
@@ -391,8 +509,6 @@ namespace TP2
 
                     distribucionElegida = TipoDistribucion.continuaUniforme;
 
-                    txtMinimo.Enabled = true;
-                    txtMaximo.Enabled = true;
 
                     break;
 
@@ -407,8 +523,6 @@ namespace TP2
 
         private void limpiarCampos()
         {
-            txtMinimo.Text = "";
-            txtMaximo.Text = "";
             txtMedia.Text = "";
             txtDesvEstandar.Text = "";
             txtLambda.Text = "";
@@ -416,96 +530,94 @@ namespace TP2
 
         private void bloquearControlesGeneracion()
         {
-            txtMinimo.Enabled = false;
-            txtMaximo.Enabled = false;
             txtMedia.Enabled = false;
             txtDesvEstandar.Enabled = false;
             txtLambda.Enabled = false;
         }
 
-        private void btnComparar_Click(object sender, EventArgs e)
-        {
-            double media = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
+        //private void btnComparar_Click(object sender, EventArgs e)
+        //{
+        //    double media = MathNet.Numerics.Statistics.ArrayStatistics.Mean(datos.ToArray());
 
-            switch (distribucionElegida)
-            {
-                case TipoDistribucion.continuaExponencial:
-                    /*
-                     En el caso de haber elegido la distribucion exponencial, tenemos que:
+        //    switch (distribucionElegida)
+        //    {
+        //        case TipoDistribucion.continuaExponencial:
+        //            /*
+        //             En el caso de haber elegido la distribucion exponencial, tenemos que:
 
-                        * lambda(media) = 1 / (media muestral);
+        //                * lambda(media) = 1 / (media muestral);
                         
-                    */
+        //            */
 
-                    //obtenemos el lambda para esta distribucion
-                    double lambda = 1 / media;
+        //            //obtenemos el lambda para esta distribucion
+        //            double lambda = 1 / media;
 
-                    //generamos la distribucion para el lambda dado:
-                    Exponential exponencial = new Exponential(lambda);
+        //            //generamos la distribucion para el lambda dado:
+        //            Exponential exponencial = new Exponential(lambda);
 
-                    //recorremos los intervalos para obtener los valores minimos y maximos, y asi calcular la frecuencia esperada
-                    foreach (Intervalo intervalo in intervalos)
-                    {
-                        intervalo.frecuenciaEsperada = (exponencial.CumulativeDistribution(intervalo.limiteSuperior) - exponencial.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+        //            //recorremos los intervalos para obtener los valores minimos y maximos, y asi calcular la frecuencia esperada
+        //            foreach (Intervalo intervalo in intervalos)
+        //            {
+        //                intervalo.frecuenciaEsperada = (exponencial.CumulativeDistribution(intervalo.limiteSuperior) - exponencial.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
 
-                        intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
-                    }
+        //                intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
+        //            }
 
-                    break;
+        //            break;
 
-                case TipoDistribucion.continuaUniforme:
-                    /*
-                     En el caso de haber elegido uniforme, tenemos que:
+        //        case TipoDistribucion.continuaUniforme:
+        //            /*
+        //             En el caso de haber elegido uniforme, tenemos que:
 
-                        * FE = cantidad de datos de la muestra / cantidad de intervalos;
+        //                * FE = cantidad de datos de la muestra / cantidad de intervalos;
                         
-                    */
+        //            */
 
-                    //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
-                    double frecuenciaEsperada = (double)datos.Count() / (double)intervalos.Count();
+        //            //Entonces obtenemos este dato y se lo asignamos a todos los intervalos.
+        //            double frecuenciaEsperada = (double)datos.Count() / (double)intervalos.Count();
 
-                    foreach (Intervalo intervalo in intervalos)
-                    {
-                        intervalo.frecuenciaEsperada = frecuenciaEsperada;
+        //            foreach (Intervalo intervalo in intervalos)
+        //            {
+        //                intervalo.frecuenciaEsperada = frecuenciaEsperada;
 
-                        intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
-                    }
+        //                intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
+        //            }
 
-                    break;
+        //            break;
 
-                case TipoDistribucion.continuaNormal:
-                    /*
-                        Para distribucion normal tenemos:
+        //        case TipoDistribucion.continuaNormal:
+        //            /*
+        //                Para distribucion normal tenemos:
                     
-                            desviacion estandar (sigma) = raiz cuadrada de la media;
+        //                    desviacion estandar (sigma) = raiz cuadrada de la media;
                             
-                     */
+        //             */
 
-                    //obtenemos la varianza
-                    double varianza = MathNet.Numerics.Statistics.ArrayStatistics.Variance(datos.ToArray());
+        //            //obtenemos la varianza
+        //            double varianza = MathNet.Numerics.Statistics.ArrayStatistics.Variance(datos.ToArray());
 
-                    //calculamos la deviacion estandar
-                    double desviacionEstandar = Math.Sqrt(varianza);
+        //            //calculamos la deviacion estandar
+        //            double desviacionEstandar = Math.Sqrt(varianza);
 
-                    //creo la distribucion normal
-                    MathNet.Numerics.Distributions.Normal normal = new MathNet.Numerics.Distributions.Normal(media, desviacionEstandar);
+        //            //creo la distribucion normal
+        //            MathNet.Numerics.Distributions.Normal normal = new MathNet.Numerics.Distributions.Normal(media, desviacionEstandar);
 
-                    foreach (Intervalo intervalo in intervalos)
-                    {
-                        intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+        //            foreach (Intervalo intervalo in intervalos)
+        //            {
+        //                intervalo.frecuenciaEsperada = (normal.CumulativeDistribution(intervalo.limiteSuperior) - normal.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
 
-                        intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
-                    }
+        //                intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
+        //            }
 
-                    break;
+        //            break;
 
-            }
+        //    }
 
-            graficar(true);
+        //    graficar(true);
 
-            cboAlpha.Enabled = true;
-            btnRealizarTest.Enabled = true;
-        }
+        //    cboAlpha.Enabled = true;
+        //    btnRealizarTest.Enabled = true;
+        //}
 
         private void reiniciarTab2()
         {
@@ -523,6 +635,8 @@ namespace TP2
             {
                 obtenerFrecuenciasEsperadas();
                 testChiCuadrado();
+
+                graficar(chkVerFrecEsperada.Checked);
             }
             else
             {
@@ -612,12 +726,12 @@ namespace TP2
 
                     double lambdaPoisson = 1 / media;
 
-                    Poisson poisson = new Poisson(lambdaPoisson);
+                    Poisson poisson = new Poisson(media);
 
                     //recorremos los intervalos para obtener los valores minimos y maximos, y asi calcular la frecuencia esperada
                     foreach (Intervalo intervalo in intervalos)
                     {
-                        intervalo.frecuenciaEsperada = (poisson.CumulativeDistribution(intervalo.limiteSuperior) - poisson.CumulativeDistribution(intervalo.limiteInferior)) * datos.Count();
+                        intervalo.frecuenciaEsperada = (poisson.CumulativeDistribution(intervalo.limiteInferior) - poisson.CumulativeDistribution(intervalo.limiteInferior - 1)) * datos.Count();
 
                         intervalo.frecuenciaEsperada = Math.Round(intervalo.frecuenciaEsperada, CANTIDAD_DECIMALES);
                     }
@@ -636,7 +750,18 @@ namespace TP2
 
                 foreach (var intervalo in intervalos)
                 {
-                    chiCuadrado += intervalo.chiCuadradoIntervalo();
+                    if (intervalo.frecuenciaEsperada == intervalo.frecuenciaObservada)
+                        continue;
+
+                    try
+                    {
+
+                        chiCuadrado += intervalo.chiCuadradoIntervalo();
+                    }
+                    catch (Exception)
+                    {
+
+                    }
                 }
 
                 int gradosLibertad = getGradosLibertad();
@@ -802,7 +927,27 @@ namespace TP2
         private void tabSeleccionDistribucion_Click(object sender, EventArgs e)
         {
 
-        }       
+        }
+
+        private void btnExportarMuestra_Click(object sender, EventArgs e)
+        {
+            StringBuilder listadoNumeros = new StringBuilder();
+
+            foreach (var numero in datos)
+            {
+                listadoNumeros.AppendLine(numero.ToString("0.0000"));
+            }
+
+            string pathArchivo = Application.StartupPath.TrimEnd('/') + "/list" + DateTime.Now.ToLongTimeString().Replace(":", "_") + ".txt";
+
+            TextWriter tw = new StreamWriter(pathArchivo);
+
+            tw.Write(listadoNumeros.ToString());
+
+            tw.Close();
+
+            Process.Start(pathArchivo);
+        }
     }
 
       
