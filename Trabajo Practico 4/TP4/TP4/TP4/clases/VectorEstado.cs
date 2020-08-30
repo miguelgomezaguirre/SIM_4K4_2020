@@ -7,7 +7,9 @@ namespace TP4.clases
         private int nroDia;
         private Boolean correspondeCompra; // cada 2 dias sera true
         private Double nroRandomLlegadaCompra; // aleatorio entre 0 y 1
-        private Double nroRandomDemandaTurnoManana;
+        private Double nroRandomDemandaTurnoManana1;
+        private Double nroRandomDemandaTurnoManana2;
+        private Double nroRandomDemandaTurnoManana3;
         private Double nroRandomDemandaTurnoTarde;
         private Double demandaTurnoManana;
         private Double demandaTurnoTarde;
@@ -39,7 +41,7 @@ namespace TP4.clases
         public int NroDiaLlegadaCompra { get => nroDiaLlegadaCompra; set => nroDiaLlegadaCompra = value; }
         public double StockInicial { get => stockInicial; set => stockInicial = value; }
         public double StockFinal { get => stockFinal; set => stockFinal = value; }
-        public double NroRandomDemandaTurnoManana { get => nroRandomDemandaTurnoManana; set => nroRandomDemandaTurnoManana = value; }
+        public double NroRandomDemandaTurnoManana1 { get => nroRandomDemandaTurnoManana1; set => nroRandomDemandaTurnoManana1 = value; }
         public double NroRandomDemandaTurnoTarde { get => nroRandomDemandaTurnoTarde; set => nroRandomDemandaTurnoTarde = value; }
         public double DemandaTurnoManana { get => demandaTurnoManana; set => demandaTurnoManana = value; }
         public double DemandaTurnoTarde { get => demandaTurnoTarde; set => demandaTurnoTarde = value; }
@@ -55,5 +57,7 @@ namespace TP4.clases
         public double DiaConStockFinalPromedio { get => diaConStockFinalPromedio; set => diaConStockFinalPromedio = value; }
         public double ContribucionDiaria { get => contribucionDiaria; set => contribucionDiaria = value; }
         public double ContribucionDiariaPromedio { get => contribucionDiariaPromedio; set => contribucionDiariaPromedio = value; }
+        public double NroRandomDemandaTurnoManana2 { get => nroRandomDemandaTurnoManana2; set => nroRandomDemandaTurnoManana2 = value; }
+        public double NroRandomDemandaTurnoManana3 { get => nroRandomDemandaTurnoManana3; set => nroRandomDemandaTurnoManana3 = value; }
     }
 }
