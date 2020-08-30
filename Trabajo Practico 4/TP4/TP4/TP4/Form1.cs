@@ -24,6 +24,9 @@ namespace TP4
         private Double importeVentaGramo; 
         private Double importeCostoGramo;
 
+        VectorEstado anterior;
+        VectorEstado actual;
+
 
         public Form1()
         {
@@ -34,7 +37,7 @@ namespace TP4
             cantFrascosCompra = 2; // se compran de a 2 frascos
             cantMaximaFrascosEnStock = 10; // hasta 10 frascos en stock al final del dia
             frecuenciaDiasCompra = 2; // se compran cada 2 dias
-            cantDiasSimular = 1000;
+            cantDiasSimular = 100000;
             gramosPorFrasco = 170d;
             importeCostoGramo = 250d / gramosPorFrasco; // El costo del café es de 250 pesos por frasco
             importeVentaGramo = 150d / 100d; // se vende a 150 pesos cada 100 gramos
@@ -46,99 +49,112 @@ namespace TP4
         }
 
         private void calcular() {
-            String tipoDemandaTurnoManana;
-
-            VectorEstado anterior = new VectorEstado();
-            VectorEstado actual = new VectorEstado();
 
             // Configuro el dia 0
+            actual = new VectorEstado();
             actual.NroDia = 0;
             actual.CorrespondeCompra = false;
             actual.StockFinal = (Double) cantFrascosCompra * gramosPorFrasco; // Suponemos comienza con stock de 2 latas de cafe
 
             for (int nroDiaSimulado = 1; nroDiaSimulado <= cantDiasSimular; nroDiaSimulado++) {
-                anterior = actual; 
-                actual = new VectorEstado();
+                simularDia(nroDiaSimulado);
+            }
 
-                actual.NroDia = nroDiaSimulado;
-                actual.StockInicial = anterior.StockFinal;
+            txtStockFinalDia.Text = actual.StockFinal.ToString();
+            txtStockFinalDiaPromedio.Text = actual.StockFinalPromedio.ToString();
+            txtCantCafeFaltantePromedio.Text = actual.DemandaNoAbastecidaPromedio.ToString();
+            txtIngresoPromedioDiario.Text = actual.IngresoDiarioPromedio.ToString();
+        }
 
-                // Controlo si hoy llega una compra
-                if (nroDiaSimulado == anterior.NroDiaLlegadaCompra) {
-                    actual.StockInicial += (Double) cantFrascosCompra * gramosPorFrasco;
+        private void simularDia(int nroDiaSimulado) {
+            String tipoDemandaTurnoManana;
+            //
+            anterior = actual;
+            actual = new VectorEstado();
+
+            actual.NroDia = nroDiaSimulado;
+            actual.StockInicial = anterior.StockFinal;
+
+            // Controlo si hoy llega una compra
+            if (nroDiaSimulado == anterior.NroDiaLlegadaCompra)
+            {
+                actual.StockInicial += (Double)cantFrascosCompra * gramosPorFrasco;
+            }
+            actual.NroDiaLlegadaCompra = anterior.NroDiaLlegadaCompra;
+
+            if (hoyCorrespondeComprar(nroDiaSimulado))
+            {
+                actual.CorrespondeCompra = true;
+                actual.NroRandomLlegadaCompra = getNroRandom();
+                actual.NroDiaLlegadaCompra = actual.NroDia + getCantDiasParaLlegadaCompra(actual.NroRandomLlegadaCompra);
+                // Puede pasar que hoy llegue una compra anterior y ademas se hace otra compra que llega  inmediatamente
+                if (nroDiaSimulado == actual.NroDiaLlegadaCompra)
+                {
+                    actual.StockInicial += (Double)cantFrascosCompra * gramosPorFrasco;
                 }
                 actual.NroDiaLlegadaCompra = anterior.NroDiaLlegadaCompra;
-
-                if (hoyCorrespondeComprar(nroDiaSimulado)) {
-                    actual.CorrespondeCompra = true;
-                    actual.NroRandomLlegadaCompra = getNroRandom();
-                    actual.NroDiaLlegadaCompra = actual.NroDia + getCantDiasParaLlegadaCompra(actual.NroRandomLlegadaCompra);
-                    // Puede pasar que hoy llegue una compra anterior y ademas se hace otra compra que llega  inmediatamente
-                    if (nroDiaSimulado == actual.NroDiaLlegadaCompra)
-                    {
-                        actual.StockInicial += (Double) cantFrascosCompra * gramosPorFrasco;
-                    }
-                    actual.NroDiaLlegadaCompra = anterior.NroDiaLlegadaCompra;
-                }
-
-                // Calculo de la demanda del dia
-                // Turno Mañana
-                actual.NroRandomDemandaTurnoManana1 = getNroRandom();
-                tipoDemandaTurnoManana = getTipoDemandaTurnoManana(actual.NroRandomDemandaTurnoManana1);
-                if (tipoDemandaTurnoManana.Equals("FIJA"))
-                {
-                    actual.DemandaTurnoManana = getDemandaTurnoMananaFija();
-                }
-                else if (tipoDemandaTurnoManana.Equals("DISTRIBUCION_NORMAL")) { 
-                    actual.NroRandomDemandaTurnoManana2 = getNroRandom();
-                    actual.NroRandomDemandaTurnoManana3 = getNroRandom();
-                    actual.DemandaTurnoManana = getDemandaTurnoMananaDistriNormal(actual.NroRandomDemandaTurnoManana2, actual.NroRandomDemandaTurnoManana3);
-                }
-                // Turno Tarde
-                actual.NroRandomDemandaTurnoTarde = getNroRandom();
-                actual.DemandaTurnoTarde = getDemandaTurnoTarde(actual.NroRandomDemandaTurnoTarde);
-                actual.DemandaDiaria = actual.DemandaTurnoManana + actual.DemandaTurnoTarde;
-
-                // Venta diaria
-                // Caso se demanda mas de lo que hay en stock => demanda total insatisfecha
-                if (actual.DemandaDiaria > actual.StockInicial)
-                {
-                    actual.VentaDiaria = actual.StockInicial;
-                    actual.StockFinal = 0d;
-                    actual.DemandaNoAbastecida = actual.DemandaDiaria - actual.StockInicial;
-                    actual.DiaConFaltante = 1;
-                }
-                // Caso se demanda menos de lo que hay en stock => demanda total satisfecha
-                else {
-                    actual.VentaDiaria = actual.DemandaDiaria;
-                    actual.StockFinal = actual.StockInicial - actual.DemandaDiaria;
-                    actual.DemandaNoAbastecida = 0d;
-                    actual.DiaConFaltante = 0;
-                }
-
-                // Hay una capacidad máxima de almacenamiento de 10 frascos al final del día. Los
-                // demás se tiran o regalan a los clientes.
-                if (actual.StockFinal > (Double)cantMaximaFrascosEnStock * gramosPorFrasco) {
-                    actual.StockFinal = (Double)cantMaximaFrascosEnStock * gramosPorFrasco;
-                }
-
-                // Ingreso diario
-                actual.IngresoDiario = actual.VentaDiaria * importeVentaGramo;
-                actual.ContribucionDiaria = actual.IngresoDiario - (actual.VentaDiaria * importeCostoGramo);
-
-                // Stock final promedio diario (punto 2)
-                actual.StockFinalPromedio = ((anterior.StockFinalPromedio * anterior.NroDia) + actual.StockFinal) / actual.NroDia;
-                // Demanda faltante promedio diaria (punto 3)
-                actual.DemandaNoAbastecidaPromedio = ((anterior.DemandaNoAbastecidaPromedio * anterior.NroDia) + actual.DemandaNoAbastecida) / actual.NroDia;
-                // ingreso promedio diario (punto 4)
-                actual.IngresoDiarioPromedio = ((anterior.IngresoDiarioPromedio * anterior.NroDia) + actual.IngresoDiario) / actual.NroDia;
-                // contribución promedio diaria (punto 5)
-                actual.ContribucionDiariaPromedio = ((anterior.ContribucionDiariaPromedio * anterior.NroDia) + actual.ContribucionDiaria) / actual.NroDia;
-                // Porcentaje de días en los que hubo faltante (punto 6)
-                actual.DiaConFaltantePromedio = ((anterior.DiaConFaltantePromedio * anterior.NroDia) + actual.DiaConFaltante) / actual.NroDia;
-                // Porcentaje de dias que terminal con stock final != 0 (punto 9)
-                actual.DiaConStockFinalPromedio = ((anterior.DiaConStockFinalPromedio * anterior.NroDia) + (actual.StockFinal > 0 ? 1 : 0)) / actual.NroDia;
             }
+
+            // Calculo de la demanda del dia
+            // Turno Mañana
+            actual.NroRandomDemandaTurnoManana1 = getNroRandom();
+            tipoDemandaTurnoManana = getTipoDemandaTurnoManana(actual.NroRandomDemandaTurnoManana1);
+            if (tipoDemandaTurnoManana.Equals("FIJA"))
+            {
+                actual.DemandaTurnoManana = getDemandaTurnoMananaFija();
+            }
+            else if (tipoDemandaTurnoManana.Equals("DISTRIBUCION_NORMAL"))
+            {
+                actual.NroRandomDemandaTurnoManana2 = getNroRandom();
+                actual.NroRandomDemandaTurnoManana3 = getNroRandom();
+                actual.DemandaTurnoManana = getDemandaTurnoMananaDistriNormal(actual.NroRandomDemandaTurnoManana2, actual.NroRandomDemandaTurnoManana3);
+            }
+            // Turno Tarde
+            actual.NroRandomDemandaTurnoTarde = getNroRandom();
+            actual.DemandaTurnoTarde = getDemandaTurnoTarde(actual.NroRandomDemandaTurnoTarde);
+            actual.DemandaDiaria = actual.DemandaTurnoManana + actual.DemandaTurnoTarde;
+
+            // Venta diaria
+            // Caso se demanda mas de lo que hay en stock => demanda total insatisfecha
+            if (actual.DemandaDiaria > actual.StockInicial)
+            {
+                actual.VentaDiaria = actual.StockInicial;
+                actual.StockFinal = 0d;
+                actual.DemandaNoAbastecida = actual.DemandaDiaria - actual.StockInicial;
+                actual.DiaConFaltante = 1;
+            }
+            // Caso se demanda menos de lo que hay en stock => demanda total satisfecha
+            else
+            {
+                actual.VentaDiaria = actual.DemandaDiaria;
+                actual.StockFinal = actual.StockInicial - actual.DemandaDiaria;
+                actual.DemandaNoAbastecida = 0d;
+                actual.DiaConFaltante = 0;
+            }
+
+            // Hay una capacidad máxima de almacenamiento de 10 frascos al final del día. Los
+            // demás se tiran o regalan a los clientes.
+            if (actual.StockFinal > (Double)cantMaximaFrascosEnStock * gramosPorFrasco)
+            {
+                actual.StockFinal = (Double)cantMaximaFrascosEnStock * gramosPorFrasco;
+            }
+
+            // Ingreso diario
+            actual.IngresoDiario = actual.VentaDiaria * importeVentaGramo;
+            actual.ContribucionDiaria = actual.IngresoDiario - (actual.VentaDiaria * importeCostoGramo);
+
+            // Stock final promedio diario (punto 2)
+            actual.StockFinalPromedio = ((anterior.StockFinalPromedio * anterior.NroDia) + actual.StockFinal) / actual.NroDia;
+            // Demanda faltante promedio diaria (punto 3)
+            actual.DemandaNoAbastecidaPromedio = ((anterior.DemandaNoAbastecidaPromedio * anterior.NroDia) + actual.DemandaNoAbastecida) / actual.NroDia;
+            // ingreso promedio diario (punto 4)
+            actual.IngresoDiarioPromedio = ((anterior.IngresoDiarioPromedio * anterior.NroDia) + actual.IngresoDiario) / actual.NroDia;
+            // contribución promedio diaria (punto 5)
+            actual.ContribucionDiariaPromedio = ((anterior.ContribucionDiariaPromedio * anterior.NroDia) + actual.ContribucionDiaria) / actual.NroDia;
+            // Porcentaje de días en los que hubo faltante (punto 6)
+            actual.DiaConFaltantePromedio = ((anterior.DiaConFaltantePromedio * anterior.NroDia) + actual.DiaConFaltante) / actual.NroDia;
+            // Porcentaje de dias que terminal con stock final != 0 (punto 9)
+            actual.DiaConStockFinalPromedio = ((anterior.DiaConStockFinalPromedio * anterior.NroDia) + (actual.StockFinal > 0 ? 1 : 0)) / actual.NroDia;
         }
 
         private Double getNroRandom() { 

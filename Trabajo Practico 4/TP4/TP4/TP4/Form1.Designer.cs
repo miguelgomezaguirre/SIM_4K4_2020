@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.button1 = new System.Windows.Forms.Button();
+            this.txtStockFinalDia = new System.Windows.Forms.TextBox();
+            this.txtStockFinalDiaPromedio = new System.Windows.Forms.TextBox();
+            this.txtCantCafeFaltantePromedio = new System.Windows.Forms.TextBox();
+            this.txtIngresoPromedioDiario = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // button1
@@ -41,22 +45,59 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // txtStockFinalDia
+            // 
+            this.txtStockFinalDia.Location = new System.Drawing.Point(58, 194);
+            this.txtStockFinalDia.Name = "txtStockFinalDia";
+            this.txtStockFinalDia.Size = new System.Drawing.Size(100, 20);
+            this.txtStockFinalDia.TabIndex = 1;
+            // 
+            // txtStockFinalDiaPromedio
+            // 
+            this.txtStockFinalDiaPromedio.Location = new System.Drawing.Point(199, 194);
+            this.txtStockFinalDiaPromedio.Name = "txtStockFinalDiaPromedio";
+            this.txtStockFinalDiaPromedio.Size = new System.Drawing.Size(100, 20);
+            this.txtStockFinalDiaPromedio.TabIndex = 2;
+            // 
+            // txtCantCafeFaltantePromedio
+            // 
+            this.txtCantCafeFaltantePromedio.Location = new System.Drawing.Point(346, 194);
+            this.txtCantCafeFaltantePromedio.Name = "txtCantCafeFaltantePromedio";
+            this.txtCantCafeFaltantePromedio.Size = new System.Drawing.Size(100, 20);
+            this.txtCantCafeFaltantePromedio.TabIndex = 3;
+            // 
+            // txtIngresoPromedioDiario
+            // 
+            this.txtIngresoPromedioDiario.Location = new System.Drawing.Point(476, 194);
+            this.txtIngresoPromedioDiario.Name = "txtIngresoPromedioDiario";
+            this.txtIngresoPromedioDiario.Size = new System.Drawing.Size(100, 20);
+            this.txtIngresoPromedioDiario.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.txtIngresoPromedioDiario);
+            this.Controls.Add(this.txtCantCafeFaltantePromedio);
+            this.Controls.Add(this.txtStockFinalDiaPromedio);
+            this.Controls.Add(this.txtStockFinalDia);
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtStockFinalDia;
+        private System.Windows.Forms.TextBox txtStockFinalDiaPromedio;
+        private System.Windows.Forms.TextBox txtCantCafeFaltantePromedio;
+        private System.Windows.Forms.TextBox txtIngresoPromedioDiario;
     }
 }
 
