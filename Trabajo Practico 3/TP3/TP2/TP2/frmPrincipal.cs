@@ -385,6 +385,15 @@ namespace TP2
                         txtLambda.Focus();
                         return false;
                     }
+                    else
+                    {
+                        if (lambda <= 0)
+                        {
+                            mensajeError = "El valor de lambda debe ser mayor a cero";
+                            txtLambda.Focus();
+                            return false;
+                        }
+                    }
                 }
             }
             #endregion
