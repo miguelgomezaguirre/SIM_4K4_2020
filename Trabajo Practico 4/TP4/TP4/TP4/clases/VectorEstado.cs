@@ -22,6 +22,15 @@ namespace TP4.clases
         private Double ingresoDiario;
         private int diaConFaltante; // 1: hubo faltante. 0: no hubo
         private Double contribucionDiaria;
+        private int cantDiasConHasta2Frascos;
+        private int cantDiasConMasDe2Hasta5Frascos;
+        private int cantDiasConMasDe5Hasta8Frascos;
+        private int cantDiasConMasDe8Frascos;
+        private Double porcentajeDiasConHasta2Frascos;
+        private Double porcentajeDiasConMasDe2Hasta5Frascos;
+        private Double porcentajeDiasConMasDe5Hasta8Frascos;
+        private Double porcentajeDiasConMasDe8Frascos;
+
 
         // promedios
         private Double stockFinalPromedio;
@@ -59,5 +68,13 @@ namespace TP4.clases
         public double ContribucionDiariaPromedio { get => contribucionDiariaPromedio; set => contribucionDiariaPromedio = value; }
         public double NroRandomDemandaTurnoManana2 { get => nroRandomDemandaTurnoManana2; set => nroRandomDemandaTurnoManana2 = value; }
         public double NroRandomDemandaTurnoManana3 { get => nroRandomDemandaTurnoManana3; set => nroRandomDemandaTurnoManana3 = value; }
+        public int CantDiasConHasta2Frascos { get => cantDiasConHasta2Frascos; set => cantDiasConHasta2Frascos = value; }
+        public int CantDiasConMasDe2Hasta5Frascos { get => cantDiasConMasDe2Hasta5Frascos; set => cantDiasConMasDe2Hasta5Frascos = value; }
+        public int CantDiasConMasDe5Hasta8Frascos { get => cantDiasConMasDe5Hasta8Frascos; set => cantDiasConMasDe5Hasta8Frascos = value; }
+        public int CantDiasConMasDe8Frascos { get => cantDiasConMasDe8Frascos; set => cantDiasConMasDe8Frascos = value; }
+        public double PorcentajeDiasConHasta2Frascos { get => porcentajeDiasConHasta2Frascos; set => porcentajeDiasConHasta2Frascos = value; }
+        public double PorcentajeDiasConMasDe2Hasta5Frascos { get => porcentajeDiasConMasDe2Hasta5Frascos; set => porcentajeDiasConMasDe2Hasta5Frascos = value; }
+        public double PorcentajeDiasConMasDe5Hasta8Frascos { get => porcentajeDiasConMasDe5Hasta8Frascos; set => porcentajeDiasConMasDe5Hasta8Frascos = value; }
+        public double PorcentajeDiasConMasDe8Frascos { get => porcentajeDiasConMasDe8Frascos; set => porcentajeDiasConMasDe8Frascos = value; }
     }
 }

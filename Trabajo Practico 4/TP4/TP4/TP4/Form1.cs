@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +24,13 @@ namespace TP4
         private Double gramosPorFrasco; // cantidad de gramos que contiene un frasco
         private Double importeVentaGramo; 
         private Double importeCostoGramo;
+        private String metodoGeneradorNrosAleatorios;
+        private Double congruencial_A;
+        private Double congruencial_C;
+        private Double congruencial_M;
+        private Double congruencialSemilla;
+        private Double congruencialUltimaSemilla;
+
 
         VectorEstado anterior;
         VectorEstado actual;
@@ -41,7 +49,15 @@ namespace TP4
             gramosPorFrasco = 170d;
             importeCostoGramo = 250d / gramosPorFrasco; // El costo del café es de 250 pesos por frasco
             importeVentaGramo = 150d / 100d; // se vende a 150 pesos cada 100 gramos
-        }
+
+            //
+            metodoGeneradorNrosAleatorios = "LENGUAJE";
+            congruencial_A = 13d;
+            congruencial_C = 43d;
+            congruencial_M = 101d;
+            congruencialSemilla = 37d;
+            congruencialUltimaSemilla = Double.NaN;
+    }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -143,6 +159,30 @@ namespace TP4
             actual.IngresoDiario = actual.VentaDiaria * importeVentaGramo;
             actual.ContribucionDiaria = actual.IngresoDiario - (actual.VentaDiaria * importeCostoGramo);
 
+            // Punto 7
+            // Cantidad de dias con x cantidad de frascos en stock. Como el enunciador no aclaraba 
+            // consideramos el stock al final del dia. Luego los porcentajes se calcularian diviendo
+            // la cantidad de las variables acumuladoras sobre la cantidad de dias simulados.
+            if (actual.StockFinal / gramosPorFrasco <= 2d)
+            {
+                actual.CantDiasConHasta2Frascos++;
+            }
+            else if (2d < actual.StockFinal / gramosPorFrasco && actual.StockFinal / gramosPorFrasco <= 5d)
+            {
+                actual.CantDiasConMasDe2Hasta5Frascos++;
+            }
+            else if (5d < actual.StockFinal / gramosPorFrasco && actual.StockFinal / gramosPorFrasco <= 8d)
+            {
+                actual.CantDiasConMasDe5Hasta8Frascos++;
+            }
+            else if (8d < actual.StockFinal / gramosPorFrasco) {
+                actual.CantDiasConMasDe8Frascos++;
+            }
+            actual.PorcentajeDiasConHasta2Frascos = (Double) actual.CantDiasConHasta2Frascos / actual.NroDia;
+            actual.PorcentajeDiasConMasDe2Hasta5Frascos = (Double) actual.CantDiasConMasDe2Hasta5Frascos / actual.NroDia;
+            actual.PorcentajeDiasConMasDe5Hasta8Frascos = (Double) actual.CantDiasConMasDe5Hasta8Frascos / actual.NroDia;
+            actual.PorcentajeDiasConMasDe8Frascos = (Double)actual.CantDiasConMasDe8Frascos / actual.NroDia;
+
             // Stock final promedio diario (punto 2)
             actual.StockFinalPromedio = ((anterior.StockFinalPromedio * anterior.NroDia) + actual.StockFinal) / actual.NroDia;
             // Demanda faltante promedio diaria (punto 3)
@@ -157,9 +197,18 @@ namespace TP4
             actual.DiaConStockFinalPromedio = ((anterior.DiaConStockFinalPromedio * anterior.NroDia) + (actual.StockFinal > 0 ? 1 : 0)) / actual.NroDia;
         }
 
-        private Double getNroRandom() { 
+        private Double getNroRandom() {
             // depende el generador elegido usa esto o el congruencial
-            return random.NextDouble();
+            return metodoGeneradorNrosAleatorios.Equals("LENGUAJE") ? random.NextDouble() : getNroRandomCongruencial();
+        }
+
+        private Double getNroRandomCongruencial() {
+            if (Double.IsNaN(congruencialUltimaSemilla))
+            {
+                congruencialUltimaSemilla = congruencialSemilla;
+            }
+            congruencialUltimaSemilla = (congruencial_A * congruencialUltimaSemilla + congruencial_C) % congruencial_M;
+            return congruencialUltimaSemilla / (congruencial_M - 1d);
         }
 
         private int getCantDiasParaLlegadaCompra(double nroRandom) {
