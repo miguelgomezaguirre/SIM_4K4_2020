@@ -21,6 +21,8 @@ namespace TP4
         private int cantMaximaFrascosEnStock; // cantidad maxima de frascos que puede haber en stock al final del dia
         private int frecuenciaDiasCompra; // frecuencia de compra de frascos en unidad de tiempo dias
         private int cantDiasSimular;
+        private Double cantHorasTurnoManana;
+        private Double cantHorasTurnoTarde;
         private Double gramosPorFrasco; // cantidad de gramos que contiene un frasco
         private Double importeVentaGramo; 
         private Double importeCostoGramo;
@@ -49,7 +51,8 @@ namespace TP4
             gramosPorFrasco = 170d;
             importeCostoGramo = 250d / gramosPorFrasco; // El costo del café es de 250 pesos por frasco
             importeVentaGramo = 150d / 100d; // se vende a 150 pesos cada 100 gramos
-
+            cantHorasTurnoManana = 8;
+            cantHorasTurnoTarde = 8;
             //
             metodoGeneradorNrosAleatorios = "LENGUAJE";
             congruencial_A = 13d;
@@ -89,7 +92,15 @@ namespace TP4
             actual = new VectorEstado();
 
             actual.NroDia = nroDiaSimulado;
+            //
             actual.StockInicial = anterior.StockFinal;
+            //
+            actual.CantDiasConHasta2Frascos = anterior.CantDiasConHasta2Frascos;
+            actual.CantDiasConMasDe2Hasta5Frascos = anterior.CantDiasConMasDe2Hasta5Frascos;
+            actual.CantDiasConMasDe5Hasta8Frascos = anterior.CantDiasConMasDe5Hasta8Frascos;
+            actual.CantDiasConMasDe8Frascos = anterior.CantDiasConMasDe8Frascos;
+            //
+            actual.CantDiasConFaltanteStock = anterior.CantDiasConFaltanteStock;
 
             // Controlo si hoy llega una compra
             if (nroDiaSimulado == anterior.NroDiaLlegadaCompra)
@@ -128,6 +139,7 @@ namespace TP4
             // Turno Tarde
             actual.NroRandomDemandaTurnoTarde = getNroRandom();
             actual.DemandaTurnoTarde = getDemandaTurnoTarde(actual.NroRandomDemandaTurnoTarde);
+            // Demanda Diaria 
             actual.DemandaDiaria = actual.DemandaTurnoManana + actual.DemandaTurnoTarde;
 
             // Venta diaria
@@ -137,7 +149,7 @@ namespace TP4
                 actual.VentaDiaria = actual.StockInicial;
                 actual.StockFinal = 0d;
                 actual.DemandaNoAbastecida = actual.DemandaDiaria - actual.StockInicial;
-                actual.DiaConFaltante = 1;
+                actual.CantDiasConFaltanteStock++;
             }
             // Caso se demanda menos de lo que hay en stock => demanda total satisfecha
             else
@@ -145,7 +157,6 @@ namespace TP4
                 actual.VentaDiaria = actual.DemandaDiaria;
                 actual.StockFinal = actual.StockInicial - actual.DemandaDiaria;
                 actual.DemandaNoAbastecida = 0d;
-                actual.DiaConFaltante = 0;
             }
 
             // Hay una capacidad máxima de almacenamiento de 10 frascos al final del día. Los
@@ -155,6 +166,7 @@ namespace TP4
                 actual.StockFinal = (Double)cantMaximaFrascosEnStock * gramosPorFrasco;
             }
 
+            // Punto 4
             // Ingreso diario
             actual.IngresoDiario = actual.VentaDiaria * importeVentaGramo;
             actual.ContribucionDiaria = actual.IngresoDiario - (actual.VentaDiaria * importeCostoGramo);
@@ -178,23 +190,27 @@ namespace TP4
             else if (8d < actual.StockFinal / gramosPorFrasco) {
                 actual.CantDiasConMasDe8Frascos++;
             }
-            actual.PorcentajeDiasConHasta2Frascos = (Double) actual.CantDiasConHasta2Frascos / actual.NroDia;
-            actual.PorcentajeDiasConMasDe2Hasta5Frascos = (Double) actual.CantDiasConMasDe2Hasta5Frascos / actual.NroDia;
-            actual.PorcentajeDiasConMasDe5Hasta8Frascos = (Double) actual.CantDiasConMasDe5Hasta8Frascos / actual.NroDia;
-            actual.PorcentajeDiasConMasDe8Frascos = (Double)actual.CantDiasConMasDe8Frascos / actual.NroDia;
+            actual.PorcentajeDiasConHasta2Frascos = (Double) actual.CantDiasConHasta2Frascos / (Double) actual.NroDia;
+            actual.PorcentajeDiasConMasDe2Hasta5Frascos = (Double) actual.CantDiasConMasDe2Hasta5Frascos / (Double) actual.NroDia;
+            actual.PorcentajeDiasConMasDe5Hasta8Frascos = (Double) actual.CantDiasConMasDe5Hasta8Frascos / (Double) actual.NroDia;
+            actual.PorcentajeDiasConMasDe8Frascos = (Double) actual.CantDiasConMasDe8Frascos / (Double) actual.NroDia;
+            // Punto 6
+            actual.PorcentajeDiasConFaltanteStock = (Double) actual.CantDiasConFaltanteStock / (Double) actual.NroDia;
+            // Punto 9. Porcentaje de dias que terminal con stock final != 0 
+            actual.PorcentajeDiasSinFaltanteStock = (Double)(actual.NroDia - actual.CantDiasConFaltanteStock) / (Double)actual.NroDia;
 
-            // Stock final promedio diario (punto 2)
+            // Punto 2. Stock final promedio diario
             actual.StockFinalPromedio = ((anterior.StockFinalPromedio * anterior.NroDia) + actual.StockFinal) / actual.NroDia;
-            // Demanda faltante promedio diaria (punto 3)
+            // Punto 3. Demanda faltante promedio diaria
             actual.DemandaNoAbastecidaPromedio = ((anterior.DemandaNoAbastecidaPromedio * anterior.NroDia) + actual.DemandaNoAbastecida) / actual.NroDia;
-            // ingreso promedio diario (punto 4)
+            // Punto 4. Ingreso promedio diario
             actual.IngresoDiarioPromedio = ((anterior.IngresoDiarioPromedio * anterior.NroDia) + actual.IngresoDiario) / actual.NroDia;
-            // contribución promedio diaria (punto 5)
+            // Punto 5. contribución promedio diaria.
             actual.ContribucionDiariaPromedio = ((anterior.ContribucionDiariaPromedio * anterior.NroDia) + actual.ContribucionDiaria) / actual.NroDia;
-            // Porcentaje de días en los que hubo faltante (punto 6)
-            actual.DiaConFaltantePromedio = ((anterior.DiaConFaltantePromedio * anterior.NroDia) + actual.DiaConFaltante) / actual.NroDia;
-            // Porcentaje de dias que terminal con stock final != 0 (punto 9)
-            actual.DiaConStockFinalPromedio = ((anterior.DiaConStockFinalPromedio * anterior.NroDia) + (actual.StockFinal > 0 ? 1 : 0)) / actual.NroDia;
+            // Punto 8. Promedio de cuantas horas se perdieron si se considera que cada turno es de 8 horas y el porcentaje 
+            // de café faltante es la proporción al a las horas perdidas del cibercafé.
+            actual.HorasPerdidasPromedio = ((anterior.HorasPerdidasPromedio * (Double) anterior.NroDia) + ((actual.DemandaDiaria != 0d ? actual.DemandaNoAbastecida/actual.DemandaDiaria : 0d) * (cantHorasTurnoManana + cantHorasTurnoTarde))) / actual.NroDia;
+
         }
 
         private Double getNroRandom() {
