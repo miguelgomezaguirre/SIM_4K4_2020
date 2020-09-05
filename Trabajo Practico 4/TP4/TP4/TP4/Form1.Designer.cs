@@ -91,6 +91,8 @@
             this.lblPorcentaje2y5Frascos = new System.Windows.Forms.Label();
             this.lblPorcentaje5y8Frascos = new System.Windows.Forms.Label();
             this.lblPorcentajeMasDe8Frascos = new System.Windows.Forms.Label();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdSimulacion)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -720,11 +722,37 @@
             this.lblPorcentajeMasDe8Frascos.Text = "label20";
             this.lblPorcentajeMasDe8Frascos.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Items.AddRange(new object[] {
+            "62476 - Ardiles Hernan Ulises",
+            "53756 - Brizuela Marcelo",
+            "40684 - Fabro Juan Pablo",
+            "65130 - Gomez Aguirre Miguel",
+            "64813 - Vildoza Gianni Luca"});
+            this.listBox1.Location = new System.Drawing.Point(1097, 56);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(157, 264);
+            this.listBox1.TabIndex = 13;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(1101, 34);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(102, 20);
+            this.label20.TabIndex = 14;
+            this.label20.Text = "Integrantes";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1270, 577);
+            this.Controls.Add(this.label20);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.tabPrincipal);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -744,6 +772,7 @@
             this.grpResumen.ResumeLayout(false);
             this.grpResumen.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -812,6 +841,8 @@
         private System.Windows.Forms.Label lblPorcentajeMasDe8Frascos;
         private System.Windows.Forms.Label lblPorcentaje5y8Frascos;
         private System.Windows.Forms.Label lblPorcentaje2y5Frascos;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label label20;
     }
 }
 
