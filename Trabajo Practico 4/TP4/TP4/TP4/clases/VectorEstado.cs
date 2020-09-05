@@ -51,22 +51,35 @@ namespace TP4.clases
         public double NroRandomLlegadaCompra { get => nroRandomLlegadaCompra; set => nroRandomLlegadaCompra = value; }
         public int NroDiaLlegadaCompra { get => nroDiaLlegadaCompra; set => nroDiaLlegadaCompra = value; }
         public double StockInicial { get => stockInicial; set => stockInicial = value; }
-        public double StockFinal { get => stockFinal; set => stockFinal = value; }
-        public double NroRandomDemandaTurnoManana1 { get => nroRandomDemandaTurnoManana1; set => nroRandomDemandaTurnoManana1 = value; }
-        public double NroRandomDemandaTurnoTarde { get => nroRandomDemandaTurnoTarde; set => nroRandomDemandaTurnoTarde = value; }
-        public double DemandaTurnoManana { get => demandaTurnoManana; set => demandaTurnoManana = value; }
-        public double DemandaTurnoTarde { get => demandaTurnoTarde; set => demandaTurnoTarde = value; }
+
         public double DemandaDiaria { get => demandaDiaria; set => demandaDiaria = value; }
+
         public double VentaDiaria { get => ventaDiaria; set => ventaDiaria = value; }
+
         public double DemandaNoAbastecida { get => demandaNoAbastecida; set => demandaNoAbastecida = value; }
+        public double StockFinal { get => stockFinal; set => stockFinal = value; }
+
         public double StockFinalPromedio { get => stockFinalPromedio; set => stockFinalPromedio = value; }
+
+        public int CantDiasConFaltanteStock { get => cantDiasConFaltanteStock; set => cantDiasConFaltanteStock = value; }
+        public double NroRandomDemandaTurnoManana1 { get => nroRandomDemandaTurnoManana1; set => nroRandomDemandaTurnoManana1 = value; }
+        public double NroRandomDemandaTurnoManana2 { get => nroRandomDemandaTurnoManana2; set => nroRandomDemandaTurnoManana2 = value; }
+        public double NroRandomDemandaTurnoManana3 { get => nroRandomDemandaTurnoManana3; set => nroRandomDemandaTurnoManana3 = value; }
+
+        public double DemandaTurnoManana { get => demandaTurnoManana; set => demandaTurnoManana = value; }
+        public double NroRandomDemandaTurnoTarde { get => nroRandomDemandaTurnoTarde; set => nroRandomDemandaTurnoTarde = value; }
+        
+        public double DemandaTurnoTarde { get => demandaTurnoTarde; set => demandaTurnoTarde = value; }
+       
+        
+        
+        
         public double DemandaNoAbastecidaPromedio { get => demandaNoAbastecidaPromedio; set => demandaNoAbastecidaPromedio = value; }
         public double IngresoDiario { get => ingresoDiario; set => ingresoDiario = value; }
         public double IngresoDiarioPromedio { get => ingresoDiarioPromedio; set => ingresoDiarioPromedio = value; }
         public double ContribucionDiaria { get => contribucionDiaria; set => contribucionDiaria = value; }
         public double ContribucionDiariaPromedio { get => contribucionDiariaPromedio; set => contribucionDiariaPromedio = value; }
-        public double NroRandomDemandaTurnoManana2 { get => nroRandomDemandaTurnoManana2; set => nroRandomDemandaTurnoManana2 = value; }
-        public double NroRandomDemandaTurnoManana3 { get => nroRandomDemandaTurnoManana3; set => nroRandomDemandaTurnoManana3 = value; }
+        
         public int CantDiasConHasta2Frascos { get => cantDiasConHasta2Frascos; set => cantDiasConHasta2Frascos = value; }
         public int CantDiasConMasDe2Hasta5Frascos { get => cantDiasConMasDe2Hasta5Frascos; set => cantDiasConMasDe2Hasta5Frascos = value; }
         public int CantDiasConMasDe5Hasta8Frascos { get => cantDiasConMasDe5Hasta8Frascos; set => cantDiasConMasDe5Hasta8Frascos = value; }
@@ -75,7 +88,7 @@ namespace TP4.clases
         public double PorcentajeDiasConMasDe2Hasta5Frascos { get => porcentajeDiasConMasDe2Hasta5Frascos; set => porcentajeDiasConMasDe2Hasta5Frascos = value; }
         public double PorcentajeDiasConMasDe5Hasta8Frascos { get => porcentajeDiasConMasDe5Hasta8Frascos; set => porcentajeDiasConMasDe5Hasta8Frascos = value; }
         public double PorcentajeDiasConMasDe8Frascos { get => porcentajeDiasConMasDe8Frascos; set => porcentajeDiasConMasDe8Frascos = value; }
-        public int CantDiasConFaltanteStock { get => cantDiasConFaltanteStock; set => cantDiasConFaltanteStock = value; }
+        
         public double PorcentajeDiasConFaltanteStock { get => porcentajeDiasConFaltanteStock; set => porcentajeDiasConFaltanteStock = value; }
         public double PorcentajeDiasSinFaltanteStock { get => porcentajeDiasSinFaltanteStock; set => porcentajeDiasSinFaltanteStock = value; }
         public double HorasPerdidasPromedio { get => horasPerdidasPromedio; set => horasPerdidasPromedio = value; }

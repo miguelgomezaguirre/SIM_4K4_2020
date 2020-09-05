@@ -31,7 +31,7 @@ namespace TP4
         private Double congruencial_C;
         private Double congruencial_M;
         private Double congruencialSemilla;
-        private Double congruencialUltimaSemilla;
+        private Double? congruencialUltimaSemilla;
 
 
         VectorEstado anterior;
@@ -43,23 +43,7 @@ namespace TP4
             InitializeComponent();
             random = new Random();
 
-            // Valores dados por el enunciado
-            cantFrascosCompra = 2; // se compran de a 2 frascos
-            cantMaximaFrascosEnStock = 10; // hasta 10 frascos en stock al final del dia
-            frecuenciaDiasCompra = 2; // se compran cada 2 dias
-            cantDiasSimular = 100000;
-            gramosPorFrasco = 170d;
-            importeCostoGramo = 250d / gramosPorFrasco; // El costo del café es de 250 pesos por frasco
-            importeVentaGramo = 150d / 100d; // se vende a 150 pesos cada 100 gramos
-            cantHorasTurnoManana = 8;
-            cantHorasTurnoTarde = 8;
-            //
-            metodoGeneradorNrosAleatorios = "LENGUAJE";
-            congruencial_A = 13d;
-            congruencial_C = 43d;
-            congruencial_M = 101d;
-            congruencialSemilla = 37d;
-            congruencialUltimaSemilla = Double.NaN;
+            
     }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -67,7 +51,20 @@ namespace TP4
 
         }
 
-        private void calcular() {
+        private void calcular() {            
+
+            getValores();
+
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = cantDiasSimular;
+
+            grdSimulacion.DataSource = null;
+
+            congruencialUltimaSemilla = null;
+
+            List<VectorEstado> diasSimulados = new List<VectorEstado>();
+
+            tabPrincipal.SelectedTab = tabResultado;
 
             // Configuro el dia 0
             actual = new VectorEstado();
@@ -75,14 +72,154 @@ namespace TP4
             actual.CorrespondeCompra = false;
             actual.StockFinal = (Double) cantFrascosCompra * gramosPorFrasco; // Suponemos comienza con stock de 2 latas de cafe
 
+            diasSimulados.Add(actual);
+
             for (int nroDiaSimulado = 1; nroDiaSimulado <= cantDiasSimular; nroDiaSimulado++) {
+                
                 simularDia(nroDiaSimulado);
+
+                if(!chkMostrarSolo10.Checked)
+                {
+                    if (nroDiaSimulado % 10000 == 0 || (chk50DiasAPartirDe.Checked && nroDiaSimulado >= int.Parse(txt50DiasAPartirDe.Text) && nroDiaSimulado < (int.Parse(txt50DiasAPartirDe.Text) + 50)))
+                    {
+                        diasSimulados.Add(actual);
+
+                        lblSimulacionesGeneradas.Text = "Simulaciones Generadas: " + nroDiaSimulado.ToString() + "/" + cantDiasSimular;
+
+                        progressBar1.Value = nroDiaSimulado;
+
+                        Application.DoEvents();
+                    }
+                }
+                else
+                {
+                    diasSimulados.Add(actual);
+
+                    lblSimulacionesGeneradas.Text = "Simulaciones Generadas: " + nroDiaSimulado.ToString() + "/" + cantDiasSimular;
+
+                    progressBar1.Value = nroDiaSimulado;
+
+                    Application.DoEvents();
+                }
+                
+                
             }
 
-            txtStockFinalDia.Text = actual.StockFinal.ToString();
-            txtStockFinalDiaPromedio.Text = actual.StockFinalPromedio.ToString();
-            txtCantCafeFaltantePromedio.Text = actual.DemandaNoAbastecidaPromedio.ToString();
-            txtIngresoPromedioDiario.Text = actual.IngresoDiarioPromedio.ToString();
+
+            cargarEnTabla(diasSimulados);
+
+            cargarResumen(actual);
+
+            grdSimulacion.FirstDisplayedScrollingRowIndex = grdSimulacion.RowCount - 1;
+
+        }
+
+        private void cargarResumen(VectorEstado actual)
+        {
+            string formatoDecimal = "0.0000";
+
+            lblContribucionPromedio.Text = "$ " + actual.ContribucionDiariaPromedio.ToString(formatoDecimal);
+            lblDemandaNoAbastecidaPromedio.Text = actual.DemandaNoAbastecidaPromedio.ToString(formatoDecimal) + " g";
+            lblIngresioDiarioPromedio.Text = "$ " + actual.IngresoDiarioPromedio.ToString(formatoDecimal);
+            lblPorcentajeConFaltanteDeStock.Text = actual.PorcentajeDiasConFaltanteStock.ToString(formatoDecimal) + " días";
+            lblPorcentajeSinFaltanteDeStock.Text = actual.PorcentajeDiasSinFaltanteStock.ToString(formatoDecimal) + " días";
+            lblPromedioHorasPerdidas.Text = actual.HorasPerdidasPromedio.ToString(formatoDecimal) + " Hs";
+            lblPorcentaje2Frascos.Text = (actual.PorcentajeDiasConHasta2Frascos * 100).ToString(formatoDecimal) + " %";
+            lblPorcentaje2y5Frascos.Text = (actual.PorcentajeDiasConMasDe2Hasta5Frascos * 100).ToString(formatoDecimal) + " %";
+            lblPorcentaje5y8Frascos.Text = (actual.PorcentajeDiasConMasDe5Hasta8Frascos * 100).ToString(formatoDecimal) + " %";
+            lblPorcentajeMasDe8Frascos.Text = (actual.PorcentajeDiasConMasDe8Frascos * 100).ToString(formatoDecimal) + " %";
+        }
+
+        private void cargarEnTabla(List<VectorEstado> listDiasSimulados)
+        {
+            DataTable tabla = new DataTable();
+
+            tabla.Columns.Add("Dia Simulado");
+            tabla.Columns.Add("Dia de Compra");
+            tabla.Columns.Add("Random Demora");
+            tabla.Columns.Add("Demora de Pedido");
+            tabla.Columns.Add("Stock Inicial");
+            tabla.Columns.Add("Demanda Diaria");
+            tabla.Columns.Add("Stock Final");
+            tabla.Columns.Add("Stock Final Promedio");
+            tabla.Columns.Add("Random Venta TM");
+            tabla.Columns.Add("Random Venta TM X1 (Normal)");
+            tabla.Columns.Add("Random Venta TM X2 (Normal)");
+            tabla.Columns.Add("Demanda TM");
+            tabla.Columns.Add("Random Venta TT");
+            tabla.Columns.Add("Demanda TT");
+            tabla.Columns.Add("Demanda No Abastecida");
+            tabla.Columns.Add("Demanda No Abastecida Promedio");
+            tabla.Columns.Add("Ingreso Diario");
+            tabla.Columns.Add("Ingreso Promedio Diario");
+            tabla.Columns.Add("Contribucion Diaria");
+            tabla.Columns.Add("Contribucion Promedio Diaria");
+
+            DataRow fila = null;
+
+            string formatoDecimal = "0.0000";
+
+            foreach (var diaSimulado in listDiasSimulados)
+            {
+                fila = tabla.NewRow();
+
+                fila["Dia Simulado"] = diaSimulado.NroDia;
+                fila["Dia de Compra"] = hoyCorrespondeComprar(diaSimulado.NroDia) ? "Si" : "No";
+                fila["Random Demora"] = diaSimulado.NroRandomLlegadaCompra.ToString(formatoDecimal);
+                fila["Demora de Pedido"] = diaSimulado.NroDiaLlegadaCompra - diaSimulado.NroDia < 0 ? 0 : diaSimulado.NroDiaLlegadaCompra - diaSimulado.NroDia;
+                fila["Stock Inicial"] = diaSimulado.StockInicial.ToString(formatoDecimal);
+                fila["Demanda Diaria"] = diaSimulado.DemandaDiaria.ToString(formatoDecimal);
+                fila["Stock Final"] = diaSimulado.StockFinal.ToString(formatoDecimal);
+                fila["Stock Final Promedio"] = diaSimulado.StockFinalPromedio.ToString(formatoDecimal);
+                fila["Random Venta TM"] = diaSimulado.NroRandomDemandaTurnoManana1.ToString(formatoDecimal);
+                fila["Random Venta TM X1 (Normal)"] = diaSimulado.NroRandomDemandaTurnoManana2.ToString(formatoDecimal);
+                fila["Random Venta TM X2 (Normal)"] = diaSimulado.NroRandomDemandaTurnoManana3.ToString(formatoDecimal);
+                fila["Demanda TM"] = diaSimulado.DemandaTurnoManana.ToString(formatoDecimal);
+                fila["Random Venta TT"] = diaSimulado.NroRandomDemandaTurnoTarde.ToString(formatoDecimal);
+                fila["Demanda TT"] = diaSimulado.DemandaTurnoTarde.ToString(formatoDecimal);
+                fila["Demanda No Abastecida"] = diaSimulado.DemandaNoAbastecida.ToString(formatoDecimal);
+                fila["Demanda No Abastecida Promedio"] = diaSimulado.DemandaNoAbastecidaPromedio.ToString(formatoDecimal);
+                fila["Ingreso Diario"] = diaSimulado.IngresoDiario.ToString(formatoDecimal);
+                fila["Ingreso Promedio Diario"] = diaSimulado.IngresoDiarioPromedio.ToString(formatoDecimal);
+                fila["Contribucion Diaria"] = diaSimulado.ContribucionDiaria.ToString(formatoDecimal);
+                fila["Contribucion Promedio Diaria"] = diaSimulado.ContribucionDiariaPromedio.ToString(formatoDecimal);
+                
+
+                tabla.Rows.Add(fila);
+            }
+
+            grdSimulacion.DataSource = tabla;
+        }
+
+        private void getValores()
+        {
+            cantFrascosCompra = int.Parse(txtFrascosPorCompra.Text); // se compran de a 2 frascos
+            cantMaximaFrascosEnStock = int.Parse(txtStockMaximo.Text); // hasta 10 frascos en stock al final del dia
+            frecuenciaDiasCompra = int.Parse(txtFrecuenciaCompra.Text); // se compran cada 2 dias
+
+            if(!string.IsNullOrEmpty(txtDiasASimular.Text))
+                cantDiasSimular = int.Parse(txtDiasASimular.Text);
+
+            gramosPorFrasco = double.Parse(txtGramosPorFrasco.Text);
+            importeCostoGramo = double.Parse(txtPrecioFrasco.Text) / gramosPorFrasco; // El costo del café es de 250 pesos por frasco
+            importeVentaGramo = double.Parse(txtPrecioVenta.Text) / 100d; // se vende a 150 pesos cada 100 gramos
+            cantHorasTurnoManana = int.Parse(txtHorasTM.Text);
+            cantHorasTurnoTarde = int.Parse(txtHorasTT.Text);
+            //
+
+            if(chkCongruencial.Checked)
+            {
+                congruencial_A = double.Parse(txtA.Text);
+                congruencial_C = double.Parse(txtC.Text);
+                congruencial_M = double.Parse(txtM.Text);
+                congruencialSemilla = double.Parse(txtSemilla.Text);
+
+                if(chkMostrarSolo10.Checked)
+                {
+                    cantDiasSimular = 10;
+                }
+            }
+            
         }
 
         private void simularDia(int nroDiaSimulado) {
@@ -119,7 +256,7 @@ namespace TP4
                 {
                     actual.StockInicial += (Double)cantFrascosCompra * gramosPorFrasco;
                 }
-                actual.NroDiaLlegadaCompra = anterior.NroDiaLlegadaCompra;
+                //actual.NroDiaLlegadaCompra = anterior.NroDiaLlegadaCompra;
             }
 
             // Calculo de la demanda del dia
@@ -222,12 +359,13 @@ namespace TP4
         }
 
         private Double getNroRandomCongruencial() {
-            if (Double.IsNaN(congruencialUltimaSemilla))
+            //if (Double.IsNaN(congruencialUltimaSemilla))
+            if(congruencialUltimaSemilla == null)
             {
                 congruencialUltimaSemilla = congruencialSemilla;
             }
             congruencialUltimaSemilla = (congruencial_A * congruencialUltimaSemilla + congruencial_C) % congruencial_M;
-            return congruencialUltimaSemilla / (congruencial_M);
+            return congruencialUltimaSemilla.Value / (congruencial_M);
         }
 
         private int getCantDiasParaLlegadaCompra(double nroRandom) {
@@ -295,6 +433,80 @@ namespace TP4
         private void button1_Click(object sender, EventArgs e)
         {
             calcular();
+        }
+
+        private void chkCongruencial_CheckedChanged(object sender, EventArgs e)
+        {
+            metodoGeneradorNrosAleatorios = "CONGRUENCIAL";
+        }
+
+        private void btnValoresPorDefecto_Click(object sender, EventArgs e)
+        {
+            //// Valores dados por el enunciado
+            //cantFrascosCompra = 2; // se compran de a 2 frascos
+            //cantMaximaFrascosEnStock = 10; // hasta 10 frascos en stock al final del dia
+            //frecuenciaDiasCompra = 2; // se compran cada 2 dias
+            //cantDiasSimular = 100000;
+            //gramosPorFrasco = 170d;
+            //importeCostoGramo = 250d / gramosPorFrasco; // El costo del café es de 250 pesos por frasco
+            //importeVentaGramo = 150d / 100d; // se vende a 150 pesos cada 100 gramos
+            //cantHorasTurnoManana = 8;
+            //cantHorasTurnoTarde = 8;
+            ////
+            //metodoGeneradorNrosAleatorios = "LENGUAJE";
+            //congruencial_A = 13d;
+            //congruencial_C = 43d;
+            //congruencial_M = 101d;
+            //congruencialSemilla = 37d;
+            //congruencialUltimaSemilla = null;
+
+            txtFrascosPorCompra.Text = "2";
+            txtStockMaximo.Text = "10";
+            txtFrecuenciaCompra.Text = "2";
+            txtDiasASimular.Text = "100000";
+            txtGramosPorFrasco.Text = "170";
+            txtPrecioFrasco.Text = "250";
+            txtPrecioVenta.Text = "150";
+            txtHorasTM.Text = "8";
+            txtHorasTT.Text = "8";
+
+            if(chkCongruencial.Checked)
+            {
+                metodoGeneradorNrosAleatorios = "CONGRUENCIAL";
+                txtA.Text = "13";
+                txtM.Text = "101";
+                txtSemilla.Text = "37";
+                txtC.Text = "43";
+            }
+            else
+            {
+                metodoGeneradorNrosAleatorios = "LENGUAJE";
+            }
+        }
+
+        private void chk50DiasAPartirDe_CheckedChanged(object sender, EventArgs e)
+        {
+            if(chk50DiasAPartirDe.Checked)
+            {
+                txt50DiasAPartirDe.Enabled = true;
+            }
+            else
+            {
+                txt50DiasAPartirDe.Enabled = false;
+            }
+        }
+
+        private void chkMostrarSolo10_CheckedChanged(object sender, EventArgs e)
+        {
+            if(chkMostrarSolo10.Checked)
+            {
+                txtDiasASimular.Text = "";
+                txtDiasASimular.Enabled = false;
+            }
+            else
+            {
+                txtDiasASimular.Enabled = true;
+            }
         }
     }
 }
