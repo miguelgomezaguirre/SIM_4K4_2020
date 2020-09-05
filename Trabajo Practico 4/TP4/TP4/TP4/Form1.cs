@@ -209,7 +209,10 @@ namespace TP4
             actual.ContribucionDiariaPromedio = ((anterior.ContribucionDiariaPromedio * anterior.NroDia) + actual.ContribucionDiaria) / actual.NroDia;
             // Punto 8. Promedio de cuantas horas se perdieron si se considera que cada turno es de 8 horas y el porcentaje 
             // de café faltante es la proporción al a las horas perdidas del cibercafé.
-            actual.HorasPerdidasPromedio = ((anterior.HorasPerdidasPromedio * (Double) anterior.NroDia) + ((actual.DemandaDiaria != 0d ? actual.DemandaNoAbastecida/actual.DemandaDiaria : 0d) * (cantHorasTurnoManana + cantHorasTurnoTarde))) / actual.NroDia;
+            actual.HorasPerdidasPromedio = 
+                (
+                  (anterior.HorasPerdidasPromedio * (Double) anterior.NroDia) +
+                  ((actual.DemandaDiaria != 0d ? actual.DemandaNoAbastecida/actual.DemandaDiaria : 0d) * (cantHorasTurnoManana + cantHorasTurnoTarde))) / actual.NroDia;
 
         }
 
@@ -224,7 +227,7 @@ namespace TP4
                 congruencialUltimaSemilla = congruencialSemilla;
             }
             congruencialUltimaSemilla = (congruencial_A * congruencialUltimaSemilla + congruencial_C) % congruencial_M;
-            return congruencialUltimaSemilla / (congruencial_M - 1d);
+            return congruencialUltimaSemilla / (congruencial_M);
         }
 
         private int getCantDiasParaLlegadaCompra(double nroRandom) {
