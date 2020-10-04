@@ -29,26 +29,38 @@
         private void InitializeComponent()
         {
             this.iniciarSimulacion = new System.Windows.Forms.Button();
+            this.grdResultado = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.SuspendLayout();
             // 
-            // btnIniciarSimulacion
+            // iniciarSimulacion
             // 
-            this.iniciarSimulacion.Location = new System.Drawing.Point(196, 92);
-            this.iniciarSimulacion.Name = "btnIniciarSimulacion";
+            this.iniciarSimulacion.Location = new System.Drawing.Point(12, 12);
+            this.iniciarSimulacion.Name = "iniciarSimulacion";
             this.iniciarSimulacion.Size = new System.Drawing.Size(107, 23);
             this.iniciarSimulacion.TabIndex = 0;
             this.iniciarSimulacion.Text = "Iniciar Simulacion";
             this.iniciarSimulacion.UseVisualStyleBackColor = true;
             this.iniciarSimulacion.Click += new System.EventHandler(this.btnIniciarSimulacion_Click);
             // 
+            // grdResultado
+            // 
+            this.grdResultado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grdResultado.Location = new System.Drawing.Point(12, 41);
+            this.grdResultado.Name = "grdResultado";
+            this.grdResultado.Size = new System.Drawing.Size(776, 397);
+            this.grdResultado.TabIndex = 1;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.grdResultado);
             this.Controls.Add(this.iniciarSimulacion);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -56,6 +68,7 @@
         #endregion
 
         private System.Windows.Forms.Button iniciarSimulacion;
+        private System.Windows.Forms.DataGridView grdResultado;
     }
 }
 

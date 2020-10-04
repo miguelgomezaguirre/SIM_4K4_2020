@@ -29,16 +29,38 @@ namespace TP5
         double media_demora_pedido = 3;
         double tiempo_fin_simulacion = 6 * 60;//6 horas
         int pedidosMaxDelivery = 3;
+
+        DataTable resultadoFinal = new DataTable();
         public Form1()
         {
             InitializeComponent();
 
-            
+            resultadoFinal.Columns.Add("Numero Evento");
+            resultadoFinal.Columns.Add("Evento");
+            resultadoFinal.Columns.Add("Reloj");
+            resultadoFinal.Columns.Add("Tiempo entre llegadas");
+            resultadoFinal.Columns.Add("Proxima Llegada");
+            resultadoFinal.Columns.Add("Cola Pedidos");
+            resultadoFinal.Columns.Add("Tiempo de proceso servidor 1");
+            resultadoFinal.Columns.Add("Momento Fin Proceso servidor 1");
+            resultadoFinal.Columns.Add("Estado Servidor 1");
+            resultadoFinal.Columns.Add("Tiempo de proceso servidor 2");
+            resultadoFinal.Columns.Add("Momento Fin Proceso servidor 2");
+            resultadoFinal.Columns.Add("Estado Servidor 2");
+            resultadoFinal.Columns.Add("Tiempo de proceso servidor 3");
+            resultadoFinal.Columns.Add("Momento Fin Proceso servidor 3");
+            resultadoFinal.Columns.Add("Estado Servidor 3");
+            resultadoFinal.Columns.Add("Cola Delivery");
+            resultadoFinal.Columns.Add("Tiempo Entrega");
+            resultadoFinal.Columns.Add("Momento Entrega");
+            resultadoFinal.Columns.Add("Estado Delivery");
         }
 
         private void btnIniciarSimulacion_Click(object sender, EventArgs e)
         {
-            generarEventoInicial();            
+            generarEventoInicial();
+
+            agregarFila(actual);
 
             string proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
             double tiempoProximoReloj = actual.tiempoEntreLlegada;
@@ -101,20 +123,44 @@ namespace TP5
                     proximoEvento = EVENTO_FIN_DE_SIMULACION;
                 }
 
+                agregarFila(actual);
+
                 //TODO: Hacer que terminen todos los eventos pendientes
             }
-            
 
-            
+
+            grdResultado.DataSource = resultadoFinal;
 
             //TODO: Consultar como generamos la distribucion poisson
             //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
 
         }
 
-        
+        private void agregarFila(VectorEstado actual)
+        {
+            var fila = resultadoFinal.NewRow();
+            fila["Numero Evento"] = actual.numeroEvento;
+            fila["Evento"] = actual.evento;
+            fila["Reloj"] = actual.reloj;
+            fila["Tiempo entre llegadas"] = actual.tiempoEntreLlegada;
+            fila["Proxima Llegada"] = actual.momentoProximaLlegada;
+            fila["Cola Pedidos"] = actual.longitudColaPedido;
+            fila["Tiempo de proceso servidor 1"] = actual.cocineros[2].tiempoProceso;
+            fila["Momento Fin Proceso servidor 1"] = actual.cocineros[2].finProceso();
+            fila["Estado Servidor 1"] = actual.cocineros[2].estadoServidor.ToString();
+            fila["Tiempo de proceso servidor 2"] = actual.cocineros[1].tiempoProceso;
+            fila["Momento Fin Proceso servidor 2"] = actual.cocineros[1].finProceso();
+            fila["Estado Servidor 2"] = actual.cocineros[1].estadoServidor.ToString();
+            fila["Tiempo de proceso servidor 3"] = actual.cocineros[0].tiempoProceso;
+            fila["Momento Fin Proceso servidor 3"] = actual.cocineros[0].finProceso();
+            fila["Estado Servidor 3"] = actual.cocineros[0].estadoServidor.ToString();
+            fila["Cola Delivery"] = actual.longitudColaDelivery;
+            fila["Tiempo Entrega"] = actual.delivery.tiempoProceso;
+            fila["Momento Entrega"] = actual.delivery.finProceso();
+            fila["Estado Delivery"] = actual.delivery.estadoServidor.ToString();
 
-        
+            resultadoFinal.Rows.Add(fila);
+        }
 
         private void simularLlegadaDePedido(int numeroPedido)
         {
