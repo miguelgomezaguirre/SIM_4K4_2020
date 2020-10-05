@@ -48,13 +48,7 @@ namespace TP5.Clases
 
         //Tiempo para la proxima llegada
         public double tiempoEntreLlegada { get; set; }
-        public double momentoProximaLlegada 
-        { 
-            get 
-            {
-                return reloj + tiempoEntreLlegada;
-            } 
-        }
+        public double momentoProximaLlegada { get; set; }
 
         
         public int cantidadEmpandasPedidas { get; set; }

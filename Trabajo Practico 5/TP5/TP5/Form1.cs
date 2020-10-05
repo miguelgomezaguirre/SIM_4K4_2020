@@ -35,6 +35,13 @@ namespace TP5
         {
             InitializeComponent();
 
+            inicializarTabla();
+        }
+
+        private void inicializarTabla()
+        {
+            resultadoFinal = new DataTable();
+
             resultadoFinal.Columns.Add("Numero Evento");
             resultadoFinal.Columns.Add("Evento");
             resultadoFinal.Columns.Add("Reloj");
@@ -58,6 +65,7 @@ namespace TP5
 
         private void btnIniciarSimulacion_Click(object sender, EventArgs e)
         {
+            inicializarTabla();
             generarEventoInicial();
 
             agregarFila(actual);
@@ -71,9 +79,9 @@ namespace TP5
             while (proximoEvento != EVENTO_FIN_DE_SIMULACION)
             {
                 
-                anterior = actual;
+                anterior = (VectorEstado)actual.Clone();
 
-                actual = (VectorEstado)anterior.Clone();
+                //actual = (VectorEstado)anterior.Clone();
 
                 //actual = new VectorEstado();
                 //actual.cocineros = anterior.cocineros;
@@ -108,7 +116,7 @@ namespace TP5
 
                     case EVENTO_ENTREGA_DE_PEDIDO:
 
-                        simularEntregaDePedido();
+                        simularEntregaDePedido(numeroPedidoAux);
 
                         break;
                     default:
@@ -123,12 +131,14 @@ namespace TP5
                     proximoEvento = EVENTO_FIN_DE_SIMULACION;
                 }
 
-                agregarFila(actual);
+                VectorEstado paraImprimir = (VectorEstado)actual.Clone();
+
+                agregarFila(paraImprimir);
 
                 //TODO: Hacer que terminen todos los eventos pendientes
             }
 
-
+            
             grdResultado.DataSource = resultadoFinal;
 
             //TODO: Consultar como generamos la distribucion poisson
@@ -136,36 +146,58 @@ namespace TP5
 
         }
 
-        private void agregarFila(VectorEstado actual)
+        private void agregarFila(VectorEstado vector)
         {
+            string formatoDecimal = "0.0000";
+
             var fila = resultadoFinal.NewRow();
-            fila["Numero Evento"] = actual.numeroEvento;
-            fila["Evento"] = actual.evento;
-            fila["Reloj"] = actual.reloj;
-            fila["Tiempo entre llegadas"] = actual.tiempoEntreLlegada;
-            fila["Proxima Llegada"] = actual.momentoProximaLlegada;
-            fila["Cola Pedidos"] = actual.longitudColaPedido;
-            fila["Tiempo de proceso servidor 1"] = actual.cocineros[2].tiempoProceso;
-            fila["Momento Fin Proceso servidor 1"] = actual.cocineros[2].finProceso();
-            fila["Estado Servidor 1"] = actual.cocineros[2].estadoServidor.ToString();
-            fila["Tiempo de proceso servidor 2"] = actual.cocineros[1].tiempoProceso;
-            fila["Momento Fin Proceso servidor 2"] = actual.cocineros[1].finProceso();
-            fila["Estado Servidor 2"] = actual.cocineros[1].estadoServidor.ToString();
-            fila["Tiempo de proceso servidor 3"] = actual.cocineros[0].tiempoProceso;
-            fila["Momento Fin Proceso servidor 3"] = actual.cocineros[0].finProceso();
-            fila["Estado Servidor 3"] = actual.cocineros[0].estadoServidor.ToString();
-            fila["Cola Delivery"] = actual.longitudColaDelivery;
-            fila["Tiempo Entrega"] = actual.delivery.tiempoProceso;
-            fila["Momento Entrega"] = actual.delivery.finProceso();
-            fila["Estado Delivery"] = actual.delivery.estadoServidor.ToString();
+
+            fila["Numero Evento"] = vector.numeroEvento;
+            fila["Evento"] = vector.evento;
+            fila["Reloj"] = vector.reloj.ToString(formatoDecimal);
+
+            if(vector.evento.Contains(EVENTO_LLEGADA_DE_PEDIDO) || vector.evento.Contains(EVENTO_INICIO_DE_SIMULACION))
+            {
+                fila["Tiempo entre llegadas"] = vector.tiempoEntreLlegada.ToString(formatoDecimal);
+            }
+            
+            fila["Proxima Llegada"] = vector.momentoProximaLlegada.ToString(formatoDecimal);
+            fila["Cola Pedidos"] = vector.longitudColaPedido;
+
+            if(vector.evento.Contains(EVENTO_LLEGADA_DE_PEDIDO))
+            {
+                fila["Tiempo de proceso servidor 1"] = vector.cocineros[2].tiempoProceso.ToString(formatoDecimal);
+                fila["Tiempo de proceso servidor 2"] = vector.cocineros[1].tiempoProceso.ToString(formatoDecimal);
+                fila["Tiempo de proceso servidor 3"] = vector.cocineros[0].tiempoProceso.ToString(formatoDecimal);
+            }
+            
+            fila["Momento Fin Proceso servidor 1"] = vector.cocineros[2].finProceso().ToString(formatoDecimal);
+            fila["Estado Servidor 1"] = vector.cocineros[2].estadoServidor.ToString();
+            
+            fila["Momento Fin Proceso servidor 2"] = vector.cocineros[1].finProceso().ToString(formatoDecimal);
+            fila["Estado Servidor 2"] = vector.cocineros[1].estadoServidor.ToString();
+            
+            fila["Momento Fin Proceso servidor 3"] = vector.cocineros[0].finProceso().ToString(formatoDecimal);
+            fila["Estado Servidor 3"] = vector.cocineros[0].estadoServidor.ToString();
+
+            fila["Cola Delivery"] = vector.longitudColaDelivery;
+
+            if(vector.evento.Contains(EVENTO_PEDIDO_FINALIZADO))
+            {
+                fila["Tiempo Entrega"] = vector.delivery.tiempoProceso.ToString(formatoDecimal);
+            }
+            
+            fila["Momento Entrega"] = vector.delivery.finProceso().ToString(formatoDecimal);
+            fila["Estado Delivery"] = vector.delivery.estadoServidor.ToString();
 
             resultadoFinal.Rows.Add(fila);
         }
 
         private void simularLlegadaDePedido(int numeroPedido)
         {
-            actual.evento = EVENTO_LLEGADA_DE_PEDIDO;
+            actual.evento = EVENTO_LLEGADA_DE_PEDIDO + " " + numeroPedido;
             actual.tiempoEntreLlegada = getTiempoEntreLlegada();
+            actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
             
             //actual.demoraPedido = actual.pedido.calcularTiempoDemora();
 
@@ -190,7 +222,7 @@ namespace TP5
 
         private void simularPedidoFinalizado(int numeroPedido)
         {
-            actual.evento = EVENTO_PEDIDO_FINALIZADO;
+            actual.evento = EVENTO_PEDIDO_FINALIZADO + " " + numeroPedido;
 
             if(anterior.delivery.estadoServidor == EstadoServidor.libre)
             {
@@ -223,11 +255,11 @@ namespace TP5
 
      
 
-        private void simularEntregaDePedido()
+        private void simularEntregaDePedido(int numeroPedido)
         {
-            actual.evento = EVENTO_ENTREGA_DE_PEDIDO;
+            actual.evento = EVENTO_ENTREGA_DE_PEDIDO + " " + numeroPedido;
 
-            if(actual.longitudColaDelivery > 0)
+            if (actual.longitudColaDelivery > 0)
             {
                 actual.delivery.inicioProceso = actual.reloj;
                 actual.delivery.tiempoProceso = getTiempoProcesoDelivery();
@@ -256,6 +288,7 @@ namespace TP5
 
             actual.evento = EVENTO_INICIO_DE_SIMULACION;
             actual.tiempoEntreLlegada = getTiempoEntreLlegada();
+            actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
             
         }
 
