@@ -13,28 +13,34 @@ namespace TP5
 {
     public partial class Form1 : Form
     {
+        //Constantes
         const string EVENTO_INICIO_DE_SIMULACION = "Inicio de simulación";
         const string EVENTO_FIN_DE_SIMULACION = "Fin de simulación";
         const string EVENTO_LLEGADA_DE_PEDIDO = "Llegada de pedido";
         const string EVENTO_PEDIDO_FINALIZADO = "Pedido Finalizado";
         const string EVENTO_ENTREGA_DE_PEDIDO = "Entrega de Pedido";
 
+        //Creacion de Vectores de estado
         VectorEstado anterior = new VectorEstado();
         VectorEstado actual = new VectorEstado();
+
+        //variables globales
+        private int numeroPedido = 0;
 
         int pedidosPorHora = 5;
         int mediaEmpanadas = 3;
         double a_pizza = 15;
         double b_pizza = 18;
-        double media_demora_pedido = 3;
-        double tiempo_fin_simulacion = 6 * 60;//6 horas
+        double mediaDemoraPedido = 3;
+        TimeSpan tiempoFinSimulacion = new TimeSpan(6,0,0); //6 horas
         int pedidosMaxDelivery = 3;
 
+
+        /***************************************************** TABLA ******************************************************/
         DataTable resultadoFinal = new DataTable();
         public Form1()
         {
             InitializeComponent();
-
             resultadoFinal.Columns.Add("Numero Evento");
             resultadoFinal.Columns.Add("Evento");
             resultadoFinal.Columns.Add("Reloj");
@@ -54,86 +60,6 @@ namespace TP5
             resultadoFinal.Columns.Add("Tiempo Entrega");
             resultadoFinal.Columns.Add("Momento Entrega");
             resultadoFinal.Columns.Add("Estado Delivery");
-        }
-
-        private void btnIniciarSimulacion_Click(object sender, EventArgs e)
-        {
-            generarEventoInicial();
-
-            agregarFila(actual);
-
-            string proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
-            double tiempoProximoReloj = actual.tiempoEntreLlegada;
-
-            int numeroPedido = 0;
-            int numeroPedidoAux = 0;
-
-            while (proximoEvento != EVENTO_FIN_DE_SIMULACION)
-            {
-                
-                anterior = actual;
-
-                actual = (VectorEstado)anterior.Clone();
-
-                //actual = new VectorEstado();
-                //actual.cocineros = anterior.cocineros;
-                //actual.delivery = anterior.delivery;
-                //actual.pedidos = anterior.pedidos;
-                //actual.longitudColaDelivery = anterior.longitudColaDelivery;
-                //actual.longitudColaPedido = anterior.longitudColaPedido;
-                //actual.cantidadEmpandasPedidas = anterior.cantidadEmpandasPedidas;
-                //actual.empanadasPreparadas = anterior.empanadasPreparadas;
-                //actual.pizzasPreparadas = anterior.pizzasPreparadas;
-                //actual.lomitosPreparados = anterior.lomitosPreparados;
-                //actual.hamburguesasPreparados = anterior.hamburguesasPreparados;
-                //actual.sandwichPreparados = anterior.sandwichPreparados;
-                
-
-                actual.numeroEvento = anterior.numeroEvento + 1;
-                actual.reloj = tiempoProximoReloj;
-
-                switch (proximoEvento)
-                {
-                    case EVENTO_LLEGADA_DE_PEDIDO:
-                        numeroPedido++;
-                        simularLlegadaDePedido(numeroPedido);
-
-                        break;
-
-                    case EVENTO_PEDIDO_FINALIZADO:
-
-                        simularPedidoFinalizado(numeroPedidoAux);
-
-                        break;
-
-                    case EVENTO_ENTREGA_DE_PEDIDO:
-
-                        simularEntregaDePedido();
-
-                        break;
-                    default:
-                        break;
-                }
-
-                
-                proximoEvento = actual.getProximoEvento(out tiempoProximoReloj, out numeroPedidoAux);
-
-                if(tiempoProximoReloj > tiempo_fin_simulacion)
-                {
-                    proximoEvento = EVENTO_FIN_DE_SIMULACION;
-                }
-
-                agregarFila(actual);
-
-                //TODO: Hacer que terminen todos los eventos pendientes
-            }
-
-
-            grdResultado.DataSource = resultadoFinal;
-
-            //TODO: Consultar como generamos la distribucion poisson
-            //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
-
         }
 
         private void agregarFila(VectorEstado actual)
@@ -161,26 +87,262 @@ namespace TP5
 
             resultadoFinal.Rows.Add(fila);
         }
+        /***************************************************** TABLA ******************************************************/
 
-        private void simularLlegadaDePedido(int numeroPedido)
+        private void generarEventoInicial()
+        {
+            //Para iniciar la simulacion, generamos el primer evento y calculamos la primer llegada
+            actual.evento = EVENTO_INICIO_DE_SIMULACION;
+            actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
+            anterior.clonar(actual);
+            agregarFila(actual);
+        }
+
+        private void btnIniciarSimulacion_Click(object sender, EventArgs e)
+        {
+            generarEventoInicial();
+            TimeSpan tiempoProximoEvento;
+            string evento = anterior.evento;
+            Pedido pedidoAux;
+
+
+            while (evento != EVENTO_FIN_DE_SIMULACION)
+            {
+                evento = getProximoEvento(out tiempoProximoEvento, out pedidoAux);
+
+                actual.numeroEvento = anterior.numeroEvento + 1;
+                actual.reloj = tiempoProximoEvento;
+
+                switch (evento)
+                {
+                    case EVENTO_LLEGADA_DE_PEDIDO:
+                        simularLlegadaDePedido();
+                        break;
+                
+                    case EVENTO_PEDIDO_FINALIZADO:
+                        simularPedidoFinalizado(pedidoAux);
+                        break;
+                
+                    case EVENTO_ENTREGA_DE_PEDIDO:
+                        simularEntregaDePedido();
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if(tiempoProximoEvento > tiempoFinSimulacion)
+                {
+                    evento = EVENTO_FIN_DE_SIMULACION;
+                }
+
+                // **NOTA: copio los datos de esta manera para trabajar con solo los 2 vectores en memoria y operar con el actual
+                anterior.clonar(actual);
+
+                agregarFila(actual);
+                //TODO: Hacer que terminen todos los eventos pendientes
+            }
+
+
+            grdResultado.DataSource = resultadoFinal;
+
+            //TODO: Consultar como generamos la distribucion poisson
+            //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
+
+        }
+
+        /// <summary>
+        /// Obtiene el proximo evento comparando los tiempos del vector anterior y viendo cual es el menor de ellos
+        /// </summary>
+        /// <returns></returns>
+        internal string getProximoEvento(out TimeSpan proximoReloj, out Pedido pedido)
+        {
+            pedido = null;
+            proximoReloj = new TimeSpan(0, 0, 0);
+            bool primero = true;
+
+            string proximoEvento = EVENTO_PEDIDO_FINALIZADO;
+
+            Servidor cocineroConMenorTiempoFinProceso = null;
+
+            foreach (var cocinero in anterior.cocineros)
+            {
+                if (cocinero.estadoServidor == EstadoServidor.libre)
+                {
+                    continue;
+                }
+
+                if (primero)
+                {
+                    proximoReloj = cocinero.finProceso();
+                    cocineroConMenorTiempoFinProceso = cocinero;
+                    primero = false;
+                }
+                else
+                {
+                    if (cocinero.finProceso() < proximoReloj)
+                    {
+                        proximoReloj = cocinero.finProceso();
+                        cocineroConMenorTiempoFinProceso = cocinero;
+                    }
+                }
+
+                pedido = anterior.pedidos.Where(p => p.cocinero.numeroServidor == cocineroConMenorTiempoFinProceso.numeroServidor).FirstOrDefault();
+            }
+
+            if (anterior.delivery != null && anterior.delivery.estadoServidor == EstadoServidor.ocupado)
+            {
+                if (cocineroConMenorTiempoFinProceso != null)
+                {
+                    if (anterior.delivery.finProceso() < proximoReloj)
+                    {
+                        proximoReloj = anterior.delivery.finProceso();
+                        proximoEvento = EVENTO_ENTREGA_DE_PEDIDO;
+                    }
+                }
+                else
+                {
+                    proximoReloj = anterior.delivery.finProceso();
+                    proximoEvento = EVENTO_ENTREGA_DE_PEDIDO;
+                }
+
+            }
+
+            if (anterior.momentoProximaLlegada < proximoReloj || proximoReloj.TotalMinutes == 0)
+            {
+                proximoReloj = anterior.momentoProximaLlegada;
+                proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
+            }
+
+            return proximoEvento;
+        }
+
+        public int getCantidadCocinerosLibres()
+        {
+            int contLibres = 0;
+
+            foreach (var cocinero in anterior.cocineros)
+            {
+                if (cocinero.estadoServidor == EstadoServidor.libre)
+                {
+                    contLibres++;
+                }
+
+            }
+
+            return contLibres;
+        }
+
+
+
+        /// <summary>
+        /// Asigna el pedido de acuerdo a quien tiene mas tiempo libre o de lo contrario por igual probabilidad de los que estan libres
+        /// </summary>
+        internal void prepararPedido(Pedido pedido)
+        {
+            Servidor cocineroConMasTiempoLibre = obtenerCocineroMayorTiempoLibre();
+            cocineroConMasTiempoLibre.estadoServidor = EstadoServidor.ocupado;
+            cocineroConMasTiempoLibre.tiempoProceso = pedido.calcularTiempoDemora();
+            cocineroConMasTiempoLibre.inicioProceso = actual.reloj;
+            pedido.momentoInicio = actual.reloj;
+            pedido.cocinero = cocineroConMasTiempoLibre;
+        }
+
+        private Servidor obtenerCocineroMayorTiempoLibre()
+        {
+            TimeSpan mayorTiempoLibre = new TimeSpan(0, 0, 0);
+            bool primero = true;
+
+            Servidor cocineroConMasTiempoLibre = null;
+
+            foreach (var cocinero in anterior.cocineros)
+            {
+                if (cocinero.estadoServidor == EstadoServidor.libre)
+                {
+                    if (primero)
+                    {
+                        mayorTiempoLibre = cocinero.tiempoLibre;
+                        cocineroConMasTiempoLibre = cocinero;
+                        primero = false;
+                    }
+                    else
+                    {
+                        if (cocinero.tiempoLibre >= mayorTiempoLibre)
+                        {
+                            mayorTiempoLibre = cocinero.tiempoLibre;
+                            cocineroConMasTiempoLibre = cocinero;
+                        }
+                    }
+                }
+            }
+            return cocineroConMasTiempoLibre;
+        }
+
+        /*
+        internal void liberarCocinero(int numeroPedido)
+        {
+            Servidor cocinero = anterior.cocineros.Where(x => x.numeroPedido == numeroPedido).FirstOrDefault();
+
+            if (cocinero != null)
+            {
+                cocinero.estadoServidor = EstadoServidor.libre;
+            }
+        }
+        */
+        private Pedido generarPedido()
+        {
+            //generamos el random para saber a que pedido pertenece
+            Double random = new Random().NextDouble();
+            Pedido pedido;
+            if (random < 0.2d)
+            {
+                //Genero una docena de sanguches
+                pedido = new PedidoSandwich(1, 1);
+                actual.sandwichPreparados++;
+            }
+            else if (0.2d < random && random < 0.6d)
+            {
+                //Genero un pedido pizza
+                pedido = new PedidoPizza(1, 1);
+                actual.pizzasPreparadas++;
+            }
+            else if (0.6 < random && random < 0.9d)
+            {
+                //genero un pedido de empanadas
+                pedido = new PedidoEmpanadas();
+                //TODO: ver como obtener la cantidad de empanadas, quiza pueda devolverla como parametro de salida
+                actual.empanadasPreparadas++;
+            }
+            else if (0.9d < random && random < 0.95d)
+            {
+                //Genero un pedido de hamburguesas
+                pedido = new PedidoHamburguesa();
+                actual.hamburguesasPreparados++;
+            }
+            else
+            {
+                //Genero un pedido de lomito
+                pedido = new PedidoLomito();
+                actual.lomitosPreparados++;
+            }
+
+            //asigno nro de pedido y agrego el pedido a la lista de pedidos
+            pedido.numeroPedido = numeroPedido++;
+            actual.pedidos.Add(pedido);
+
+            return pedido;
+        }
+
+
+        private void simularLlegadaDePedido()
         {
             actual.evento = EVENTO_LLEGADA_DE_PEDIDO;
-            actual.tiempoEntreLlegada = getTiempoEntreLlegada();
-            
-            //actual.demoraPedido = actual.pedido.calcularTiempoDemora();
+            actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
 
-            int cantidadCocinerosLibres = anterior.getCantidadCocinerosLibres();
-
-            if (cantidadCocinerosLibres > 0)
+            if (getCantidadCocinerosLibres() > 0)
             {
-                //Trabajamos con pizzas, despues agregamos los otros
-                Pedido pedido = new PedidoPizza(a_pizza, b_pizza);
-
-                pedido.numeroPedido = numeroPedido;
-
-                actual.pedidos.Add(pedido);
-                actual.pizzasPreparadas++;
-                actual.asignarPedido(numeroPedido);
+                Pedido pedido = generarPedido();
+                prepararPedido(pedido);
             }
             else
             {
@@ -188,18 +350,17 @@ namespace TP5
             }
         }
 
-        private void simularPedidoFinalizado(int numeroPedido)
+        private void simularPedidoFinalizado(Pedido pedido)
         {
-            actual.evento = EVENTO_PEDIDO_FINALIZADO;
+            actual.evento = EVENTO_PEDIDO_FINALIZADO + " " + pedido.numeroPedido.ToString();
+            pedido.momentoFinProceso = actual.reloj;
 
             if(anterior.delivery.estadoServidor == EstadoServidor.libre)
             {
-                //Liberar servidor
-
                 //Enviar Delivery
                 actual.delivery.estadoServidor = EstadoServidor.ocupado;
                 actual.delivery.inicioProceso = actual.reloj;
-                actual.delivery.tiempoProceso = getTiempoProcesoDelivery();
+                actual.delivery.tiempoProceso = obtenerTiempoEntregaDelivery();
             }
             else
             {
@@ -208,21 +369,17 @@ namespace TP5
 
             if(actual.longitudColaPedido > 0)
             {
-                actual.pedidos.Add(new PedidoPizza(a_pizza, b_pizza));
-                actual.pizzasPreparadas++;
-
-                actual.asignarPedido(numeroPedido);
-
                 actual.longitudColaPedido--;
+                Pedido pedidoCola = generarPedido();
+                prepararPedido(pedidoCola);
             }
             else
             {
-                actual.liberarCocinero(numeroPedido);
+                pedido.cocinero.estadoServidor = EstadoServidor.libre;
             }
         }
 
-     
-
+        
         private void simularEntregaDePedido()
         {
             actual.evento = EVENTO_ENTREGA_DE_PEDIDO;
@@ -230,7 +387,7 @@ namespace TP5
             if(actual.longitudColaDelivery > 0)
             {
                 actual.delivery.inicioProceso = actual.reloj;
-                actual.delivery.tiempoProceso = getTiempoProcesoDelivery();
+                actual.delivery.tiempoProceso = obtenerTiempoEntregaDelivery();
                 actual.delivery.estadoServidor = EstadoServidor.ocupado;
 
                 if (actual.longitudColaDelivery <= pedidosMaxDelivery)
@@ -249,33 +406,21 @@ namespace TP5
             }
         }
 
-        private void generarEventoInicial()
-        {
-            //Los datos iniciales estan en el constructor
-            actual = new VectorEstado();
-
-            actual.evento = EVENTO_INICIO_DE_SIMULACION;
-            actual.tiempoEntreLlegada = getTiempoEntreLlegada();
-            
-        }
-
-        private double getTiempoEntreLlegada()
+        private TimeSpan generarTiempoEntreLlegada()
         {
             Random rnd = new Random();
 
             double lambda = pedidosPorHora / 60d;
 
-            double tiempoEntreLlegada = -1 / lambda * Math.Log(1 - rnd.NextDouble());
+            double tiempoEntreLlegada = (-1 / lambda) * Math.Log(1 - rnd.NextDouble());
 
-            return tiempoEntreLlegada;
+            return TimeSpan.FromMinutes(tiempoEntreLlegada);
         }
 
-        private double getTiempoProcesoDelivery()
+        private TimeSpan obtenerTiempoEntregaDelivery()
         {
             Random rnd = new Random();
-
-            return -media_demora_pedido * Math.Log(1 - rnd.NextDouble());
-
+            return TimeSpan.FromMinutes(-mediaDemoraPedido * Math.Log(1 - rnd.NextDouble()));
         }
 
         private int getCantidadEmpanadas()

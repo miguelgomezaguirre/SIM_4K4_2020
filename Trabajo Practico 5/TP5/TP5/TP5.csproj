@@ -47,6 +47,9 @@
   <ItemGroup>
     <Compile Include="Clases\IPedido.cs" />
     <Compile Include="Clases\Pedido.cs" />
+    <Compile Include="Clases\PedidoEmpanadas.cs" />
+    <Compile Include="Clases\PedidoHamburguesa.cs" />
+    <Compile Include="Clases\PedidoLomito.cs" />
     <Compile Include="Clases\PedidoPizza.cs" />
     <Compile Include="Clases\PedidoSandwich.cs" />
     <Compile Include="Clases\Servidor.cs" />

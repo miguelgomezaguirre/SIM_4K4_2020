@@ -9,10 +9,12 @@ namespace TP5.Clases
     public abstract class Pedido
     {
         public int numeroPedido { get; set; }
-        public double momentoInicio { get; set; }
-        public double momentoLimite { get { return momentoInicio + 60; } }
-        public double momentoEntrega { get; set; }
+        public TimeSpan momentoInicio { get; set; }
+        public TimeSpan momentoFinProceso { get; set; }
+        public TimeSpan momentoEntrega { get; set; }
+        public TimeSpan momentoLimite { get { return momentoInicio.Add(new TimeSpan(1, 0, 0)); } }
+        public Servidor cocinero { get; set; }
 
-        public abstract double calcularTiempoDemora();
+        public abstract TimeSpan calcularTiempoDemora();
     }
 }

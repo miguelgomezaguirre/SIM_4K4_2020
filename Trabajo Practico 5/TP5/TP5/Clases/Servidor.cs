@@ -19,18 +19,17 @@ namespace TP5.Clases
         }
 
         public int numeroServidor { get; set; }
-        public double inicioProceso { get; set; }
+        public TimeSpan inicioProceso { get; set; }
 
-        public double tiempoProceso { get; set; }
+        public TimeSpan tiempoProceso { get; set; }
 
         public EstadoServidor estadoServidor { get; set; }
 
-        public double tiempoLibre { get; set; }
-        public int numeroPedido { get; set; }
+        public TimeSpan tiempoLibre { get; set; }
 
-        public double finProceso()
+        public TimeSpan finProceso()
         {
-            return inicioProceso + tiempoProceso;
+            return inicioProceso.Add(tiempoProceso);
         }
 
     }

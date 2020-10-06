@@ -10,24 +10,17 @@ namespace TP5.Clases
     {
         double a;
         double b;
+
         public PedidoPizza(double a, double b)
         {
             this.a = a;
             this.b = b;
         }
 
-        public int numeroPedido { get; set; }
-
-        public double momentoInicio { get; set; }
-
-        public double momentoLimite { get; set; }
-
-        public override double calcularTiempoDemora()
+        public override TimeSpan calcularTiempoDemora()
         {
-            //La pizza tiene desviacion uniforme entre 15 y 18
             Random rnd = new Random();
-
-            return a + rnd.NextDouble() * (b - a);
+            return TimeSpan.FromMinutes( a + rnd.NextDouble() * (b - a));
         }
     }
 }
