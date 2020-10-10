@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Generadores;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +9,21 @@ namespace TP5.Clases
 {
     public class PedidoSandwich : Pedido
     {
+        private double media { get; set; }
+        private double desvEstandar { get; set; }
         public PedidoSandwich(double media, double desvEstandar)
         {
-
+            this.media = media;
+            this.desvEstandar = desvEstandar;
         }
 
         public override TimeSpan calcularTiempoDemora()
         {
-            throw new NotImplementedException();
+            double demora = DistribucionesContinuas.generarNormal(2, media, desvEstandar)[0];
+
+            if (demora <= 0) demora = 0.001;
+
+            return TimeSpan.FromMinutes(demora);
         }
     }
 }

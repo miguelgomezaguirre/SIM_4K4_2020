@@ -19,13 +19,8 @@ namespace TP5.Clases
         public Servidor delivery { get; set; }
         public List<Pedido> pedidos { get; set; }
 
-        public TimeSpan momentoProximaLlegada
-        {
-            get
-            {
-                return reloj.Add(tiempoEntreLlegada);
-            }
-        }
+
+        public TimeSpan momentoProximaLlegada { get; set; }
 
         //**COLAS**
         //Longitud de pedidos por preparar
@@ -71,6 +66,7 @@ namespace TP5.Clases
             this.cocineros = actual.cocineros;
             this.delivery = actual.delivery;
             this.pedidos = actual.pedidos;
+            this.momentoProximaLlegada = actual.momentoProximaLlegada;
         }
     }
 }

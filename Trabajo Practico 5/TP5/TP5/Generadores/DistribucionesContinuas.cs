@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TP5.Clases;
 
 namespace Generadores
 {
     public class DistribucionesContinuas
     {
         private static double[] vRND, vGen;
-        private static Random RND = new Random();
-        //private static Random rnd, r1, r2;
+
         private static double pi, variable, z;
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Generadores
         /// <returns></returns>
         public static double generarUniforme(double min, double max)
         {
-            return Math.Round(RND.NextDouble() * (max - min) + min, 4);
+            return Math.Round(Aleatorio.getInstancia().NextDouble() * (max - min) + min, 4);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Generadores
             for (int i = 0; i < v.Length; i++)
             {
 
-                v[i] = Math.Round(-media * Math.Log(1 - RND.NextDouble()), 4);
+                v[i] = Math.Round(-media * Math.Log(1 - Aleatorio.getInstancia().NextDouble()), 4);
 
             }
 
@@ -58,7 +58,6 @@ namespace Generadores
         public static double[] generarNormal(int n, double media, double desviacion)
         {
             pi = Math.PI;
-            RND = new Random();
 
 
             double[] v;
@@ -68,8 +67,8 @@ namespace Generadores
 
             while (i < v.Length)
             {
-                double aux1 = RND.NextDouble() * 1;
-                double aux2 = RND.NextDouble() * 1;
+                double aux1 = Aleatorio.getInstancia().NextDouble() * 1;
+                double aux2 = Aleatorio.getInstancia().NextDouble() * 1;
 
                 double z1 = Math.Sqrt(-2 * Math.Log(aux1)) * (Math.Sin(2 * pi * aux2));
                 double z2 = Math.Sqrt(-2 * Math.Log(aux1)) * (Math.Cos(2 * pi * aux2));
@@ -124,7 +123,7 @@ namespace Generadores
                 x = 0;
                 do
                 {
-                    u = RND.NextDouble();
+                    u = Aleatorio.getInstancia().NextDouble();
                     p = p * u;
 
                     x++;
@@ -135,6 +134,27 @@ namespace Generadores
 
             }
             return v;
+        }
+
+        public static int generarRandomPoisson(double lambda, int valorInicialX)
+        {
+            double p = 1;
+            int x = valorInicialX;
+            double u = 0;
+
+            double a = Math.Exp(-lambda);
+
+            p = 1;
+            x = 0;
+            do
+            {
+                u = Aleatorio.getInstancia().NextDouble();
+                p = p * u;
+
+                x++;
+            } while (p >= a);
+
+            return x;
         }
 
     }

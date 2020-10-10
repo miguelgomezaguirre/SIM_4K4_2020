@@ -48,14 +48,14 @@
             this.grdResultado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdResultado.Location = new System.Drawing.Point(12, 41);
             this.grdResultado.Name = "grdResultado";
-            this.grdResultado.Size = new System.Drawing.Size(776, 397);
+            this.grdResultado.Size = new System.Drawing.Size(1346, 550);
             this.grdResultado.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1370, 561);
             this.Controls.Add(this.grdResultado);
             this.Controls.Add(this.iniciarSimulacion);
             this.Name = "Form1";

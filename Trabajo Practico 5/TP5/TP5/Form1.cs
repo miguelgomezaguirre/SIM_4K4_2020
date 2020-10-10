@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TP5.Clases;
@@ -38,6 +39,7 @@ namespace TP5
 
         /***************************************************** TABLA ******************************************************/
         DataTable resultadoFinal = new DataTable();
+
         public Form1()
         {
             InitializeComponent();
@@ -60,17 +62,24 @@ namespace TP5
             resultadoFinal.Columns.Add("Tiempo Entrega");
             resultadoFinal.Columns.Add("Momento Entrega");
             resultadoFinal.Columns.Add("Estado Delivery");
+            resultadoFinal.Columns.Add("Cantidad Sandwiches");
+            resultadoFinal.Columns.Add("Cantidad Pizzas");
+            resultadoFinal.Columns.Add("Cantidad Empanadas");
+            resultadoFinal.Columns.Add("Cantidad Lomitos");
+            resultadoFinal.Columns.Add("Cantidad Hamburguesas");
         }
 
         private void agregarFila(VectorEstado actual)
         {
             var fila = resultadoFinal.NewRow();
+
             fila["Numero Evento"] = actual.numeroEvento;
             fila["Evento"] = actual.evento;
             fila["Reloj"] = actual.reloj;
             fila["Tiempo entre llegadas"] = actual.tiempoEntreLlegada;
             fila["Proxima Llegada"] = actual.momentoProximaLlegada;
             fila["Cola Pedidos"] = actual.longitudColaPedido;
+            
             fila["Tiempo de proceso servidor 1"] = actual.cocineros[2].tiempoProceso;
             fila["Momento Fin Proceso servidor 1"] = actual.cocineros[2].finProceso();
             fila["Estado Servidor 1"] = actual.cocineros[2].estadoServidor.ToString();
@@ -84,6 +93,11 @@ namespace TP5
             fila["Tiempo Entrega"] = actual.delivery.tiempoProceso;
             fila["Momento Entrega"] = actual.delivery.finProceso();
             fila["Estado Delivery"] = actual.delivery.estadoServidor.ToString();
+            fila["Cantidad Sandwiches"] = actual.sandwichPreparados;
+            fila["Cantidad Pizzas"] = actual.pizzasPreparadas;
+            fila["Cantidad Empanadas"] = actual.empanadasPreparadas;
+            fila["Cantidad Lomitos"] = actual.lomitosPreparados;
+            fila["Cantidad Hamburguesas"] = actual.hamburguesasPreparados;
 
             resultadoFinal.Rows.Add(fila);
         }
@@ -94,6 +108,7 @@ namespace TP5
             //Para iniciar la simulacion, generamos el primer evento y calculamos la primer llegada
             actual.evento = EVENTO_INICIO_DE_SIMULACION;
             actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
+            actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
             anterior.clonar(actual);
             agregarFila(actual);
         }
@@ -139,6 +154,7 @@ namespace TP5
                 // **NOTA: copio los datos de esta manera para trabajar con solo los 2 vectores en memoria y operar con el actual
                 anterior.clonar(actual);
 
+                //Thread.Sleep(0);
                 agregarFila(actual);
                 //TODO: Hacer que terminen todos los eventos pendientes
             }
@@ -292,7 +308,7 @@ namespace TP5
         private Pedido generarPedido()
         {
             //generamos el random para saber a que pedido pertenece
-            Double random = new Random().NextDouble();
+            Double random = Aleatorio.getInstancia().NextDouble();
             Pedido pedido;
             if (random < 0.2d)
             {
@@ -309,9 +325,10 @@ namespace TP5
             else if (0.6 < random && random < 0.9d)
             {
                 //genero un pedido de empanadas
-                pedido = new PedidoEmpanadas();
+                pedido = new PedidoEmpanadas(3);
+                
                 //TODO: ver como obtener la cantidad de empanadas, quiza pueda devolverla como parametro de salida
-                actual.empanadasPreparadas++;
+                actual.empanadasPreparadas += pedido.getCantidad();
             }
             else if (0.9d < random && random < 0.95d)
             {
@@ -338,6 +355,7 @@ namespace TP5
         {
             actual.evento = EVENTO_LLEGADA_DE_PEDIDO;
             actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
+            actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
 
             if (getCantidadCocinerosLibres() > 0)
             {
@@ -408,19 +426,16 @@ namespace TP5
 
         private TimeSpan generarTiempoEntreLlegada()
         {
-            Random rnd = new Random();
-
             double lambda = pedidosPorHora / 60d;
 
-            double tiempoEntreLlegada = (-1 / lambda) * Math.Log(1 - rnd.NextDouble());
+            double tiempoEntreLlegada = (-1 / lambda) * Math.Log(1 - Aleatorio.getInstancia().NextDouble());
 
             return TimeSpan.FromMinutes(tiempoEntreLlegada);
         }
 
         private TimeSpan obtenerTiempoEntregaDelivery()
         {
-            Random rnd = new Random();
-            return TimeSpan.FromMinutes(-mediaDemoraPedido * Math.Log(1 - rnd.NextDouble()));
+            return TimeSpan.FromMinutes(-mediaDemoraPedido * Math.Log(1 - Aleatorio.getInstancia().NextDouble()));
         }
 
         private int getCantidadEmpanadas()

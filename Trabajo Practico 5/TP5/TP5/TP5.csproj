@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clases\Aleatorio.cs" />
     <Compile Include="Clases\IPedido.cs" />
     <Compile Include="Clases\Pedido.cs" />
     <Compile Include="Clases\PedidoEmpanadas.cs" />

@@ -19,8 +19,7 @@ namespace TP5.Clases
 
         public override TimeSpan calcularTiempoDemora()
         {
-            Random rnd = new Random();
-            return TimeSpan.FromMinutes( a + rnd.NextDouble() * (b - a));
+            return TimeSpan.FromMinutes( a + Aleatorio.getInstancia().NextDouble() * (b - a));
         }
     }
 }

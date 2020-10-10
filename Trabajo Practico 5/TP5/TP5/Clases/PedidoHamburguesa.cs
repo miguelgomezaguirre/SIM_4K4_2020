@@ -10,7 +10,7 @@ namespace TP5.Clases
     {
         public override TimeSpan calcularTiempoDemora()
         {
-            throw new NotImplementedException();
+            return new TimeSpan(0, 8, 0);
         }
     }
 }
