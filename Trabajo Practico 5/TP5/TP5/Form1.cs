@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,6 +44,14 @@ namespace TP5
         public Form1()
         {
             InitializeComponent();
+
+            reiniciarTabla();
+        }
+
+        private void reiniciarTabla()
+        {
+            resultadoFinal = new DataTable();
+
             resultadoFinal.Columns.Add("Numero Evento");
             resultadoFinal.Columns.Add("Evento");
             resultadoFinal.Columns.Add("Reloj");
@@ -67,6 +76,10 @@ namespace TP5
             resultadoFinal.Columns.Add("Cantidad Empanadas");
             resultadoFinal.Columns.Add("Cantidad Lomitos");
             resultadoFinal.Columns.Add("Cantidad Hamburguesas");
+
+            resultadoFinal.Columns.Add("Tiempo Libre Cocinero 1");
+            resultadoFinal.Columns.Add("Tiempo Libre Cocinero 2");
+            resultadoFinal.Columns.Add("Tiempo Libre Cocinero 3");
         }
 
         private void agregarFila(VectorEstado actual)
@@ -99,6 +112,10 @@ namespace TP5
             fila["Cantidad Lomitos"] = actual.lomitosPreparados;
             fila["Cantidad Hamburguesas"] = actual.hamburguesasPreparados;
 
+            fila["Tiempo Libre Cocinero 1"] = actual.cocineros[2].tiempoLibre;
+            fila["Tiempo Libre Cocinero 2"] = actual.cocineros[1].tiempoLibre;
+            fila["Tiempo Libre Cocinero 3"] = actual.cocineros[0].tiempoLibre;
+
             resultadoFinal.Rows.Add(fila);
         }
         /***************************************************** TABLA ******************************************************/
@@ -115,7 +132,12 @@ namespace TP5
 
         private void btnIniciarSimulacion_Click(object sender, EventArgs e)
         {
+            reiniciarTabla();
+            actual = new VectorEstado();
+            anterior = new VectorEstado();
+
             generarEventoInicial();
+
             TimeSpan tiempoProximoEvento;
             string evento = anterior.evento;
             Pedido pedidoAux;
@@ -127,6 +149,8 @@ namespace TP5
 
                 actual.numeroEvento = anterior.numeroEvento + 1;
                 actual.reloj = tiempoProximoEvento;
+
+                actualizarTiempoLibreCocineros();
 
                 switch (evento)
                 {
@@ -142,14 +166,23 @@ namespace TP5
                         simularEntregaDePedido();
                         break;
 
+                    case EVENTO_FIN_DE_SIMULACION:
+                        actual.evento = evento;
+                        actual.reloj = anterior.reloj;
+                        break;
+
                     default:
                         break;
                 }
 
-                if(tiempoProximoEvento > tiempoFinSimulacion)
-                {
-                    evento = EVENTO_FIN_DE_SIMULACION;
-                }
+                
+
+                //if(esFinDeSimulacion(tiempoProximoEvento))
+                //{
+                //    evento = EVENTO_FIN_DE_SIMULACION;
+
+                //    actual.evento = evento;
+                //}
 
                 // **NOTA: copio los datos de esta manera para trabajar con solo los 2 vectores en memoria y operar con el actual
                 anterior.clonar(actual);
@@ -160,11 +193,57 @@ namespace TP5
             }
 
 
+
+
             grdResultado.DataSource = resultadoFinal;
 
             //TODO: Consultar como generamos la distribucion poisson
             //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
 
+        }
+
+        private void actualizarTiempoLibreCocineros()
+        {
+            foreach (var cocinero in anterior.cocineros)
+            {
+                if(cocinero.estadoServidor == EstadoServidor.ocupado)
+                {
+                    continue;
+                }
+
+                TimeSpan tiempoLibreASumar = actual.reloj - anterior.reloj;
+                actual.cocineros.Where(x => x.numeroServidor == cocinero.numeroServidor).FirstOrDefault().tiempoLibre += tiempoLibreASumar;
+            }
+        }
+
+        
+
+        private bool esFinDeSimulacion(TimeSpan tiempoProximoEvento)
+        {
+            if(!(tiempoProximoEvento > tiempoFinSimulacion))
+            {
+                return false;
+            }
+            else
+            {
+                if (!(anterior.pedidos.Count() == 0))
+                {
+                    return false;
+                }
+
+                if (!(getCantidadCocinerosLibres() == anterior.cocineros.Count()))
+                {
+                    return false;
+                }
+
+                if (!(anterior.delivery.estadoServidor == EstadoServidor.libre))
+                {
+                    return false;
+                }
+            }
+            
+
+            return true;
         }
 
         /// <summary>
@@ -177,7 +256,7 @@ namespace TP5
             proximoReloj = new TimeSpan(0, 0, 0);
             bool primero = true;
 
-            string proximoEvento = EVENTO_PEDIDO_FINALIZADO;
+            string proximoEvento = EVENTO_FIN_DE_SIMULACION;
 
             Servidor cocineroConMenorTiempoFinProceso = null;
 
@@ -187,6 +266,8 @@ namespace TP5
                 {
                     continue;
                 }
+
+                proximoEvento = EVENTO_PEDIDO_FINALIZADO;
 
                 if (primero)
                 {
@@ -224,11 +305,15 @@ namespace TP5
 
             }
 
-            if (anterior.momentoProximaLlegada < proximoReloj || proximoReloj.TotalMinutes == 0)
+            if(actual.reloj <= new TimeSpan(6, 0, 0))
             {
-                proximoReloj = anterior.momentoProximaLlegada;
-                proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
+                if (anterior.momentoProximaLlegada < proximoReloj || proximoReloj.TotalMinutes == 0)
+                {
+                    proximoReloj = anterior.momentoProximaLlegada;
+                    proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
+                }
             }
+          
 
             return proximoEvento;
         }
@@ -271,26 +356,92 @@ namespace TP5
 
             Servidor cocineroConMasTiempoLibre = null;
 
-            foreach (var cocinero in anterior.cocineros)
+            List<Servidor> cocinerosLibres = anterior.cocineros.Where(x => x.estadoServidor == EstadoServidor.libre).ToList();
+
+            TimeSpan menorTiempoLibre;
+            List<Servidor> servidoresConTiempoLibre;
+            double aleatorio;
+
+            switch (cocinerosLibres.Count)
             {
-                if (cocinero.estadoServidor == EstadoServidor.libre)
-                {
-                    if (primero)
+                case 1:
+                    cocineroConMasTiempoLibre = cocinerosLibres.First();
+                    break;
+
+                case 2:
+
+                    menorTiempoLibre = cocinerosLibres.Min(x => x.tiempoLibre);
+
+                    servidoresConTiempoLibre = cocinerosLibres.Where(x => x.tiempoLibre == menorTiempoLibre).ToList();
+
+                    if(servidoresConTiempoLibre.Count == 1)
                     {
-                        mayorTiempoLibre = cocinero.tiempoLibre;
-                        cocineroConMasTiempoLibre = cocinero;
-                        primero = false;
+                        cocineroConMasTiempoLibre = servidoresConTiempoLibre[0];
                     }
                     else
                     {
-                        if (cocinero.tiempoLibre >= mayorTiempoLibre)
+                        aleatorio = Aleatorio.getInstancia().NextDouble();
+
+                        if (aleatorio < 0.5)
                         {
-                            mayorTiempoLibre = cocinero.tiempoLibre;
-                            cocineroConMasTiempoLibre = cocinero;
+                            cocineroConMasTiempoLibre = cocinerosLibres[0];
+                        }
+                        else
+                        {
+                            cocineroConMasTiempoLibre = cocinerosLibres[1];
                         }
                     }
-                }
+                   
+
+                    break;
+
+                case 3:
+
+                    menorTiempoLibre = cocinerosLibres.Min(x => x.tiempoLibre);
+
+                    servidoresConTiempoLibre = cocinerosLibres.Where(x => x.tiempoLibre == menorTiempoLibre).ToList();
+
+                    if (servidoresConTiempoLibre.Count == 1)
+                    {
+                        cocineroConMasTiempoLibre = servidoresConTiempoLibre[0];
+                    }
+                    else
+                    {
+                        aleatorio = Aleatorio.getInstancia().NextDouble();
+
+                        if (servidoresConTiempoLibre.Count == 2)
+                        {
+                            if (aleatorio < 0.5)
+                            {
+                                cocineroConMasTiempoLibre = cocinerosLibres[0];
+                            }
+                            else
+                            {
+                                cocineroConMasTiempoLibre = cocinerosLibres[1];
+                            }
+                        }
+                        else
+                        {
+                            if (aleatorio < 0.3333)
+                            {
+                                cocineroConMasTiempoLibre = cocinerosLibres[0];
+                            }
+                            else if(aleatorio < 0.6666)
+                            {
+                                cocineroConMasTiempoLibre = cocinerosLibres[1];
+                            }
+                            else
+                            {
+                                cocineroConMasTiempoLibre = cocinerosLibres[2];
+                            }
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
             }
+           
             return cocineroConMasTiempoLibre;
         }
 
@@ -373,7 +524,9 @@ namespace TP5
             actual.evento = EVENTO_PEDIDO_FINALIZADO + " " + pedido.numeroPedido.ToString();
             pedido.momentoFinProceso = actual.reloj;
 
-            if(anterior.delivery.estadoServidor == EstadoServidor.libre)
+            pedido.cocinero.estadoServidor = EstadoServidor.libre;
+
+            if (anterior.delivery.estadoServidor == EstadoServidor.libre)
             {
                 //Enviar Delivery
                 actual.delivery.estadoServidor = EstadoServidor.ocupado;
@@ -390,10 +543,6 @@ namespace TP5
                 actual.longitudColaPedido--;
                 Pedido pedidoCola = generarPedido();
                 prepararPedido(pedidoCola);
-            }
-            else
-            {
-                pedido.cocinero.estadoServidor = EstadoServidor.libre;
             }
         }
 
@@ -428,7 +577,7 @@ namespace TP5
         {
             double lambda = pedidosPorHora / 60d;
 
-            double tiempoEntreLlegada = (-1 / lambda) * Math.Log(1 - Aleatorio.getInstancia().NextDouble());
+            double tiempoEntreLlegada = (-1/lambda) * Math.Log(1 - Aleatorio.getInstancia().NextDouble());
 
             return TimeSpan.FromMinutes(tiempoEntreLlegada);
         }
