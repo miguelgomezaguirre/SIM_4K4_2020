@@ -152,6 +152,8 @@ namespace TP5
 
                 actualizarTiempoLibreCocineros();
 
+                verificarPedidosExcedidos();
+
                 switch (evento)
                 {
                     case EVENTO_LLEGADA_DE_PEDIDO:
@@ -201,6 +203,27 @@ namespace TP5
             //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
 
         }
+
+        private void verificarPedidosExcedidos()
+        {
+            if(anterior.pedidos.Count > 0)
+            {
+                foreach (var pedido in anterior.pedidos)
+                {
+                    if((actual.reloj - pedido.momentoInicio) > new TimeSpan(1, 0, 0))
+                    {
+                        if(pedido.cocinero == null)
+                        {
+                            actual.pedidos.Remove(pedido);
+
+                            if(anterior.longitudColaPedido > 0)
+                                actual.longitudColaPedido--;
+                        }
+                    }
+                }
+            }
+        }
+
 
         private void actualizarTiempoLibreCocineros()
         {
@@ -345,20 +368,20 @@ namespace TP5
             cocineroConMasTiempoLibre.estadoServidor = EstadoServidor.ocupado;
             cocineroConMasTiempoLibre.tiempoProceso = pedido.calcularTiempoDemora();
             cocineroConMasTiempoLibre.inicioProceso = actual.reloj;
-            pedido.momentoInicio = actual.reloj;
+            
             pedido.cocinero = cocineroConMasTiempoLibre;
         }
 
         private Servidor obtenerCocineroMayorTiempoLibre()
         {
-            TimeSpan mayorTiempoLibre = new TimeSpan(0, 0, 0);
+            //TimeSpan mayorTiempoLibre = new TimeSpan(0, 0, 0);
             bool primero = true;
 
             Servidor cocineroConMasTiempoLibre = null;
 
             List<Servidor> cocinerosLibres = anterior.cocineros.Where(x => x.estadoServidor == EstadoServidor.libre).ToList();
 
-            TimeSpan menorTiempoLibre;
+            TimeSpan mayorTiempoLibre;
             List<Servidor> servidoresConTiempoLibre;
             double aleatorio;
 
@@ -370,9 +393,9 @@ namespace TP5
 
                 case 2:
 
-                    menorTiempoLibre = cocinerosLibres.Min(x => x.tiempoLibre);
+                    mayorTiempoLibre = cocinerosLibres.Max(x => x.tiempoLibre);
 
-                    servidoresConTiempoLibre = cocinerosLibres.Where(x => x.tiempoLibre == menorTiempoLibre).ToList();
+                    servidoresConTiempoLibre = cocinerosLibres.Where(x => x.tiempoLibre == mayorTiempoLibre).ToList();
 
                     if(servidoresConTiempoLibre.Count == 1)
                     {
@@ -397,9 +420,9 @@ namespace TP5
 
                 case 3:
 
-                    menorTiempoLibre = cocinerosLibres.Min(x => x.tiempoLibre);
+                    mayorTiempoLibre = cocinerosLibres.Max(x => x.tiempoLibre);
 
-                    servidoresConTiempoLibre = cocinerosLibres.Where(x => x.tiempoLibre == menorTiempoLibre).ToList();
+                    servidoresConTiempoLibre = cocinerosLibres.Where(x => x.tiempoLibre == mayorTiempoLibre).ToList();
 
                     if (servidoresConTiempoLibre.Count == 1)
                     {
@@ -461,46 +484,100 @@ namespace TP5
             //generamos el random para saber a que pedido pertenece
             Double random = Aleatorio.getInstancia().NextDouble();
             Pedido pedido;
+
             if (random < 0.2d)
             {
-                //Genero una docena de sanguches
-                pedido = new PedidoSandwich(1, 1);
-                actual.sandwichPreparados++;
+                pedido = buscarPedidoDisponible(typeof(PedidoSandwich), 1);
+
+                if (pedido == null)
+                {
+                    //Genero una docena de sanguches
+                    pedido = new PedidoSandwich(1, 1);
+                    actual.sandwichPreparados++;
+                }
+                
             }
             else if (0.2d < random && random < 0.6d)
             {
-                //Genero un pedido pizza
-                pedido = new PedidoPizza(1, 1);
-                actual.pizzasPreparadas++;
+                pedido = buscarPedidoDisponible(typeof(PedidoPizza), 1);
+
+                if(pedido == null)
+                {
+                    //Genero un pedido pizza
+                    pedido = new PedidoPizza(1, 1);
+                    actual.pizzasPreparadas++;
+                }
+                
             }
             else if (0.6 < random && random < 0.9d)
             {
-                //genero un pedido de empanadas
                 pedido = new PedidoEmpanadas(3);
+
+                Pedido pedidoAux = buscarPedidoDisponible(typeof(PedidoEmpanadas), pedido.getCantidad());
+
+                //genero un pedido de empanadas
                 
-                //TODO: ver como obtener la cantidad de empanadas, quiza pueda devolverla como parametro de salida
-                actual.empanadasPreparadas += pedido.getCantidad();
+
+                if (pedidoAux == null)
+                {
+                    //TODO: ver como obtener la cantidad de empanadas, quiza pueda devolverla como parametro de salida
+                    actual.empanadasPreparadas += pedido.getCantidad();
+                }
+                else
+                {
+                    pedido = pedidoAux;
+                }
+
             }
             else if (0.9d < random && random < 0.95d)
             {
-                //Genero un pedido de hamburguesas
-                pedido = new PedidoHamburguesa();
-                actual.hamburguesasPreparados++;
+                pedido = buscarPedidoDisponible(typeof(PedidoHamburguesa), 1);
+
+                if (pedido == null)
+                {
+                    //Genero un pedido de hamburguesas
+                    pedido = new PedidoHamburguesa();
+                    actual.hamburguesasPreparados++;
+                }
             }
             else
             {
-                //Genero un pedido de lomito
-                pedido = new PedidoLomito();
-                actual.lomitosPreparados++;
+                pedido = buscarPedidoDisponible(typeof(PedidoLomito), 1);
+
+                if (pedido == null)
+                {
+                    //Genero un pedido de lomito
+                    pedido = new PedidoLomito();
+                    actual.lomitosPreparados++;
+                }
             }
 
             //asigno nro de pedido y agrego el pedido a la lista de pedidos
             pedido.numeroPedido = numeroPedido++;
+
+            pedido.momentoInicio = actual.reloj;
+            pedido.estadoPedido = EstadoPedido.pendientePreparacion;
+
             actual.pedidos.Add(pedido);
 
             return pedido;
         }
 
+        private Pedido buscarPedidoDisponible(Type tipoPedido, int cantidadPedida)
+        {
+            foreach (var pedido in anterior.pedidos)
+            {
+                if(pedido.momentoLimite < actual.reloj &&  pedido.momentoFinProceso < actual.reloj)
+                {
+                    if(typeof(Pedido) == tipoPedido && pedido.getCantidad() == cantidadPedida)
+                    {
+                        return pedido;
+                    }
+                }
+            }
+
+            return null;
+        }
 
         private void simularLlegadaDePedido()
         {
@@ -508,9 +585,10 @@ namespace TP5
             actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
             actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
 
+            Pedido pedido = generarPedido();            
+
             if (getCantidadCocinerosLibres() > 0)
             {
-                Pedido pedido = generarPedido();
                 prepararPedido(pedido);
             }
             else
@@ -532,6 +610,8 @@ namespace TP5
                 actual.delivery.estadoServidor = EstadoServidor.ocupado;
                 actual.delivery.inicioProceso = actual.reloj;
                 actual.delivery.tiempoProceso = obtenerTiempoEntregaDelivery();
+
+
             }
             else
             {
@@ -551,18 +631,49 @@ namespace TP5
         {
             actual.evento = EVENTO_ENTREGA_DE_PEDIDO;
 
-            if(actual.longitudColaDelivery > 0)
+            //Aca puede haber entregado 1, 2 o 3 pedidos... hay que eliminarlos si no superaron la hora de espera
+            foreach (var pedido in anterior.pedidos)
+            {
+                if(pedido.enProcesoDeEntrega && pedido.momentoLimite < actual.reloj)
+                {
+                    actual.pedidos.Remove(pedido);
+                }
+                else
+                {
+                    if(actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault() != null)
+                        actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault().enProcesoDeEntrega = false;
+                }
+            }
+
+            if(anterior.longitudColaDelivery > 0)
             {
                 actual.delivery.inicioProceso = actual.reloj;
                 actual.delivery.tiempoProceso = obtenerTiempoEntregaDelivery();
                 actual.delivery.estadoServidor = EstadoServidor.ocupado;
 
-                if (actual.longitudColaDelivery <= pedidosMaxDelivery)
+                if (anterior.longitudColaDelivery <= pedidosMaxDelivery)
                 {                    
                     actual.longitudColaDelivery = 0;
+
+                    for (int i = 0; i < anterior.longitudColaDelivery; i++)
+                    {
+                        if(actual.pedidos[i].momentoLimite > actual.reloj)
+                        {
+                            actual.pedidos[i].enProcesoDeEntrega = true;
+                        }
+                        
+                    }
                 }
                 else
                 {
+                    for (int i = 0; i < actual.pedidos.Count; i++)
+                    {
+                        if (actual.pedidos[i].momentoLimite > actual.reloj)
+                        {
+                            actual.pedidos[i].enProcesoDeEntrega = true;
+                        }
+                    }
+
                     actual.longitudColaDelivery = actual.longitudColaDelivery - pedidosMaxDelivery;
                 }
                 

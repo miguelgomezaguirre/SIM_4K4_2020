@@ -36,6 +36,9 @@ namespace TP5.Clases
         public int hamburguesasPreparados { get; set; }
         public int cantidadEmpandasPedidas { get; set; }
 
+        public int pedidosAbandonados { get; set; }
+
+
 
         public VectorEstado()
         {
@@ -63,9 +66,13 @@ namespace TP5.Clases
             this.empanadasPreparadas = actual.empanadasPreparadas;
             this.lomitosPreparados = actual.lomitosPreparados;
             this.hamburguesasPreparados = actual.hamburguesasPreparados;
+            //this.pedidos = actual.pedidos;
+
             this.cocineros = actual.cocineros;
             this.delivery = actual.delivery;
-            this.pedidos = actual.pedidos;
+            this.pedidos = new List<Pedido>();
+            this.pedidos.AddRange(actual.pedidos);
+
             this.momentoProximaLlegada = actual.momentoProximaLlegada;
         }
     }

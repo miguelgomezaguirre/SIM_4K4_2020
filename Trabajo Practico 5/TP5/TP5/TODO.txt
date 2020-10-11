@@ -1,13 +1,16 @@
 ﻿-----
-TODO:
+DONE:
 -----
-
 *random de los servidores, cuando tengan el mismo tiempo libre ---> listo
 *imprimir fin de simulacion ---> listo
 *Actualizar estado cocinero --> listo
 *despues de la hora 6 no generar mas pedidos y terminar los que tenemos (cola a cero) --> listo
 *sumar el tiempo libre a los otros cocineros --> listo
 *cola delivery --> listo
+
+-----
+TODO:
+-----
 *si el pedido supera la hora y queda hecho, hay que entregregarselo al proximo que pida lo mismo
 *corregir el nro de pedido cuando se finalizan (evento)
 *arreglar lo de la hora (formato)
