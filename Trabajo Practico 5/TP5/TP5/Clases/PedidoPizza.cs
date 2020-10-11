@@ -21,5 +21,10 @@ namespace TP5.Clases
         {
             return TimeSpan.FromMinutes( a + Aleatorio.getInstancia().NextDouble() * (b - a));
         }
+
+        public override double getPrecio()
+        {
+            return 250;
+        }
     }
 }

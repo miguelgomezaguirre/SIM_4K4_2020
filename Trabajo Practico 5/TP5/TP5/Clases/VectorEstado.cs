@@ -38,6 +38,38 @@ namespace TP5.Clases
 
         public int pedidosAbandonados { get; set; }
 
+        public double ingresosGeneradosTotal { get; set; }
+
+
+        //ESTADISTICAS
+        public int cantidadLlegadas { get; set; }
+        public TimeSpan tiempoEntreLlegadasPromedio { get; set; }
+        public TimeSpan tiempoEntreLlegadasDesviacion { get; set; }
+
+        public int horaSimulacion { get; set; }
+        public int cantidadPedidosPorHora { get; set; }
+
+        public double promedioPedidosEnUnaHora { get; set; }
+        public double promedioPedidosPorHora { get; set; }
+                
+        public TimeSpan tiempoPreparacionDeSandwichPromedio { get; set; }
+
+        public double tiempoSandwichPreparadosDesviacion { get; set; }
+
+        public TimeSpan tiempoPreparacionDePizzaPromedio { get; set; }
+
+        public double tiempoCoccionPizzaDesviacion { get; set; }
+
+        public TimeSpan tiempoCoccionEmpanadasPromedio { get; set; }
+
+        public double tiempoCoccionEmpanadasDesviacion { get; set; }
+
+        public double ingresoPorHamburgesa { get; set; }
+        public double ingresoPorLomito { get; set; }
+
+        public int cantidadEntregas { get; set; }
+        public TimeSpan tiempoEntregaPromedio { get; set; }
+        public TimeSpan tiempoEntregaDesviacion { get; set; }
 
 
         public VectorEstado()
@@ -50,6 +82,10 @@ namespace TP5.Clases
             cocineros.Add(new Servidor { numeroServidor = 3 });
             delivery = new Servidor();
             pedidos = new List<Pedido>();
+
+            horaSimulacion = 0;
+            cantidadPedidosPorHora = 0;
+            promedioPedidosPorHora = 0;
         }
 
 

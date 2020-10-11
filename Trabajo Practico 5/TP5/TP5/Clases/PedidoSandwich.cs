@@ -25,5 +25,10 @@ namespace TP5.Clases
 
             return TimeSpan.FromMinutes(demora);
         }
+
+        public override double getPrecio()
+        {
+            return 500;
+        }
     }
 }

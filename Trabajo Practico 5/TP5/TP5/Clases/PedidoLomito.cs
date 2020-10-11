@@ -12,5 +12,10 @@ namespace TP5.Clases
         {
             return new TimeSpan(0, 8, 0);
         }
+
+        public override double getPrecio()
+        {
+            return 450;
+        }
     }
 }

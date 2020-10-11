@@ -16,7 +16,7 @@ namespace TP5.Clases
     public abstract class Pedido
     {
         public int numeroPedido { get; set; }
-        
+
         private int cantidad = 1;
 
         public TimeSpan momentoInicio { get; set; }
@@ -27,13 +27,15 @@ namespace TP5.Clases
 
         public bool enProcesoDeEntrega { get; set; }
 
-        public EstadoPedido estadoPedido { get; set; }
+        public double ingresoGenerado { get; set; }
 
 
         public virtual int getCantidad()
         {
             return cantidad;
         }
+
+        public abstract double getPrecio();
 
         public abstract TimeSpan calcularTiempoDemora();
     }

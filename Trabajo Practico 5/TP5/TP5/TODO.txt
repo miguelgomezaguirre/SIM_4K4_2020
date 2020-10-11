@@ -7,6 +7,7 @@ DONE:
 *despues de la hora 6 no generar mas pedidos y terminar los que tenemos (cola a cero) --> listo
 *sumar el tiempo libre a los otros cocineros --> listo
 *cola delivery --> listo
+*borrar los pedidos --> listo
 
 -----
 TODO:
@@ -14,8 +15,14 @@ TODO:
 *si el pedido supera la hora y queda hecho, hay que entregregarselo al proximo que pida lo mismo
 *corregir el nro de pedido cuando se finalizan (evento)
 *arreglar lo de la hora (formato)
-*borrar los pedidos
 
+
+punto a)
+	Cantidad de pedidos por hora
+	Tipo de producto pedido
+	Cantidad de empanadas demandadas
+	Ingreso por hamburguesa y lomito
+	Orden en el uso de los empleados de coccion
 
 
 *si era 25 min, el pedido es gratis

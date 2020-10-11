@@ -47,5 +47,10 @@ namespace TP5.Clases
 
             return cantidadPedidas;
         }
+
+        public override double getPrecio()
+        {
+            return cantidadPedidas * 25;
+        }
     }
 }

@@ -37,54 +37,59 @@ namespace TP5
         TimeSpan tiempoFinSimulacion = new TimeSpan(6,0,0); //6 horas
         int pedidosMaxDelivery = 3;
 
+        List<VectorEstado> resultados = new List<VectorEstado>();
+
 
         /***************************************************** TABLA ******************************************************/
-        DataTable resultadoFinal = new DataTable();
+        DataTable simulacionDiariaDataTable = new DataTable();
+        DataTable simulacionesDataTable = new DataTable();
 
         public Form1()
         {
             InitializeComponent();
 
-            reiniciarTabla();
+            reiniciarTabla(ref simulacionDiariaDataTable);
+            reiniciarTabla(ref simulacionesDataTable);
         }
 
-        private void reiniciarTabla()
+        private void reiniciarTabla(ref DataTable tabla)
         {
-            resultadoFinal = new DataTable();
+            //resultadoFinal = new DataTable();
+            tabla = new DataTable();
 
-            resultadoFinal.Columns.Add("Numero Evento");
-            resultadoFinal.Columns.Add("Evento");
-            resultadoFinal.Columns.Add("Reloj");
-            resultadoFinal.Columns.Add("Tiempo entre llegadas");
-            resultadoFinal.Columns.Add("Proxima Llegada");
-            resultadoFinal.Columns.Add("Cola Pedidos");
-            resultadoFinal.Columns.Add("Tiempo de proceso servidor 1");
-            resultadoFinal.Columns.Add("Momento Fin Proceso servidor 1");
-            resultadoFinal.Columns.Add("Estado Servidor 1");
-            resultadoFinal.Columns.Add("Tiempo de proceso servidor 2");
-            resultadoFinal.Columns.Add("Momento Fin Proceso servidor 2");
-            resultadoFinal.Columns.Add("Estado Servidor 2");
-            resultadoFinal.Columns.Add("Tiempo de proceso servidor 3");
-            resultadoFinal.Columns.Add("Momento Fin Proceso servidor 3");
-            resultadoFinal.Columns.Add("Estado Servidor 3");
-            resultadoFinal.Columns.Add("Cola Delivery");
-            resultadoFinal.Columns.Add("Tiempo Entrega");
-            resultadoFinal.Columns.Add("Momento Entrega");
-            resultadoFinal.Columns.Add("Estado Delivery");
-            resultadoFinal.Columns.Add("Cantidad Sandwiches");
-            resultadoFinal.Columns.Add("Cantidad Pizzas");
-            resultadoFinal.Columns.Add("Cantidad Empanadas");
-            resultadoFinal.Columns.Add("Cantidad Lomitos");
-            resultadoFinal.Columns.Add("Cantidad Hamburguesas");
+            tabla.Columns.Add("Numero Evento");
+            tabla.Columns.Add("Evento");
+            tabla.Columns.Add("Reloj");
+            tabla.Columns.Add("Tiempo entre llegadas");
+            tabla.Columns.Add("Proxima Llegada");
+            tabla.Columns.Add("Cola Pedidos");
+            tabla.Columns.Add("Tiempo de proceso servidor 1");
+            tabla.Columns.Add("Momento Fin Proceso servidor 1");
+            tabla.Columns.Add("Estado Servidor 1");
+            tabla.Columns.Add("Tiempo de proceso servidor 2");
+            tabla.Columns.Add("Momento Fin Proceso servidor 2");
+            tabla.Columns.Add("Estado Servidor 2");
+            tabla.Columns.Add("Tiempo de proceso servidor 3");
+            tabla.Columns.Add("Momento Fin Proceso servidor 3");
+            tabla.Columns.Add("Estado Servidor 3");
+            tabla.Columns.Add("Cola Delivery");
+            tabla.Columns.Add("Tiempo Entrega");
+            tabla.Columns.Add("Momento Entrega");
+            tabla.Columns.Add("Estado Delivery");
+            tabla.Columns.Add("Cantidad Sandwiches");
+            tabla.Columns.Add("Cantidad Pizzas");
+            tabla.Columns.Add("Cantidad Empanadas");
+            tabla.Columns.Add("Cantidad Lomitos");
+            tabla.Columns.Add("Cantidad Hamburguesas");
 
-            resultadoFinal.Columns.Add("Tiempo Libre Cocinero 1");
-            resultadoFinal.Columns.Add("Tiempo Libre Cocinero 2");
-            resultadoFinal.Columns.Add("Tiempo Libre Cocinero 3");
+            tabla.Columns.Add("Tiempo Libre Cocinero 1");
+            tabla.Columns.Add("Tiempo Libre Cocinero 2");
+            tabla.Columns.Add("Tiempo Libre Cocinero 3");
         }
 
-        private void agregarFila(VectorEstado actual)
+        private void agregarFila(VectorEstado actual,ref DataTable tabla)
         {
-            var fila = resultadoFinal.NewRow();
+            var fila = tabla.NewRow();
 
             fila["Numero Evento"] = actual.numeroEvento;
             fila["Evento"] = actual.evento;
@@ -116,7 +121,7 @@ namespace TP5
             fila["Tiempo Libre Cocinero 2"] = actual.cocineros[1].tiempoLibre;
             fila["Tiempo Libre Cocinero 3"] = actual.cocineros[0].tiempoLibre;
 
-            resultadoFinal.Rows.Add(fila);
+            tabla.Rows.Add(fila);
         }
         /***************************************************** TABLA ******************************************************/
 
@@ -127,12 +132,12 @@ namespace TP5
             actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
             actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
             anterior.clonar(actual);
-            agregarFila(actual);
+            agregarFila(actual, ref simulacionDiariaDataTable);
         }
 
         private void btnIniciarSimulacion_Click(object sender, EventArgs e)
         {
-            reiniciarTabla();
+            reiniciarTabla(ref simulacionDiariaDataTable);
             actual = new VectorEstado();
             anterior = new VectorEstado();
 
@@ -190,18 +195,29 @@ namespace TP5
                 anterior.clonar(actual);
 
                 //Thread.Sleep(0);
-                agregarFila(actual);
+                agregarFila(actual, ref simulacionDiariaDataTable);
                 //TODO: Hacer que terminen todos los eventos pendientes
             }
 
 
 
 
-            grdResultado.DataSource = resultadoFinal;
+            grdResultado.DataSource = simulacionDiariaDataTable;
 
             //TODO: Consultar como generamos la distribucion poisson
             //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
+            resultados.Add(actual);
 
+            agregarSimulacion(actual);
+        }
+
+        private void agregarSimulacion(VectorEstado ultimaSimulacion)
+        {
+            grdResultados.DataSource = null;
+
+            agregarFila(ultimaSimulacion, ref simulacionesDataTable);
+
+            grdResultados.DataSource = simulacionesDataTable;
         }
 
         private void verificarPedidosExcedidos()
@@ -370,6 +386,34 @@ namespace TP5
             cocineroConMasTiempoLibre.inicioProceso = actual.reloj;
             
             pedido.cocinero = cocineroConMasTiempoLibre;
+
+            if(pedido.GetType() == typeof(PedidoSandwich))
+            {
+                actual.tiempoPreparacionDeSandwichPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoPreparacionDeSandwichPromedio.TotalMinutes * anterior.sandwichPreparados + actual.sandwichPreparados) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                
+                if(actual.sandwichPreparados > 1)
+                {
+                    actual.tiempoSandwichPreparadosDesviacion = calcularVarianza(actual.sandwichPreparados, anterior.tiempoSandwichPreparadosDesviacion, actual.tiempoPreparacionDeSandwichPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                }
+            }
+            else if(pedido.GetType() == typeof(PedidoPizza))
+            {
+                actual.tiempoPreparacionDePizzaPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoPreparacionDePizzaPromedio.TotalMinutes * anterior.pizzasPreparadas + actual.pizzasPreparadas) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+
+                if (actual.pizzasPreparadas > 1)
+                {
+                    actual.tiempoCoccionPizzaDesviacion = calcularVarianza(actual.pizzasPreparadas, anterior.tiempoCoccionPizzaDesviacion, actual.tiempoPreparacionDePizzaPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                }
+            }
+            else if(pedido.GetType() == typeof(PedidoEmpanadas))
+            {
+                actual.tiempoCoccionEmpanadasPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoCoccionEmpanadasPromedio.TotalMinutes * anterior.empanadasPreparadas + actual.empanadasPreparadas) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+
+                if (actual.pizzasPreparadas > 1)
+                {
+                    actual.tiempoCoccionEmpanadasDesviacion = calcularVarianza(actual.empanadasPreparadas, anterior.tiempoCoccionEmpanadasDesviacion, actual.tiempoCoccionEmpanadasPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                }
+            }
         }
 
         private Servidor obtenerCocineroMayorTiempoLibre()
@@ -556,7 +600,6 @@ namespace TP5
             pedido.numeroPedido = numeroPedido++;
 
             pedido.momentoInicio = actual.reloj;
-            pedido.estadoPedido = EstadoPedido.pendientePreparacion;
 
             actual.pedidos.Add(pedido);
 
@@ -595,6 +638,57 @@ namespace TP5
             {
                 actual.longitudColaPedido++;
             }
+
+            //Estadisticas
+            actual.cantidadLlegadas++;
+            
+
+            actual.tiempoEntreLlegadasPromedio = TimeSpan.FromMinutes((double)(anterior.cantidadLlegadas * anterior.tiempoEntreLlegadasPromedio.TotalMinutes + actual.tiempoEntreLlegada.TotalMinutes) / (double)actual.cantidadLlegadas);
+
+            if(actual.cantidadLlegadas > 1)
+                actual.tiempoEntreLlegadasDesviacion = TimeSpan.FromMinutes(Math.Sqrt(calcularVarianza(actual.cantidadLlegadas, anterior.tiempoEntreLlegadasDesviacion.TotalMinutes, actual.tiempoEntreLlegadasPromedio.TotalMinutes, actual.tiempoEntreLlegada.TotalMinutes)));
+            //TODO:----
+            //if (actual.reloj.Hours == actual.horaSimulacion)
+            //{
+            //    actual.cantidadPedidosPorHora++;
+
+            //    //actual.promedioPedidosEnUnaHora = (double)(anterior.cantidadLlegadas * anterior.cantidadPedidosPorHora + actual.cantidadPedidosPorHora) / (double)actual.cantidadLlegadas;
+            //}
+            //else
+            //{
+                
+            //    actual.horaSimulacion = actual.reloj.Hours;
+            //    //actual.cantidadPedidosPorHora = 1;
+            //    actual.promedioPedidosEnUnaHora = 1;
+
+                
+            //    //actual.promedioPedidosPorHora = anterior.horaSimulacion * anterior.promedioPedidosEnUnaHora + actual.
+            //}
+
+            
+        }
+
+        public double calcularPromedio(int n, double promedioAnterior, double cantidadActual)
+        {
+            double promedio = (double)((n - 1) * promedioAnterior + cantidadActual) / (double)n;
+
+            return promedio;
+        }
+
+        public double calcularVarianza(int n, double varianzaAnterior, double promedioActual, double cantidadActual)
+        {
+            if(n == 1)
+            {
+                throw new ArgumentException();
+            }
+
+            double varianza = (n - 2) * varianzaAnterior;
+            
+            varianza += (((double)n / (double)(n - 1)) * Math.Pow(promedioActual - cantidadActual, 2));
+
+            varianza = (double)varianza / (double)(n - 1);
+
+            return varianza;
         }
 
         private void simularPedidoFinalizado(Pedido pedido)
@@ -640,10 +734,36 @@ namespace TP5
                 }
                 else
                 {
-                    if(actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault() != null)
+                    if(pedido.momentoInicio + new TimeSpan(0, 25, 0) < actual.reloj)
+                    {
+                        pedido.ingresoGenerado = pedido.getPrecio();
+                    }
+                    else
+                    {
+                        pedido.ingresoGenerado = 0;
+                    }
+
+                    actual.ingresosGeneradosTotal += pedido.ingresoGenerado;
+
+                    if(typeof(PedidoHamburguesa) == pedido.GetType())
+                    {
+                        actual.ingresoPorHamburgesa += pedido.ingresoGenerado;
+                    }
+                    else if(typeof(PedidoLomito) == pedido.GetType())
+                    {
+                        actual.ingresoPorLomito += pedido.ingresoGenerado;
+                    }
+
+                    if (actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault() != null)
                         actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault().enProcesoDeEntrega = false;
                 }
             }
+
+            actual.cantidadEntregas++;
+            actual.tiempoEntregaPromedio = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadEntregas, anterior.tiempoEntregaPromedio.TotalMinutes, anterior.delivery.tiempoProceso.TotalMinutes));
+
+            if(actual.cantidadEntregas > 1)
+                actual.tiempoEntregaDesviacion = TimeSpan.FromMinutes(Math.Sqrt(calcularVarianza(actual.cantidadEntregas, Math.Pow(anterior.tiempoEntregaDesviacion.TotalMinutes,2), actual.tiempoEntregaPromedio.TotalMinutes, anterior.delivery.tiempoProceso.TotalMinutes )));
 
             if(anterior.longitudColaDelivery > 0)
             {
@@ -683,6 +803,7 @@ namespace TP5
                 actual.delivery.estadoServidor = EstadoServidor.libre;
             }
         }
+
 
         private TimeSpan generarTiempoEntreLlegada()
         {
