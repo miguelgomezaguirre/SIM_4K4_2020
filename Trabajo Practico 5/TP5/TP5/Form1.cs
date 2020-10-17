@@ -39,17 +39,40 @@ namespace TP5
 
         List<VectorEstado> resultados = new List<VectorEstado>();
 
-
+        VectorEstado resultadoSimulacionDiaria = new VectorEstado();
         /***************************************************** TABLA ******************************************************/
         DataTable simulacionDiariaDataTable = new DataTable();
-        DataTable simulacionesDataTable = new DataTable();
+        DataTable simulacionesResumenDataTable = new DataTable();
 
         public Form1()
         {
             InitializeComponent();
 
             reiniciarTabla(ref simulacionDiariaDataTable);
-            reiniciarTabla(ref simulacionesDataTable);
+            reiniciarTablaResumen();
+        }
+
+        private void reiniciarTablaResumen()
+        {
+            simulacionesResumenDataTable = new DataTable();
+
+            simulacionesResumenDataTable.Columns.Add("Numero Simulacion");
+
+            simulacionesResumenDataTable.Columns.Add("Tiempo Promedio Libre Coccion");
+            simulacionesResumenDataTable.Columns.Add("Tiempo Promedio Libre Delivery");
+            simulacionesResumenDataTable.Columns.Add("Ventas Perdidas Promedio Por Dia");
+            simulacionesResumenDataTable.Columns.Add("Ventas con Entrega Gratuita Por Dia");
+            simulacionesResumenDataTable.Columns.Add("Valor de los Ingresos");
+            simulacionesResumenDataTable.Columns.Add("Valor de las Ventas Perdidas");
+            simulacionesResumenDataTable.Columns.Add("Ingreso Promedio Diario");
+            simulacionesResumenDataTable.Columns.Add("Desvío Ingreso Diario");
+            simulacionesResumenDataTable.Columns.Add("Numero Maximo de Ventas Perdidas");
+            simulacionesResumenDataTable.Columns.Add("Tiempo Promedio en Cola");
+            simulacionesResumenDataTable.Columns.Add("Tiempo de Entrega de Pedidos Promedio Desde Creacion");
+
+            simulacionesResumenDataTable.Columns.Add("Probabilidad ingreso < 250");
+
+            simulacionesResumenDataTable.Columns.Add("Probabilidad pedidos caidos o gratis");
         }
 
         private void reiniciarTabla(ref DataTable tabla)
@@ -63,6 +86,7 @@ namespace TP5
             tabla.Columns.Add("Tiempo entre llegadas");
             tabla.Columns.Add("Proxima Llegada");
             tabla.Columns.Add("Cola Pedidos");
+            tabla.Columns.Add("Producto Pedido");
             tabla.Columns.Add("Tiempo de proceso servidor 1");
             tabla.Columns.Add("Momento Fin Proceso servidor 1");
             tabla.Columns.Add("Estado Servidor 1");
@@ -85,6 +109,26 @@ namespace TP5
             tabla.Columns.Add("Tiempo Libre Cocinero 1");
             tabla.Columns.Add("Tiempo Libre Cocinero 2");
             tabla.Columns.Add("Tiempo Libre Cocinero 3");
+
+            tabla.Columns.Add("Tiempo Entre Llegadas Promedio");
+            tabla.Columns.Add("Tiempo Entre Llegadas Desviacion");
+            
+            tabla.Columns.Add("Tiempo Preparación Sandwich Promedio");
+            tabla.Columns.Add("Tiempo Preparación Sandwich Desviacion");
+
+            tabla.Columns.Add("Tiempo Preparación Pizza Promedio");
+            tabla.Columns.Add("Tiempo Preparación Pizza Desviacion");
+
+            tabla.Columns.Add("Tiempo Cocción Empanadas Promedio");
+            tabla.Columns.Add("Tiempo Cocción Empanadas Desviacion");
+
+            tabla.Columns.Add("Tiempo de Entrega de Pedidos Promedio");
+            tabla.Columns.Add("Tiempo de Entrega de Pedidos Desviacion");
+
+            tabla.Columns.Add("Probabilidad ingreso < 250");
+
+            tabla.Columns.Add("Probabilidad pedidos caidos o gratis");
+
         }
 
         private void agregarFila(VectorEstado actual,ref DataTable tabla)
@@ -97,6 +141,8 @@ namespace TP5
             fila["Tiempo entre llegadas"] = actual.tiempoEntreLlegada;
             fila["Proxima Llegada"] = actual.momentoProximaLlegada;
             fila["Cola Pedidos"] = actual.longitudColaPedido;
+
+            fila["Producto Pedido"] = actual.productoPedido;
             
             fila["Tiempo de proceso servidor 1"] = actual.cocineros[2].tiempoProceso;
             fila["Momento Fin Proceso servidor 1"] = actual.cocineros[2].finProceso();
@@ -121,7 +167,53 @@ namespace TP5
             fila["Tiempo Libre Cocinero 2"] = actual.cocineros[1].tiempoLibre;
             fila["Tiempo Libre Cocinero 3"] = actual.cocineros[0].tiempoLibre;
 
+            fila["Tiempo Entre Llegadas Promedio"] = actual.tiempoEntreLlegadasPromedio;
+            fila["Tiempo Entre Llegadas Desviacion"] = actual.tiempoEntreLlegadasDesviacion;
+
+            fila["Tiempo Preparación Sandwich Promedio"] = actual.tiempoPreparacionDeSandwichPromedio;
+            fila["Tiempo Preparación Sandwich Desviacion"] = actual.tiempoSandwichPreparadosDesviacion;
+
+            fila["Tiempo Preparación Pizza Promedio"] = actual.tiempoPreparacionDePizzaPromedio;
+            fila["Tiempo Preparación Pizza Desviacion"] = actual.tiempoCoccionPizzaDesviacion;
+
+            fila["Tiempo Cocción Empanadas Promedio"] = actual.tiempoCoccionEmpanadasPromedio;
+            fila["Tiempo Cocción Empanadas Desviacion"] = actual.tiempoCoccionEmpanadasDesviacion;
+
+            fila["Tiempo de Entrega de Pedidos Promedio"] = actual.tiempoEntregaPromedio;
+            fila["Tiempo de Entrega de Pedidos Desviacion"] = actual.tiempoEntregaDesviacion;
+
+            fila["Probabilidad ingreso < 250"] = actual.probabilidadIngresoMenosDe250;
+
+            fila["Probabilidad pedidos caidos o gratis"] = actual.probabilidadPedidosCaidosOGratis;
+
+
             tabla.Rows.Add(fila);
+        }
+
+        private void agregarFilaResumen(VectorEstado simulacionFinal)
+        {
+            var fila = simulacionesResumenDataTable.NewRow();
+
+            fila["Numero Simulacion"] = simulacionFinal.numeroEvento;
+
+            fila["Tiempo Promedio Libre Coccion"] = simulacionFinal.tiempoPromedioLibreCocineros;
+            fila["Tiempo Promedio Libre Delivery"] = simulacionFinal.tiempoPromedioLibreDelivery;
+            fila["Ventas Perdidas Promedio Por Dia"] = "X";
+            fila["Ventas con Entrega Gratuita Por Dia"] = simulacionFinal.cantidadPedidosCeroIngresos;
+            fila["Valor de los Ingresos"] = simulacionFinal.ingresosGeneradosTotal;
+            fila["Valor de las Ventas Perdidas"] = simulacionFinal.montoPedidosPerdidos;
+            fila["Ingreso Promedio Diario"] = "X";
+            fila["Desvío Ingreso Diario"] = "X";
+            fila["Numero Maximo de Ventas Perdidas"] = simulacionFinal.maximoVentasPerdidas;
+            fila["Tiempo Promedio en Cola"] = simulacionFinal.promedioTiempoClientesEnCola;
+            fila["Tiempo de Entrega de Pedidos Promedio Desde Creacion"] = simulacionFinal.promedioTiempoEntregaDesdePedido;
+
+            fila["Probabilidad ingreso < 250"] = simulacionFinal.probabilidadIngresoMenosDe250;
+
+            fila["Probabilidad pedidos caidos o gratis"] = simulacionFinal.probabilidadPedidosCaidosOGratis;
+
+
+            simulacionesResumenDataTable.Rows.Add(fila);
         }
         /***************************************************** TABLA ******************************************************/
 
@@ -131,8 +223,14 @@ namespace TP5
             actual.evento = EVENTO_INICIO_DE_SIMULACION;
             actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
             actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
+
+            actual.numeroProximaLlegada = 1;
+            actual.tiempoEntreLlegadasPromedio = actual.tiempoEntreLlegada;
+
             anterior.clonar(actual);
             agregarFila(actual, ref simulacionDiariaDataTable);
+
+            
         }
 
         private void btnIniciarSimulacion_Click(object sender, EventArgs e)
@@ -150,12 +248,14 @@ namespace TP5
 
             while (evento != EVENTO_FIN_DE_SIMULACION)
             {
+                actual.productoPedido = "";
                 evento = getProximoEvento(out tiempoProximoEvento, out pedidoAux);
 
                 actual.numeroEvento = anterior.numeroEvento + 1;
                 actual.reloj = tiempoProximoEvento;
-
-                actualizarTiempoLibreCocineros();
+                
+                if(evento != EVENTO_FIN_DE_SIMULACION)
+                    actualizarTiempoLibreServidores();
 
                 verificarPedidosExcedidos();
 
@@ -182,7 +282,7 @@ namespace TP5
                         break;
                 }
 
-                
+                getPromediosPuntoB();
 
                 //if(esFinDeSimulacion(tiempoProximoEvento))
                 //{
@@ -201,8 +301,9 @@ namespace TP5
 
 
 
+            mostrarEstadisticas();
+            
 
-            grdResultado.DataSource = simulacionDiariaDataTable;
 
             //TODO: Consultar como generamos la distribucion poisson
             //actual.cantidadEmpandasPedidas = getCantidadEmpanadas();
@@ -211,13 +312,163 @@ namespace TP5
             agregarSimulacion(actual);
         }
 
+        private void getPromediosPuntoB()
+        {
+            actual.tiempoPromedioLibreCocineros = TimeSpan.FromMinutes(actual.cocineros.Sum(x => x.tiempoLibre.TotalMinutes) / (double)actual.cocineros.Count());
+            actual.tiempoPromedioLibreDelivery = actual.delivery.tiempoLibre;
+        }
+
+        private void mostrarEstadisticas()
+        {
+            lstPedidosPorHora.Items.Clear();
+            grdResultado.DataSource = simulacionDiariaDataTable;
+
+            foreach (var pedidosPorHora in actual.cantidadPedidosPorHora)
+            {
+                lstPedidosPorHora.Items.Add("Hora: " + pedidosPorHora.Key + "   Cantidad de pedidos: " + pedidosPorHora.Value);
+            }
+
+            List<Servidor> cocineros = new List<Servidor>();
+            
+            cocineros.AddRange(actual.cocineros);
+
+            cocineros = cocineros.OrderBy(x => x.tiempoLibre).ToList();
+
+            foreach (var cocinero in cocineros)
+            {
+                TimeSpan tiempoOcupacion = actual.reloj - cocinero.tiempoLibre;
+                lstRankingCocineros.Items.Add("Tiempo de uso cocinero " + cocinero.numeroServidor + ": " + tiempoOcupacion);
+            }
+            
+            lblCantidadEmpanadas.Text = actual.empanadasPreparadas.ToString();
+            lblCantidadHamburguesas.Text = actual.hamburguesasPreparados.ToString();
+            lblCantidadLomitos.Text = actual.lomitosPreparados.ToString();
+            lblCantidadPizzas.Text = actual.pizzasPreparadas.ToString();
+            lblCantidadSandwich.Text = actual.sandwichPreparados.ToString();
+
+            lblIngresoHamburguesas.Text = actual.ingresoPorHamburgesa.ToString();
+            lblIngresoLomito.Text = actual.ingresoPorLomito.ToString();
+        }
+
         private void agregarSimulacion(VectorEstado ultimaSimulacion)
         {
+            ultimaSimulacion.numeroEvento = resultados.Count;
+            ultimaSimulacion.maximoVentasPerdidas = ultimaSimulacion.cantidadPedidosPerdidos;
+            calcularPromedioSimulacionDiaria();
+
             grdResultados.DataSource = null;
 
-            agregarFila(ultimaSimulacion, ref simulacionesDataTable);
+            int cantidadPedidosCaidosOAbandonados = ultimaSimulacion.pedidosAbandonados + ultimaSimulacion.cantidadPedidosCeroIngresos;
 
-            grdResultados.DataSource = simulacionesDataTable;
+            if (cantidadPedidosCaidosOAbandonados >= 5)
+            {
+                ultimaSimulacion.probabilidadPedidosCaidosOGratis = 1;
+            }
+
+            agregarFilaResumen(ultimaSimulacion);
+
+            grdResultados.DataSource = simulacionesResumenDataTable;
+
+        }
+
+        private void mostrarVectorResultado()
+        {
+            VectorEstado simulacionFinal = calcularPromedioSimulacionDiaria();
+
+            agregarFilaResumen(simulacionFinal);
+
+            grdResultados.DataSource = simulacionesResumenDataTable;
+        }
+
+       
+
+        private VectorEstado calcularPromedioSimulacionDiaria()
+        {
+            double tiempoLibreCocineros = 0d;
+            double tiempoLibreDelivery = 0d;
+            int pedidosPerdidos = 0;
+            int pedidosConCeroIngresos = 0;
+            double montoPedidosPerdidos = 0;
+            int maxVentasPerdidas = 0;
+            double tiempoEnColas = 0d;
+            double tiempoEntregaDesdePedido = 0d;
+            double ingresoConMenosDe250 = 0;
+            double valorIngresos = 0;
+            double ventasConEntregaGratuita = 0;
+
+            int cantidadSimulacionesCon5PedidosCaidosOAbandonados = 0;
+
+            foreach (var simulacionIndividual in resultados)
+            {
+                
+                tiempoLibreCocineros += simulacionIndividual.cocineros.Sum(x => x.tiempoLibre.TotalMinutes) / (double)simulacionIndividual.cocineros.Count;
+                tiempoLibreDelivery += simulacionIndividual.delivery.tiempoLibre.TotalMinutes;
+                pedidosPerdidos += simulacionIndividual.cantidadPedidosPerdidos;
+                pedidosConCeroIngresos += simulacionIndividual.cantidadPedidosCeroIngresos;
+
+                montoPedidosPerdidos += simulacionIndividual.montoPedidosPerdidos;
+                
+                if(simulacionIndividual.cantidadPedidosPerdidos > maxVentasPerdidas)
+                {
+                    maxVentasPerdidas = simulacionIndividual.cantidadPedidosPerdidos;
+                }
+
+                tiempoEnColas += simulacionIndividual.tiempoClientesEnCola.TotalMinutes;
+                tiempoEntregaDesdePedido += simulacionIndividual.tiempoEntregaPromedio.TotalMinutes;
+                ingresoConMenosDe250 += simulacionIndividual.probabilidadIngresoMenosDe250;
+
+                int cantidadPedidosCaidosOAbandonados = simulacionIndividual.pedidosAbandonados + simulacionIndividual.cantidadPedidosCeroIngresos;
+
+                if(cantidadPedidosCaidosOAbandonados >= 5)
+                {
+                    cantidadSimulacionesCon5PedidosCaidosOAbandonados++;
+                }
+
+                valorIngresos += simulacionIndividual.ingresosGeneradosTotal;
+
+            }
+
+            VectorEstado resultadoSimulacionTotal = new VectorEstado();
+
+            resultadoSimulacionTotal.tiempoPromedioLibreCocineros = TimeSpan.FromMinutes(tiempoLibreCocineros / (double) resultados.Count);
+            resultadoSimulacionTotal.tiempoPromedioLibreDelivery = TimeSpan.FromMinutes(tiempoLibreDelivery / (double)resultados.Count);
+            resultadoSimulacionTotal.promedioPedidosPerdidos = pedidosPerdidos / (double)resultados.Count;
+            resultadoSimulacionTotal.cantidadPedidosCeroIngresos = pedidosConCeroIngresos;
+
+            resultadoSimulacionTotal.montoPedidosPerdidos = montoPedidosPerdidos;
+            resultadoSimulacionTotal.maximoVentasPerdidas = maxVentasPerdidas;
+            resultadoSimulacionTotal.promedioTiempoClientesEnCola = TimeSpan.FromMinutes(tiempoEnColas / (double)resultados.Count);
+            resultadoSimulacionTotal.promedioTiempoEntregaDesdePedido = TimeSpan.FromMinutes(tiempoEntregaDesdePedido / (double)resultados.Count);
+
+
+            resultadoSimulacionTotal.probabilidadIngresoMenosDe250 = ingresoConMenosDe250 / (double)resultados.Count;
+
+            resultadoSimulacionTotal.probabilidadPedidosCaidosOGratis = cantidadSimulacionesCon5PedidosCaidosOAbandonados / (double)resultados.Count;
+
+            resultadoSimulacionTotal.ingresosGeneradosTotal = valorIngresos;
+
+
+            return resultadoSimulacionTotal;
+
+            //if(resultados.Count == 2)
+            //{
+
+
+            //    resultadoSimulacionDiaria.tiempoPromedioLibreCocineros = TimeSpan.FromMinutes((resultados[0].cocineros.Sum(x => x.tiempoLibre.TotalMinutes) + resultados[1].cocineros.Sum(x => x.tiempoLibre.TotalMinutes)) / (double)2);
+            //    resultadoSimulacionDiaria.tiempoPromedioLibreDelivery = TimeSpan.FromMinutes((resultados[0].delivery.tiempoLibre.TotalMinutes + resultados[1].delivery.tiempoLibre.TotalMinutes) / (double)2);
+            //    resultadoSimulacionDiaria.promedioPedidosPerdidos = (resultados[0].cantidadPedidosPerdidos + resultados[1].cantidadPedidosPerdidos) / (double)2;
+            //    resultadoSimulacionDiaria.promedioPedidosConCeroIngresos = (resultados[0].cantidadPedidosCeroIngresos + resultados[1].cantidadPedidosCeroIngresos) / (double)2;
+
+            //    resultadoSimulacionDiaria.montoPedidosPerdidos = resultados[0].montoPedidosPerdidos + resultados[1].montoPedidosPerdidos;
+            //    resultadoSimulacionDiaria.maximoVentasPerdidas = resultados[0].cantidadPedidosPerdidos > resultados[1].cantidadPedidosPerdidos ? resultados[0].cantidadPedidosPerdidos : resultados[1].cantidadPedidosPerdidos;
+            //    resultadoSimulacionDiaria.promedioTiempoClientesEnCola = TimeSpan.FromMinutes((resultados[0].promedioTiempoClientesEnCola.TotalMinutes + resultados[1].promedioTiempoClientesEnCola.TotalMinutes) / (double)2);
+
+            //    resultadoSimulacionDiaria.promedioTiempoEntregaDesdePedido = TimeSpan.FromMinutes((resultados[0].promedioTiempoEntregaDesdePedido.TotalMinutes + resultados[1].promedioTiempoEntregaDesdePedido.TotalMinutes) / (double) 2);
+
+            //    resultadoSimulacionDiaria.probabilidadIngresoMenosDe250 = (resultados[0].probabilidadIngresoMenosDe250 + resultados[1].probabilidadIngresoMenosDe250) / (double) 2;
+            //}
+
+
         }
 
         private void verificarPedidosExcedidos()
@@ -228,7 +479,16 @@ namespace TP5
                 {
                     if((actual.reloj - pedido.momentoInicio) > new TimeSpan(1, 0, 0))
                     {
-                        if(pedido.cocinero == null)
+                        if(!pedido.abandonado)
+                        {
+                            actual.cantidadPedidosPerdidos++;
+                            actual.montoPedidosPerdidos += pedido.getPrecio();
+
+                            pedido.abandonado = true;
+                        }
+                        
+
+                        if (pedido.cocinero == null)
                         {
                             actual.pedidos.Remove(pedido);
 
@@ -241,17 +501,23 @@ namespace TP5
         }
 
 
-        private void actualizarTiempoLibreCocineros()
+        private void actualizarTiempoLibreServidores()
         {
+            TimeSpan tiempoLibreASumar = actual.reloj - anterior.reloj;
+
             foreach (var cocinero in anterior.cocineros)
             {
                 if(cocinero.estadoServidor == EstadoServidor.ocupado)
                 {
                     continue;
                 }
-
-                TimeSpan tiempoLibreASumar = actual.reloj - anterior.reloj;
+                
                 actual.cocineros.Where(x => x.numeroServidor == cocinero.numeroServidor).FirstOrDefault().tiempoLibre += tiempoLibreASumar;
+            }
+
+            if(anterior.delivery.estadoServidor == EstadoServidor.libre)
+            {
+                actual.delivery.tiempoLibre += tiempoLibreASumar;
             }
         }
 
@@ -344,13 +610,17 @@ namespace TP5
 
             }
 
-            if(actual.reloj <= new TimeSpan(6, 0, 0))
+            if(actual.reloj.Hours < 6 || anterior.cantidadLlegadas < 6)
             {
-                if (anterior.momentoProximaLlegada < proximoReloj || proximoReloj.TotalMinutes == 0)
+                if(anterior.momentoProximaLlegada.Hours < 6 || anterior.cantidadLlegadas < 6)
                 {
-                    proximoReloj = anterior.momentoProximaLlegada;
-                    proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
+                    if (anterior.momentoProximaLlegada < proximoReloj || proximoReloj.TotalMinutes == 0)
+                    {
+                        proximoReloj = anterior.momentoProximaLlegada;
+                        proximoEvento = EVENTO_LLEGADA_DE_PEDIDO;
+                    }
                 }
+                
             }
           
 
@@ -387,18 +657,22 @@ namespace TP5
             
             pedido.cocinero = cocineroConMasTiempoLibre;
 
+            actual.productoPedido = pedido.nombrePedido;
+
             if(pedido.GetType() == typeof(PedidoSandwich))
             {
-                actual.tiempoPreparacionDeSandwichPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoPreparacionDeSandwichPromedio.TotalMinutes * anterior.sandwichPreparados + actual.sandwichPreparados) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                //actual.tiempoPreparacionDeSandwichPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoPreparacionDeSandwichPromedio.TotalMinutes * anterior.sandwichPreparados + actual.sandwichPreparados) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                actual.tiempoPreparacionDeSandwichPromedio = TimeSpan.FromMinutes(calcularPromedio(actual.sandwichPreparados, anterior.tiempoPreparacionDeSandwichPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes));
                 
-                if(actual.sandwichPreparados > 1)
+                if (actual.sandwichPreparados > 1)
                 {
                     actual.tiempoSandwichPreparadosDesviacion = calcularVarianza(actual.sandwichPreparados, anterior.tiempoSandwichPreparadosDesviacion, actual.tiempoPreparacionDeSandwichPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
                 }
             }
             else if(pedido.GetType() == typeof(PedidoPizza))
             {
-                actual.tiempoPreparacionDePizzaPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoPreparacionDePizzaPromedio.TotalMinutes * anterior.pizzasPreparadas + actual.pizzasPreparadas) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                //actual.tiempoPreparacionDePizzaPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoPreparacionDePizzaPromedio.TotalMinutes * anterior.pizzasPreparadas + actual.pizzasPreparadas) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                actual.tiempoPreparacionDePizzaPromedio = TimeSpan.FromMinutes(calcularPromedio(actual.pizzasPreparadas, anterior.tiempoPreparacionDePizzaPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes));
 
                 if (actual.pizzasPreparadas > 1)
                 {
@@ -407,9 +681,10 @@ namespace TP5
             }
             else if(pedido.GetType() == typeof(PedidoEmpanadas))
             {
-                actual.tiempoCoccionEmpanadasPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoCoccionEmpanadasPromedio.TotalMinutes * anterior.empanadasPreparadas + actual.empanadasPreparadas) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                //actual.tiempoCoccionEmpanadasPromedio = TimeSpan.FromMinutes((double)(anterior.tiempoCoccionEmpanadasPromedio.TotalMinutes * anterior.empanadasPreparadas + actual.empanadasPreparadas) / (double)cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
+                actual.tiempoCoccionEmpanadasPromedio = TimeSpan.FromMinutes(calcularPromedio(actual.empanadasPreparadas, anterior.tiempoCoccionEmpanadasPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes));
 
-                if (actual.pizzasPreparadas > 1)
+                if (actual.empanadasPreparadas > 1)
                 {
                     actual.tiempoCoccionEmpanadasDesviacion = calcularVarianza(actual.empanadasPreparadas, anterior.tiempoCoccionEmpanadasDesviacion, actual.tiempoCoccionEmpanadasPromedio.TotalMinutes, cocineroConMasTiempoLibre.tiempoProceso.TotalMinutes);
                 }
@@ -640,13 +915,17 @@ namespace TP5
             }
 
             //Estadisticas
-            actual.cantidadLlegadas++;
-            
+            actual.cantidadLlegadas += 1;
+            actual.numeroProximaLlegada += 1;
 
-            actual.tiempoEntreLlegadasPromedio = TimeSpan.FromMinutes((double)(anterior.cantidadLlegadas * anterior.tiempoEntreLlegadasPromedio.TotalMinutes + actual.tiempoEntreLlegada.TotalMinutes) / (double)actual.cantidadLlegadas);
+            actual.tiempoEntreLlegadasPromedio = TimeSpan.FromMinutes((double)(anterior.numeroProximaLlegada * anterior.tiempoEntreLlegadasPromedio.TotalMinutes + actual.tiempoEntreLlegada.TotalMinutes) / (double)actual.numeroProximaLlegada);
+
+            //actual.tiempoEntregaPromedio = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadLlegadas, anterior.tiempoEntreLlegadasPromedio.TotalMinutes, actual.tiempoEntreLlegada.TotalMinutes));
 
             if(actual.cantidadLlegadas > 1)
-                actual.tiempoEntreLlegadasDesviacion = TimeSpan.FromMinutes(Math.Sqrt(calcularVarianza(actual.cantidadLlegadas, anterior.tiempoEntreLlegadasDesviacion.TotalMinutes, actual.tiempoEntreLlegadasPromedio.TotalMinutes, actual.tiempoEntreLlegada.TotalMinutes)));
+                actual.tiempoEntreLlegadasDesviacion = TimeSpan.FromMinutes(Math.Sqrt(calcularVarianza(actual.numeroProximaLlegada, anterior.tiempoEntreLlegadasDesviacion.TotalMinutes, actual.tiempoEntreLlegadasPromedio.TotalMinutes, actual.tiempoEntreLlegada.TotalMinutes)));
+
+            sumarPedidosPorHora();
             //TODO:----
             //if (actual.reloj.Hours == actual.horaSimulacion)
             //{
@@ -668,11 +947,32 @@ namespace TP5
             
         }
 
+        private void sumarPedidosPorHora()
+        {
+            //var pedidosPorHora = actual.cantidadPedidosPorHora[actual.reloj.Hours + 1];
+
+            if(actual.cantidadPedidosPorHora.ContainsKey(actual.reloj.Hours + 1))
+            {
+                actual.cantidadPedidosPorHora[actual.reloj.Hours + 1] += 1;
+            }
+            else
+            {
+                actual.cantidadPedidosPorHora.Add(actual.reloj.Hours + 1, 1);
+            }
+
+               
+        }
+
         public double calcularPromedio(int n, double promedioAnterior, double cantidadActual)
         {
-            double promedio = (double)((n - 1) * promedioAnterior + cantidadActual) / (double)n;
+            if(n > 0)
+            {
+                double promedio = (double)((n - 1) * promedioAnterior + cantidadActual) / (double)n;
 
-            return promedio;
+                return promedio;
+            }
+
+            return cantidadActual;
         }
 
         public double calcularVarianza(int n, double varianzaAnterior, double promedioActual, double cantidadActual)
@@ -705,7 +1005,9 @@ namespace TP5
                 actual.delivery.inicioProceso = actual.reloj;
                 actual.delivery.tiempoProceso = obtenerTiempoEntregaDelivery();
 
+                TimeSpan tiempoEntregaDesdePedido = actual.delivery.tiempoProceso + pedido.momentoFinProceso - pedido.momentoInicio;
 
+                actual.promedioTiempoEntregaDesdePedido = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadEntregas, anterior.promedioTiempoEntregaDesdePedido.TotalMinutes, tiempoEntregaDesdePedido.TotalMinutes));
             }
             else
             {
@@ -715,6 +1017,15 @@ namespace TP5
             if(actual.longitudColaPedido > 0)
             {
                 actual.longitudColaPedido--;
+
+                var pedidoConMasTiempoEnCola = actual.pedidos.Where(x => x.cocinero == null).OrderBy(x => x.momentoInicio).FirstOrDefault();
+
+                TimeSpan tiempoEnCola = actual.reloj - pedidoConMasTiempoEnCola.momentoInicio;
+
+                actual.cantidadClientesEnCola++;
+                actual.tiempoClientesEnCola += tiempoEnCola;
+                actual.promedioTiempoClientesEnCola = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadClientesEnCola, anterior.promedioTiempoClientesEnCola.TotalMinutes, tiempoEnCola.TotalMinutes));
+
                 Pedido pedidoCola = generarPedido();
                 prepararPedido(pedidoCola);
             }
@@ -724,6 +1035,8 @@ namespace TP5
         private void simularEntregaDePedido()
         {
             actual.evento = EVENTO_ENTREGA_DE_PEDIDO;
+
+            actual.cantidadEntregas++;
 
             //Aca puede haber entregado 1, 2 o 3 pedidos... hay que eliminarlos si no superaron la hora de espera
             foreach (var pedido in anterior.pedidos)
@@ -741,6 +1054,7 @@ namespace TP5
                     else
                     {
                         pedido.ingresoGenerado = 0;
+                        actual.cantidadPedidosCeroIngresos++;
                     }
 
                     actual.ingresosGeneradosTotal += pedido.ingresoGenerado;
@@ -757,9 +1071,16 @@ namespace TP5
                     if (actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault() != null)
                         actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault().enProcesoDeEntrega = false;
                 }
+
+                if(pedido.ingresoGenerado <= 250)
+                {
+                    actual.cantidadEntregasMenosDe250++;
+                    actual.probabilidadIngresoMenosDe250 = actual.cantidadEntregasMenosDe250 / (double)actual.cantidadEntregas;
+                }
             }
 
-            actual.cantidadEntregas++;
+            
+
             actual.tiempoEntregaPromedio = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadEntregas, anterior.tiempoEntregaPromedio.TotalMinutes, anterior.delivery.tiempoProceso.TotalMinutes));
 
             if(actual.cantidadEntregas > 1)
@@ -824,6 +1145,9 @@ namespace TP5
             throw new NotImplementedException();
         }
 
-        
+        private void btnSimularDia_Click(object sender, EventArgs e)
+        {
+            mostrarVectorResultado();
+        }
     }
 }

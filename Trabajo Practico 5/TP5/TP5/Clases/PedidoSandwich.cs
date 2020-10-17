@@ -15,6 +15,7 @@ namespace TP5.Clases
         {
             this.media = media;
             this.desvEstandar = desvEstandar;
+            this.nombrePedido = "Sandwich";
         }
 
         public override TimeSpan calcularTiempoDemora()

@@ -15,6 +15,7 @@ namespace TP5.Clases
         {
             this.a = a;
             this.b = b;
+            this.nombrePedido = "Pizza";
         }
 
         public override TimeSpan calcularTiempoDemora()

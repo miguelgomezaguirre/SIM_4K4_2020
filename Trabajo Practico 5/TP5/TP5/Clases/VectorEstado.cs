@@ -43,14 +43,12 @@ namespace TP5.Clases
 
         //ESTADISTICAS
         public int cantidadLlegadas { get; set; }
+        public int numeroProximaLlegada { get; set; }
         public TimeSpan tiempoEntreLlegadasPromedio { get; set; }
         public TimeSpan tiempoEntreLlegadasDesviacion { get; set; }
 
         public int horaSimulacion { get; set; }
-        public int cantidadPedidosPorHora { get; set; }
-
-        public double promedioPedidosEnUnaHora { get; set; }
-        public double promedioPedidosPorHora { get; set; }
+        
                 
         public TimeSpan tiempoPreparacionDeSandwichPromedio { get; set; }
 
@@ -71,7 +69,32 @@ namespace TP5.Clases
         public TimeSpan tiempoEntregaPromedio { get; set; }
         public TimeSpan tiempoEntregaDesviacion { get; set; }
 
+        public Dictionary<int, int> cantidadPedidosPorHora { get; set; }
 
+        public string productoPedido { get; set; }
+
+        public TimeSpan tiempoPromedioLibreCocineros { get; set; }
+        public TimeSpan tiempoPromedioLibreDelivery { get; set; }
+
+        public double montoPedidosPerdidos { get; set; }
+        public int cantidadPedidosPerdidos { get; set; }
+        public int cantidadPedidosCeroIngresos { get; set; }
+        public double promedioPedidosPerdidos { get; set; }
+        public double promedioPedidosConCeroIngresos { get; set; }
+
+        public int maximoVentasPerdidas { get; set; }
+
+        public TimeSpan tiempoClientesEnCola { get; set; }
+        public int cantidadClientesEnCola { get; set; }
+        public TimeSpan promedioTiempoClientesEnCola { get; set; }
+
+        public TimeSpan promedioTiempoEntregaDesdePedido { get; set; }
+
+        public int cantidadEntregasMenosDe250 { get; set; }
+
+        public double probabilidadIngresoMenosDe250 { get; set; }
+
+        public double probabilidadPedidosCaidosOGratis { get; set; }
         public VectorEstado()
         {
             reloj = new TimeSpan(0, 0, 0);
@@ -84,8 +107,10 @@ namespace TP5.Clases
             pedidos = new List<Pedido>();
 
             horaSimulacion = 0;
-            cantidadPedidosPorHora = 0;
-            promedioPedidosPorHora = 0;
+
+            cantidadPedidosPorHora = new Dictionary<int, int>();
+
+            productoPedido = "";
         }
 
 
@@ -108,8 +133,44 @@ namespace TP5.Clases
             this.delivery = actual.delivery;
             this.pedidos = new List<Pedido>();
             this.pedidos.AddRange(actual.pedidos);
+            this.cantidadLlegadas = actual.cantidadLlegadas;
 
             this.momentoProximaLlegada = actual.momentoProximaLlegada;
-        }
+
+            this.numeroProximaLlegada = actual.numeroProximaLlegada;
+            this.cantidadLlegadas = actual.cantidadLlegadas;
+            this.tiempoEntreLlegadasPromedio = actual.tiempoEntreLlegadasPromedio;
+            this.tiempoEntreLlegadasDesviacion = actual.tiempoEntreLlegadasDesviacion;
+
+            this.horaSimulacion = actual.horaSimulacion;
+
+            this.tiempoPreparacionDeSandwichPromedio = actual.tiempoPreparacionDeSandwichPromedio;
+            this.tiempoSandwichPreparadosDesviacion = actual.tiempoSandwichPreparadosDesviacion;
+            this.tiempoPreparacionDePizzaPromedio = actual.tiempoPreparacionDePizzaPromedio;
+            this.tiempoCoccionPizzaDesviacion = actual.tiempoCoccionPizzaDesviacion;
+            this.tiempoCoccionEmpanadasPromedio = actual.tiempoCoccionEmpanadasPromedio;
+            this.tiempoCoccionEmpanadasDesviacion = actual.tiempoCoccionEmpanadasDesviacion;
+            this.ingresoPorHamburgesa = actual.ingresoPorHamburgesa;
+            this.ingresoPorLomito = actual.ingresoPorLomito;
+            this.cantidadEntregas = actual.cantidadEntregas;
+            this.tiempoEntregaPromedio = actual.tiempoEntregaPromedio;
+            this.tiempoEntregaDesviacion = actual.tiempoEntregaDesviacion;
+            this.cantidadPedidosPorHora = actual.cantidadPedidosPorHora;
+            this.cantidadPedidosPerdidos = actual.cantidadPedidosPerdidos;
+            this.cantidadPedidosCeroIngresos = actual.cantidadPedidosCeroIngresos;
+
+            this.cantidadClientesEnCola = actual.cantidadClientesEnCola;
+            this.tiempoClientesEnCola = actual.tiempoClientesEnCola;
+            this.promedioTiempoClientesEnCola = actual.promedioTiempoClientesEnCola;
+
+            this.promedioTiempoEntregaDesdePedido = actual.promedioTiempoEntregaDesdePedido;
+
+            this.cantidadEntregasMenosDe250 = actual.cantidadEntregasMenosDe250;
+            this.probabilidadIngresoMenosDe250 = actual.probabilidadIngresoMenosDe250;
+
+            this.probabilidadPedidosCaidosOGratis = actual.probabilidadPedidosCaidosOGratis;
+
+            this.productoPedido = "";
+    }
     }
 }

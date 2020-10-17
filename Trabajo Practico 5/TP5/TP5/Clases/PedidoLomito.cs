@@ -8,6 +8,10 @@ namespace TP5.Clases
 {
     class PedidoLomito : Pedido
     {
+        public PedidoLomito()
+        {
+            this.nombrePedido = "Lomito";
+        }
         public override TimeSpan calcularTiempoDemora()
         {
             return new TimeSpan(0, 8, 0);

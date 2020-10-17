@@ -14,6 +14,7 @@ namespace TP5.Clases
         public PedidoEmpanadas(double lambda)
         {
             this.lambda = lambda;
+            this.nombrePedido = "Empanadas";
         }
         public override TimeSpan calcularTiempoDemora()
         {

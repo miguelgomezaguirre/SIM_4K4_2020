@@ -8,21 +8,28 @@ DONE:
 *sumar el tiempo libre a los otros cocineros --> listo
 *cola delivery --> listo
 *borrar los pedidos --> listo
+*Cantidad de pedidos por hora --> listo
+Tipo de producto pedido
+Cantidad de empanadas demandadas
+Ingreso por hamburguesa y lomito
+Orden en el uso de los empleados de coccion
+*si el pedido supera la hora y queda hecho, hay que entregregarselo al proximo que pida lo mismo
+
 
 -----
 TODO:
 -----
-*si el pedido supera la hora y queda hecho, hay que entregregarselo al proximo que pida lo mismo
+
 *corregir el nro de pedido cuando se finalizan (evento)
 *arreglar lo de la hora (formato)
 
 
-punto a)
-	Cantidad de pedidos por hora
-	Tipo de producto pedido
-	Cantidad de empanadas demandadas
-	Ingreso por hamburguesa y lomito
-	Orden en el uso de los empleados de coccion
+* Ventas promedio perdidas por dia
+* Ingreso promedio y desvio diario
+
+
+punto a)	
+
 
 
 *si era 25 min, el pedido es gratis
