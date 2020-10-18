@@ -54,6 +54,7 @@
     <Compile Include="Clases\PedidoPizza.cs" />
     <Compile Include="Clases\PedidoSandwich.cs" />
     <Compile Include="Clases\Servidor.cs" />
+    <Compile Include="Clases\Simulacion.cs" />
     <Compile Include="Clases\VectorEstado.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>

@@ -66,6 +66,7 @@ namespace TP5.Clases
         public double ingresoPorLomito { get; set; }
 
         public int cantidadEntregas { get; set; }
+        public int cantidadPedidosEntregados { get; set; }
         public TimeSpan tiempoEntregaPromedio { get; set; }
         public TimeSpan tiempoEntregaDesviacion { get; set; }
 
@@ -95,6 +96,10 @@ namespace TP5.Clases
         public double probabilidadIngresoMenosDe250 { get; set; }
 
         public double probabilidadPedidosCaidosOGratis { get; set; }
+
+        public double ingresoPromedioDiario { get; set; }
+        public double ingresoDesvioDiario { get; set; }
+
         public VectorEstado()
         {
             reloj = new TimeSpan(0, 0, 0);
@@ -169,6 +174,9 @@ namespace TP5.Clases
             this.probabilidadIngresoMenosDe250 = actual.probabilidadIngresoMenosDe250;
 
             this.probabilidadPedidosCaidosOGratis = actual.probabilidadPedidosCaidosOGratis;
+
+            this.ingresoPromedioDiario = actual.ingresoPromedioDiario;
+            this.ingresoDesvioDiario = actual.ingresoDesvioDiario;
 
             this.productoPedido = "";
     }

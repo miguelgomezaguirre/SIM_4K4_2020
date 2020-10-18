@@ -14,7 +14,7 @@ Cantidad de empanadas demandadas
 Ingreso por hamburguesa y lomito
 Orden en el uso de los empleados de coccion
 *si el pedido supera la hora y queda hecho, hay que entregregarselo al proximo que pida lo mismo
-
+* Ventas promedio perdidas por dia (falta en simulacion por turno)
 
 -----
 TODO:
@@ -23,9 +23,15 @@ TODO:
 *corregir el nro de pedido cuando se finalizan (evento)
 *arreglar lo de la hora (formato)
 
-
-* Ventas promedio perdidas por dia
 * Ingreso promedio y desvio diario
+
+* En pedido hacer llegar el valor de abandono de pedido en momento limite
+* En pedido hamburguesa y lomito hacer llegar el timespan tomado por parametro
+
+validar bien en simulacion diaria
+	tiempo de entrega de pedidos promedio desde creacion
+	tiempo promedio en cola
+	Desvio Ingreso Diario
 
 
 punto a)	

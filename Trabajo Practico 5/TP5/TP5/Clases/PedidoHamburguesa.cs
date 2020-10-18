@@ -14,7 +14,8 @@ namespace TP5.Clases
         }
         public override TimeSpan calcularTiempoDemora()
         {
-            return new TimeSpan(0, 8, 0);
+            //return new TimeSpan(0, 8, 0);
+            return Simulacion.getInstancia().tiempoDemoraLomitoHamburguesa;
         }
 
         public override double getPrecio()

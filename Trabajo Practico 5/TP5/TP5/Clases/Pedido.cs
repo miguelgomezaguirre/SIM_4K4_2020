@@ -23,7 +23,7 @@ namespace TP5.Clases
         public TimeSpan momentoInicio { get; set; }
         public TimeSpan momentoFinProceso { get; set; }
         public TimeSpan momentoEntrega { get; set; }
-        public TimeSpan momentoLimite { get { return momentoInicio.Add(new TimeSpan(1, 0, 0)); } }
+        public TimeSpan momentoLimite { get { return momentoInicio.Add(Simulacion.getInstancia().tiempoAbandonoPedido); } }
         public Servidor cocinero { get; set; }
 
         public bool abandonado { get; set; }
