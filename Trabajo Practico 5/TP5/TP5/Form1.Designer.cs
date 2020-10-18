@@ -419,6 +419,7 @@
             this.btnValoresPorDefecto.TabIndex = 11;
             this.btnValoresPorDefecto.Text = "Valores por Defecto";
             this.btnValoresPorDefecto.UseVisualStyleBackColor = true;
+            this.btnValoresPorDefecto.Visible = false;
             this.btnValoresPorDefecto.Click += new System.EventHandler(this.btnValoresPorDefecto_Click);
             // 
             // groupBox2

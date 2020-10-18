@@ -1123,6 +1123,8 @@ namespace TP5
             mediaDemoraPedido = 3;
             tiempoFinSimulacion = new TimeSpan(6, 0, 0);
             pedidosMaxDelivery = 3;
+
+            
         }
     }
 }
