@@ -107,6 +107,9 @@
             this.btnSimularDia = new System.Windows.Forms.Button();
             this.label37 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabParametros.SuspendLayout();
@@ -352,7 +355,10 @@
             this.groupBox3.Controls.Add(this.txtTurnoMinutos);
             this.groupBox3.Controls.Add(this.label27);
             this.groupBox3.Controls.Add(this.txtTurnoHoras);
+            this.groupBox3.Controls.Add(this.label40);
             this.groupBox3.Controls.Add(this.label26);
+            this.groupBox3.Controls.Add(this.label38);
+            this.groupBox3.Controls.Add(this.label39);
             this.groupBox3.Location = new System.Drawing.Point(247, 132);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(170, 166);
@@ -880,6 +886,33 @@
             this.listBox1.Size = new System.Drawing.Size(164, 82);
             this.listBox1.TabIndex = 15;
             // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(6, 26);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(23, 13);
+            this.label38.TabIndex = 0;
+            this.label38.Text = "HH";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(6, 52);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(23, 13);
+            this.label39.TabIndex = 0;
+            this.label39.Text = "mm";
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(6, 78);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(17, 13);
+            this.label40.TabIndex = 0;
+            this.label40.Text = "ss";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1011,6 +1044,9 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label label39;
     }
 }
 

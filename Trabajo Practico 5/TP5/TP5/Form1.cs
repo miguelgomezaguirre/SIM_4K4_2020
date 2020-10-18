@@ -341,6 +341,8 @@ namespace TP5
 
             grdResultado.DataSource = simulacionDiariaDataTable;
 
+            string formatoTimeSpan = @"hh\:mm\:ss";
+
             foreach (var pedidosPorHora in actual.cantidadPedidosPorHora)
             {
                 lstPedidosPorHora.Items.Add("Hora: " + pedidosPorHora.Key + "   Cantidad de pedidos: " + pedidosPorHora.Value);
@@ -356,7 +358,7 @@ namespace TP5
             foreach (var cocinero in cocineros)
             {
                 TimeSpan tiempoOcupacion = actual.reloj - cocinero.tiempoLibre;
-                lstRankingCocineros.Items.Add("Tiempo de uso cocinero " + cocinero.numeroServidor + ": " + tiempoOcupacion);
+                lstRankingCocineros.Items.Add("Tiempo de uso cocinero " + cocinero.numeroServidor + ": " + tiempoOcupacion.ToString(formatoTimeSpan));
             }
             
             lblCantidadEmpanadas.Text = actual.empanadasPreparadas.ToString();
