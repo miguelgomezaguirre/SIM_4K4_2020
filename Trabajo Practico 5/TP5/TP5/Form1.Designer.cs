@@ -83,8 +83,8 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.txtMediaEmpanadas = new System.Windows.Forms.TextBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabSimulacionTurno = new System.Windows.Forms.TabPage();
+            this.tabSimulacionDiaria = new System.Windows.Forms.TabPage();
             this.grdResultados = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.lstPedidosPorHora = new System.Windows.Forms.ListBox();
@@ -105,6 +105,8 @@
             this.lstRankingCocineros = new System.Windows.Forms.ListBox();
             this.label9 = new System.Windows.Forms.Label();
             this.btnSimularDia = new System.Windows.Forms.Button();
+            this.label37 = new System.Windows.Forms.Label();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultado)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabParametros.SuspendLayout();
@@ -112,8 +114,8 @@
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.tabSimulacionTurno.SuspendLayout();
+            this.tabSimulacionDiaria.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdResultados)).BeginInit();
             this.SuspendLayout();
             // 
@@ -138,8 +140,8 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabParametros);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabSimulacionTurno);
+            this.tabControl1.Controls.Add(this.tabSimulacionDiaria);
             this.tabControl1.Location = new System.Drawing.Point(12, 41);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -653,27 +655,27 @@
             this.txtMediaEmpanadas.TabIndex = 3;
             this.txtMediaEmpanadas.Text = "3";
             // 
-            // tabPage1
+            // tabSimulacionTurno
             // 
-            this.tabPage1.Controls.Add(this.grdResultado);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(966, 482);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabSimulacionTurno.Controls.Add(this.grdResultado);
+            this.tabSimulacionTurno.Location = new System.Drawing.Point(4, 22);
+            this.tabSimulacionTurno.Name = "tabSimulacionTurno";
+            this.tabSimulacionTurno.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSimulacionTurno.Size = new System.Drawing.Size(966, 482);
+            this.tabSimulacionTurno.TabIndex = 0;
+            this.tabSimulacionTurno.Text = "Simulacion Turno";
+            this.tabSimulacionTurno.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabSimulacionDiaria
             // 
-            this.tabPage2.Controls.Add(this.grdResultados);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(966, 482);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabSimulacionDiaria.Controls.Add(this.grdResultados);
+            this.tabSimulacionDiaria.Location = new System.Drawing.Point(4, 22);
+            this.tabSimulacionDiaria.Name = "tabSimulacionDiaria";
+            this.tabSimulacionDiaria.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSimulacionDiaria.Size = new System.Drawing.Size(966, 482);
+            this.tabSimulacionDiaria.TabIndex = 1;
+            this.tabSimulacionDiaria.Text = "Simulacion Diaria";
+            this.tabSimulacionDiaria.UseVisualStyleBackColor = true;
             // 
             // grdResultados
             // 
@@ -853,11 +855,37 @@
             this.btnSimularDia.UseVisualStyleBackColor = true;
             this.btnSimularDia.Click += new System.EventHandler(this.btnSimularDia_Click);
             // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.Location = new System.Drawing.Point(1007, 410);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(102, 20);
+            this.label37.TabIndex = 16;
+            this.label37.Text = "Integrantes";
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Items.AddRange(new object[] {
+            "62476 - Ardiles Hernan Ulises",
+            "53756 - Brizuela Marcelo",
+            "40684 - Fabro Juan Pablo",
+            "65130 - Gomez Aguirre Miguel",
+            "64813 - Vildoza Gianni Luca"});
+            this.listBox1.Location = new System.Drawing.Point(1011, 433);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(164, 82);
+            this.listBox1.TabIndex = 15;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1370, 561);
+            this.Controls.Add(this.label37);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.btnSimularDia);
             this.Controls.Add(this.lstRankingCocineros);
             this.Controls.Add(this.label9);
@@ -893,8 +921,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
+            this.tabSimulacionTurno.ResumeLayout(false);
+            this.tabSimulacionDiaria.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.grdResultados)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -906,8 +934,8 @@
         private System.Windows.Forms.Button iniciarSimulacion;
         private System.Windows.Forms.DataGridView grdResultado;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabSimulacionTurno;
+        private System.Windows.Forms.TabPage tabSimulacionDiaria;
         private System.Windows.Forms.DataGridView grdResultados;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox lstPedidosPorHora;
@@ -980,6 +1008,8 @@
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.TextBox txtPedidoGratisHoras;
         private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 
