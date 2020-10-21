@@ -571,7 +571,7 @@ namespace TP5
                     }
                 }
 
-                pedido = anterior.pedidos.Where(p => p.cocinero.numeroServidor == cocineroConMenorTiempoFinProceso.numeroServidor).FirstOrDefault();
+                pedido = anterior.pedidos.Where(p => p.cocinero != null && p.cocinero.numeroServidor == cocineroConMenorTiempoFinProceso.numeroServidor).FirstOrDefault();
             }
 
             if (anterior.delivery != null && anterior.delivery.estadoServidor == EstadoServidor.ocupado)
@@ -630,11 +630,16 @@ namespace TP5
         /// <summary>
         /// Asigna el pedido de acuerdo a quien tiene mas tiempo libre o de lo contrario por igual probabilidad de los que estan libres
         /// </summary>
-        internal void prepararPedido(Pedido pedido)
+        internal void prepararPedido(Pedido pedido, bool pedidoCreadoAnteriormente)
         {
             Servidor cocineroConMasTiempoLibre = obtenerCocineroMayorTiempoLibre();
             cocineroConMasTiempoLibre.estadoServidor = EstadoServidor.ocupado;
-            cocineroConMasTiempoLibre.tiempoProceso = pedido.calcularTiempoDemora();
+
+            if (!pedidoCreadoAnteriormente)
+                cocineroConMasTiempoLibre.tiempoProceso = pedido.calcularTiempoDemora();
+            else
+                cocineroConMasTiempoLibre.tiempoProceso = new TimeSpan(0,0,0);
+
             cocineroConMasTiempoLibre.inicioProceso = actual.reloj;
             
             pedido.cocinero = cocineroConMasTiempoLibre;
@@ -764,8 +769,9 @@ namespace TP5
         }
 
      
-        private Pedido generarPedido()
+        private Pedido generarPedido(out bool pedidoYaCreado)
         {
+            pedidoYaCreado = false;
             //generamos el random para saber a que pedido pertenece
             Double random = Aleatorio.getInstancia().NextDouble();
             Pedido pedido;
@@ -773,6 +779,7 @@ namespace TP5
             if (random < 0.2d)
             {
                 pedido = buscarPedidoDisponible(typeof(PedidoSandwich), 1);
+                
 
                 if (pedido == null)
                 {
@@ -780,7 +787,11 @@ namespace TP5
                     pedido = new PedidoSandwich(mediaSandwich, desviacionSandwich);
                     actual.sandwichPreparados++;
                 }
-                
+                else
+                {
+                    pedidoYaCreado = true;
+                }
+
             }
             else if (0.2d < random && random < 0.6d)
             {
@@ -792,7 +803,11 @@ namespace TP5
                     pedido = new PedidoPizza(a_pizza, b_pizza);
                     actual.pizzasPreparadas++;
                 }
-                
+                else
+                {
+                    pedidoYaCreado = true;
+                }
+
             }
             else if (0.6 < random && random < 0.9d)
             {
@@ -810,6 +825,7 @@ namespace TP5
                 else
                 {
                     pedido = pedidoAux;
+                    pedidoYaCreado = true;
                 }
 
             }
@@ -823,6 +839,10 @@ namespace TP5
                     pedido = new PedidoHamburguesa();
                     actual.hamburguesasPreparados++;
                 }
+                else
+                {
+                    pedidoYaCreado = true;
+                }
             }
             else
             {
@@ -833,6 +853,10 @@ namespace TP5
                     //Genero un pedido de lomito
                     pedido = new PedidoLomito();
                     actual.lomitosPreparados++;
+                }
+                else
+                {
+                    pedidoYaCreado = true;
                 }
             }
 
@@ -852,8 +876,9 @@ namespace TP5
             {
                 if(pedido.momentoLimite < actual.reloj &&  pedido.momentoFinProceso < actual.reloj)
                 {
-                    if(typeof(Pedido) == tipoPedido && pedido.getCantidad() == cantidadPedida)
+                    if(pedido.GetType() == tipoPedido && pedido.getCantidad() == cantidadPedida)
                     {
+                        pedido.momentoFinProceso = actual.reloj;
                         return pedido;
                     }
                 }
@@ -868,11 +893,13 @@ namespace TP5
             actual.tiempoEntreLlegada = generarTiempoEntreLlegada();
             actual.momentoProximaLlegada = actual.reloj + actual.tiempoEntreLlegada;
 
-            Pedido pedido = generarPedido();            
+            bool pedidoYaCreado = false;
+
+            Pedido pedido = generarPedido(out pedidoYaCreado);            
 
             if (getCantidadCocinerosLibres() > 0)
             {
-                prepararPedido(pedido);
+                prepararPedido(pedido, pedidoYaCreado);
             }
             else
             {
@@ -965,14 +992,20 @@ namespace TP5
 
                 var pedidoConMasTiempoEnCola = actual.pedidos.Where(x => x.cocinero == null).OrderBy(x => x.momentoInicio).FirstOrDefault();
 
-                TimeSpan tiempoEnCola = actual.reloj - pedidoConMasTiempoEnCola.momentoInicio;
+                if(pedidoConMasTiempoEnCola != null)
+                {
+                    TimeSpan tiempoEnCola = actual.reloj - pedidoConMasTiempoEnCola.momentoInicio;
 
-                actual.cantidadClientesEnCola++;
-                actual.tiempoClientesEnCola += tiempoEnCola;
-                actual.promedioTiempoClientesEnCola = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadClientesEnCola, anterior.cantidadClientesEnCola, anterior.promedioTiempoClientesEnCola.TotalMinutes, tiempoEnCola.TotalMinutes));
+                    actual.cantidadClientesEnCola++;
+                    actual.tiempoClientesEnCola += tiempoEnCola;
+                    actual.promedioTiempoClientesEnCola = TimeSpan.FromMinutes(calcularPromedio(actual.cantidadClientesEnCola, anterior.cantidadClientesEnCola, anterior.promedioTiempoClientesEnCola.TotalMinutes, tiempoEnCola.TotalMinutes));
 
-                Pedido pedidoCola = generarPedido();
-                prepararPedido(pedidoCola);
+                    bool pedidoYaCreado = false;
+
+                    Pedido pedidoCola = generarPedido(out pedidoYaCreado);
+                    prepararPedido(pedidoCola, pedidoYaCreado);
+                }
+                
             }
         }
 
