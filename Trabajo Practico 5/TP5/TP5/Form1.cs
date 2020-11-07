@@ -27,7 +27,7 @@ namespace TP5
         VectorEstado actual = new VectorEstado();
 
         //variables globales
-        private int numeroPedido = 0;
+        private int numeroPedido = 1;
 
         int pedidosPorHora = 5;
         double mediaEmpanadas = 3;
@@ -36,6 +36,8 @@ namespace TP5
         double mediaSandwich = 10;
         double desviacionSandwich = 5;
         double mediaDemoraPedido = 3;
+        double h_rungeKutta = 0.05;
+
         TimeSpan tiempoFinSimulacion = new TimeSpan(6,0,0); //6 horas
         TimeSpan tiempoAbandonoPedido = new TimeSpan(1, 0, 0);
         TimeSpan tiempoPedidoGratis = new TimeSpan(0, 25, 0);
@@ -326,6 +328,8 @@ namespace TP5
 
             mediaSandwich = double.Parse(txtMediaSandwich.Text);
             desviacionSandwich = double.Parse(txtDesviacionSandwich.Text);
+
+            h_rungeKutta = double.Parse(txtHRungeKutta.Text);
         }
 
         private void getPromediosPuntoB()
@@ -554,6 +558,12 @@ namespace TP5
                     continue;
                 }
 
+                if(anterior.pedidos.Where(p => p.cocinero != null && p.cocinero.numeroServidor == cocinero.numeroServidor).FirstOrDefault() == null)
+                {
+                    cocinero.estadoServidor = EstadoServidor.libre;
+                    continue;
+                }
+
                 proximoEvento = EVENTO_PEDIDO_FINALIZADO;
 
                 if (primero)
@@ -572,6 +582,7 @@ namespace TP5
                 }
 
                 pedido = anterior.pedidos.Where(p => p.cocinero != null && p.cocinero.numeroServidor == cocineroConMenorTiempoFinProceso.numeroServidor).FirstOrDefault();
+
             }
 
             if (anterior.delivery != null && anterior.delivery.estadoServidor == EstadoServidor.ocupado)
@@ -636,13 +647,22 @@ namespace TP5
             cocineroConMasTiempoLibre.estadoServidor = EstadoServidor.ocupado;
 
             if (!pedidoCreadoAnteriormente)
+            {
+                actual.cocineros.Where(x => x.numeroServidor == cocineroConMasTiempoLibre.numeroServidor).FirstOrDefault().estadoServidor = EstadoServidor.ocupado;
                 cocineroConMasTiempoLibre.tiempoProceso = pedido.calcularTiempoDemora();
+            }                
             else
-                cocineroConMasTiempoLibre.tiempoProceso = new TimeSpan(0,0,0);
+            {
+                //actual.cocineros.Where(x => x.numeroServidor == cocineroConMasTiempoLibre.numeroServidor).FirstOrDefault().estadoServidor = EstadoServidor.libre;
+                cocineroConMasTiempoLibre.tiempoProceso = new TimeSpan(0, 0, 0);
+            }
+                
 
             cocineroConMasTiempoLibre.inicioProceso = actual.reloj;
             
             pedido.cocinero = cocineroConMasTiempoLibre;
+
+            actual.pedidos.Where(x => x.numeroPedido == pedido.numeroPedido).FirstOrDefault().cocinero = cocineroConMasTiempoLibre;
 
             actual.productoPedido = pedido.nombrePedido;
 
@@ -800,7 +820,7 @@ namespace TP5
                 if(pedido == null)
                 {
                     //Genero un pedido pizza
-                    pedido = new PedidoPizza(a_pizza, b_pizza);
+                    pedido = new PedidoPizza(100, h_rungeKutta);
                     actual.pizzasPreparadas++;
                 }
                 else
@@ -861,7 +881,9 @@ namespace TP5
             }
 
             //asigno nro de pedido y agrego el pedido a la lista de pedidos
-            pedido.numeroPedido = numeroPedido++;
+            pedido.numeroPedido = numeroPedido;
+
+            numeroPedido++;
 
             pedido.momentoInicio = actual.reloj;
 
@@ -969,6 +991,9 @@ namespace TP5
             pedido.momentoFinProceso = actual.reloj;
 
             pedido.cocinero.estadoServidor = EstadoServidor.libre;
+
+            actual.cocineros.Where(x => x.numeroServidor == pedido.cocinero.numeroServidor).FirstOrDefault().estadoServidor = EstadoServidor.libre;
+
 
             if (anterior.delivery.estadoServidor == EstadoServidor.libre)
             {
